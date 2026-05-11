@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# Pre-commit hook for tweetTweet.
+#
+# Blocks commits that would leak identity / signing info into a public repo.
+# Bypass intentionally with: git commit --no-verify
+#
+# Detection has two layers:
+#   1) Generic shape patterns (defined below) — safe to publish.
+#   2) Optional local-only patterns from .githooks/patterns.local
+#      (gitignored, for your private strings such as a real work email).
+
+set -e
+
+# ---- Layer 1: generic shape patterns (committed, public-safe) ----
+# Format: "pattern|label"
+GENERIC_PATTERNS=(
+    'DEVELOPMENT_TEAM[[:space:]]*=[[:space:]]*[A-Z0-9]{8,}|DEVELOPMENT_TEAM with a real value'
+    'PROVISIONING_PROFILE_SPECIFIER[[:space:]]*=[[:space:]]*[^"'"'"';[:space:]]+|PROVISIONING_PROFILE_SPECIFIER set'
+    'PROVISIONING_PROFILE[[:space:]]*=[[:space:]]*[A-F0-9-]{20,}|PROVISIONING_PROFILE UUID'
+    '-----BEGIN[[:space:]]+[A-Z[:space:]]*PRIVATE KEY-----|private key block'
+    'AKIA[0-9A-Z]{16}|AWS access key id'
+    'ghp_[A-Za-z0-9]{36,}|GitHub personal access token'
+    'xox[abprs]-[A-Za-z0-9-]{10,}|Slack token'
+)
+
+# ---- Layer 2: local-only patterns (gitignored) ----
+LOCAL_PATTERNS_FILE=".githooks/patterns.local"
+LOCAL_PATTERNS=()
+if [ -f "$LOCAL_PATTERNS_FILE" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Skip blank lines and comments
+        [ -z "$line" ] && continue
+        case "$line" in
+            \#*) continue ;;
+        esac
+        LOCAL_PATTERNS+=("$line")
+    done < "$LOCAL_PATTERNS_FILE"
+fi
+
+# ---- Grab staged additions only ----
+STAGED_DIFF=$(git diff --cached --diff-filter=AM -U0 -- ':!.githooks/pre-commit' ':!.githooks/patterns.local*' 2>/dev/null || true)
+
+if [ -z "$STAGED_DIFF" ]; then
+    exit 0
+fi
+
+violations=0
+violation_output=""
+
+check_patterns() {
+    for entry in "$@"; do
+        pattern="${entry%%|*}"
+        label="${entry#*|}"
+
+        matches=$(echo "$STAGED_DIFF" | grep -E '^\+' | grep -vE '^\+\+\+' | grep -E -e "$pattern" || true)
+
+        if [ -n "$matches" ]; then
+            violation_output+="  [$label]\n"
+            while IFS= read -r line; do
+                violation_output+="    $line\n"
+            done <<< "$(echo "$matches" | head -3)"
+            violation_output+="\n"
+            violations=$((violations + 1))
+        fi
+    done
+}
+
+check_patterns "${GENERIC_PATTERNS[@]}"
+if [ "${#LOCAL_PATTERNS[@]}" -gt 0 ]; then
+    check_patterns "${LOCAL_PATTERNS[@]}"
+fi
+
+if [ "$violations" -gt 0 ]; then
+    echo "pre-commit: blocking commit — staged changes look like an info leak."
+    echo ""
+    printf "%b" "$violation_output"
+    echo "If this is intentional, bypass with: git commit --no-verify"
+    exit 1
+fi
+
+exit 0

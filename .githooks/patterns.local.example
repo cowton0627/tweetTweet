@@ -1,0 +1,15 @@
+# Local pattern file for pre-commit hook.
+#
+# Copy this to `.githooks/patterns.local` (which is gitignored) and add
+# any private strings you want to block from accidentally being committed.
+#
+# Format per line: regex_pattern|human-readable label
+# Lines starting with # are comments.
+#
+# Examples:
+#   your.work.email@company\.com|company email leak
+#   AB12CD34EF|known company Team ID
+#   internal\.example\.com|internal hostname
+
+# your.work.email@company\.com|work email leak
+# YOURTEAMID|your Apple Team ID
