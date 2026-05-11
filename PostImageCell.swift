@@ -19,7 +19,7 @@ struct PostImageCell: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: width, height: width * 0.75)
-                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }else if images.count == 2{
                 PostImageCellRow(images: images, width: width)
             }else if images.count == 3{
@@ -55,7 +55,7 @@ struct PostImageCellRow: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: (self.width - kImageSpace * CGFloat(self.images.count - 1)) / CGFloat(self.images.count), height: (self.width - kImageSpace * CGFloat(self.images.count - 1)) / CGFloat(self.images.count))
-                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
         }
         

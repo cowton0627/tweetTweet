@@ -8,54 +8,29 @@ import SwiftUI
 
 struct PostListView: View { //顯示推特列表
     let category: PostListCategory
-    
-//    var postList: PostList {
-//        switch category {
-//        case .recommend:
-//            return loadPostListData("PostListData_recommend_1.json")
-//        case .hot:
-//            return loadPostListData("PostListData_hot_1.json")
-//        }
-//    }
-    
+
     @EnvironmentObject var userData: UserData
-    
-    /*
-         init() {
-            UITableView.appearance().separatorStyle = .none
-            UITableViewCell.appearance().selectionStyle = .none
-         }
-         將創建時原生的分隔線去除
-         叫出PostListView時採用取消預設分隔線的動作
-         
-         但此處不能再用init, 於是挪到HomeView裡
-    */
-    
+
     var body: some View {
-        List {
-            ForEach(userData.postList(for: category).list) { post in    //每次去取出一個list生成一個postcell
-                //原為postList.list
-                ZStack {
-                    PostCell(post: post)
+        ScrollView {
+            LazyVStack(spacing: 0) {
+                ForEach(userData.postList(for: category).list) { post in
                     NavigationLink(destination: PostDetailView(post: post)) {
-                        //原des: Text("Detail")
-                       EmptyView()
+                        PostCell(post: post)
                     }
-                    .hidden()   //隱藏預設右邊中間小箭頭
+                    .buttonStyle(PlainButtonStyle())    //避免 NavigationLink 的整個 cell 顯示成藍色
                 }
-                    .listRowInsets(EdgeInsets())    //Insets 即上下左右的間距
             }
         }
+        .background(Color(.systemBackground))
     }
 }
 
 
 struct PostListView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView{
+        NavigationView {
             PostListView(category: .recommend)
-                .navigationBarTitle("回列表")
-                .navigationBarHidden(true)
         }
         .environmentObject(UserData())
     }
