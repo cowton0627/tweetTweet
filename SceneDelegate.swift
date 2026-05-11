@@ -23,8 +23,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             let hostingController = UIHostingController(rootView: contentView)
-            hostingController.view.backgroundColor = .systemBackground
-            window.backgroundColor = .systemBackground
+            hostingController.view.backgroundColor = .white
+            hostingController.overrideUserInterfaceStyle = .light
+            window.backgroundColor = .white
+            window.overrideUserInterfaceStyle = .light
             window.rootViewController = hostingController
             self.window = window
             window.makeKeyAndVisible()

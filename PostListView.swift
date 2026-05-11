@@ -8,6 +8,7 @@ import SwiftUI
 
 struct PostListView: View { //顯示推特列表
     let category: PostListCategory
+    let onSelectPost: (Post) -> Void
 
     @EnvironmentObject var userData: UserData
     @State private var bottomState: BottomState = .idle
@@ -19,10 +20,12 @@ struct PostListView: View { //顯示推特列表
                 let posts = userData.postList(for: category).list
 
                 ForEach(Array(posts.enumerated()), id: \.element.id) { index, post in
-                    NavigationLink(destination: PostDetailView(post: post)) {
+                    Button(action: {
+                        onSelectPost(post)
+                    }) {
                         PostCell(post: post)
                     }
-                    .buttonStyle(PlainButtonStyle())    //避免 NavigationLink 的整個 cell 顯示成藍色
+                    .buttonStyle(PlainButtonStyle())
                     .onAppear {
                         if index == posts.count - 1 {
                             triggerBottomCheckIfNeeded()
@@ -81,7 +84,7 @@ private struct BottomStatusView: View {
 struct PostListView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PostListView(category: .recommend)
+            PostListView(category: .recommend, onSelectPost: { _ in })
         }
         .environmentObject(UserData())
     }
