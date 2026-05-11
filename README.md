@@ -96,3 +96,13 @@ tweetTweet/
 - 程式碼採用 [MIT License](LICENSE)。
 - 本 App 不收集任何使用者資料,詳見 [PRIVACY.md](PRIVACY.md)。
 - `Resources/` 內的部分圖片素材僅作為展示用途,版權仍屬原作者所有。
+
+## Clone 後設定
+
+這個 repo 內附 pre-commit hook(`.githooks/pre-commit`),用來在 commit 前掃 staged 內容,擋住 Team ID、工作 email 等敏感字串。要啟用請執行一次:
+
+```
+git config core.hooksPath .githooks
+```
+
+需要繞過時可用 `git commit --no-verify`。
