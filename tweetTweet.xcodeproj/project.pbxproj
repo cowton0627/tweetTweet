@@ -28,6 +28,8 @@
 		01BF0000000000000000001A /* HomeChromeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001A /* HomeChromeViews.swift */; };
 		01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001B /* HomeFeedPagerView.swift */; };
 		01BF0000000000000000001C /* HomeSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001C /* HomeSearchView.swift */; };
+		01BF00000000000000000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000012 /* Assets.xcassets */; };
+		01BF00000000000000000021 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000014 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -259,6 +261,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01BF00000000000000000020 /* Assets.xcassets in Resources */,
+				01BF00000000000000000021 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
