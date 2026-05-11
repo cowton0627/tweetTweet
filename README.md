@@ -90,3 +90,9 @@ tweetTweet/
 ## 備註
 
 此專案主要作為 UI 與資料狀態展示用途,並非完整社群服務 App。畫面、資料與操作流程皆以展示社群動態頁情境為主,後續若要接後端 API,可直接替換 `Network` 與 `ViewModel` 層,UI 不需重寫。
+
+## 授權與隱私
+
+- 程式碼採用 [MIT License](LICENSE)。
+- 本 App 不收集任何使用者資料,詳見 [PRIVACY.md](PRIVACY.md)。
+- `Resources/` 內的部分圖片素材僅作為展示用途,版權仍屬原作者所有。
