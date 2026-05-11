@@ -12,7 +12,12 @@ struct PostDetailView: View {
     @EnvironmentObject private var userData: UserData
     @State private var showingCommentInput = false
 
+    private var bindingPost: Post {
+        userData.post(forId: post.id) ?? post
+    }
+
     var body: some View {
+        let post = bindingPost
         VStack(spacing: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
@@ -50,9 +55,21 @@ struct PostDetailView: View {
 
             Divider()
 
-            Button(action: { showingCommentInput = true }) {
-                Label("回應這則貼文", systemImage: "message")
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 12) {
+                Button(action: { toggleFollow(for: post) }) {
+                    Label(post.isFollowed ? "已追蹤" : "追蹤", systemImage: post.isFollowed ? "checkmark.circle.fill" : "person.badge.plus")
+                        .frame(maxWidth: .infinity)
+                }
+
+                Button(action: { toggleLike(for: post) }) {
+                    Label(post.isLiked ? "已喜歡" : "喜歡", systemImage: post.isLiked ? "heart.fill" : "heart")
+                        .frame(maxWidth: .infinity)
+                }
+
+                Button(action: { showingCommentInput = true }) {
+                    Label("回應", systemImage: "message")
+                        .frame(maxWidth: .infinity)
+                }
             }
             .font(.system(size: 16, weight: .medium))
             .padding(.horizontal, 16)
@@ -65,6 +82,24 @@ struct PostDetailView: View {
             CommentInputView(post: post)
                 .environmentObject(userData)
         }
+    }
+
+    private func toggleFollow(for post: Post) {
+        var updated = post
+        updated.isFollowed.toggle()
+        userData.update(updated)
+    }
+
+    private func toggleLike(for post: Post) {
+        var updated = post
+        if updated.isLiked {
+            updated.isLiked = false
+            updated.likeCount = max(0, updated.likeCount - 1)
+        } else {
+            updated.isLiked = true
+            updated.likeCount += 1
+        }
+        userData.update(updated)
     }
 }
 
