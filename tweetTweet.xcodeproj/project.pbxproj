@@ -74,27 +74,12 @@
 		01DF00000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				01AF00000000000000000001 /* AppDelegate.swift */,
-				01AF00000000000000000002 /* SceneDelegate.swift */,
-				01AF00000000000000000004 /* HScrollViewController.swift */,
-				01AF00000000000000000005 /* PostCell.swift */,
-				01AF00000000000000000006 /* CommentTextView.swift */,
-				01AF00000000000000000007 /* PostImageCell.swift */,
-				01AF00000000000000000008 /* Post.swift */,
-				01AF00000000000000000009 /* PostCellToolbarButton.swift */,
-				01AF0000000000000000000A /* UserData.swift */,
-				01AF0000000000000000000B /* KeyboardResponder.swift */,
-				01AF0000000000000000000C /* HomeView.swift */,
-				01AF0000000000000000000D /* CommentInputView.swift */,
-				01AF0000000000000000000E /* PostDetailView.swift */,
-				01AF0000000000000000000F /* HomeNavigationBar.swift */,
-				01AF00000000000000000010 /* PostListView.swift */,
-				01AF00000000000000000011 /* PostVIPBadge.swift */,
-				01AF00000000000000000018 /* ComposePostView.swift */,
-				01AF00000000000000000019 /* MediaPickerView.swift */,
-				01AF0000000000000000001A /* HomeChromeViews.swift */,
-				01AF0000000000000000001B /* HomeFeedPagerView.swift */,
-				01AF0000000000000000001C /* HomeSearchView.swift */,
+				01DF00000000000000000003 /* Controller */,
+				01DF00000000000000000008 /* Model */,
+				01DF00000000000000000009 /* Network */,
+				01DF0000000000000000000A /* View */,
+				01DF0000000000000000000D /* ViewModel */,
+				01DF0000000000000000000E /* Extension */,
 				01AF00000000000000000012 /* Assets.xcassets */,
 				01AF00000000000000000013 /* Info.plist */,
 				01AF00000000000000000017 /* InfoForBinary.plist */,
@@ -110,6 +95,109 @@
 				01AF00000000000000000016 /* tweetTweet.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000003 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				01DF00000000000000000004 /* Friend */,
+				01DF00000000000000000005 /* Main */,
+				01DF00000000000000000006 /* MainTabBarController */,
+				01DF00000000000000000007 /* Scenario */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000004 /* Friend */ = {
+			isa = PBXGroup;
+			path = Friend;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000005 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				01AF0000000000000000000C /* HomeView.swift */,
+				01AF0000000000000000001B /* HomeFeedPagerView.swift */,
+				01AF0000000000000000001C /* HomeSearchView.swift */,
+				01AF0000000000000000000E /* PostDetailView.swift */,
+				01AF00000000000000000018 /* ComposePostView.swift */,
+				01AF00000000000000000019 /* MediaPickerView.swift */,
+				01AF00000000000000000010 /* PostListView.swift */,
+				01AF00000000000000000004 /* HScrollViewController.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000006 /* MainTabBarController */ = {
+			isa = PBXGroup;
+			path = MainTabBarController;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000007 /* Scenario */ = {
+			isa = PBXGroup;
+			children = (
+				01AF00000000000000000001 /* AppDelegate.swift */,
+				01AF00000000000000000002 /* SceneDelegate.swift */,
+			);
+			path = Scenario;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000008 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				01AF00000000000000000008 /* Post.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		01DF00000000000000000009 /* Network */ = {
+			isa = PBXGroup;
+			path = Network;
+			sourceTree = "<group>";
+		};
+		01DF0000000000000000000A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				01DF0000000000000000000B /* Customised */,
+				01DF0000000000000000000C /* TableViewCell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		01DF0000000000000000000B /* Customised */ = {
+			isa = PBXGroup;
+			children = (
+				01AF0000000000000000001A /* HomeChromeViews.swift */,
+				01AF0000000000000000000F /* HomeNavigationBar.swift */,
+				01AF00000000000000000009 /* PostCellToolbarButton.swift */,
+				01AF00000000000000000011 /* PostVIPBadge.swift */,
+				01AF00000000000000000006 /* CommentTextView.swift */,
+				01AF0000000000000000000D /* CommentInputView.swift */,
+				01AF00000000000000000007 /* PostImageCell.swift */,
+			);
+			path = Customised;
+			sourceTree = "<group>";
+		};
+		01DF0000000000000000000C /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				01AF00000000000000000005 /* PostCell.swift */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		01DF0000000000000000000D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				01AF0000000000000000000A /* UserData.swift */,
+				01AF0000000000000000000B /* KeyboardResponder.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		01DF0000000000000000000E /* Extension */ = {
+			isa = PBXGroup;
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
