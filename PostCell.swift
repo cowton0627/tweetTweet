@@ -10,7 +10,7 @@ struct PostCell: View {
     let post: Post
     
     var bindingPost: Post {
-        userData.post(forId: post.id)!
+        userData.post(forId: post.id) ?? post
     }
     
     @State var presentComment: Bool = false
@@ -20,52 +20,51 @@ struct PostCell: View {
     var body: some View {
         var post = bindingPost
         return VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 5) {
-                post.avatarImage    //前用 Image(uiImage: UIImage(named: "圖片名"))
-                                    //圖片名又引用了post.avatar
+            HStack(spacing: 10) {
+                post.avatarImage
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 56, height: 56)
-                    .clipShape(Circle())    //圖片切成圓形
+                    .frame(width: 48, height: 48)
+                    .clipShape(Circle())
                     .overlay(
-                        PostVIPBadge(vip: post.vip)     //以VIPBadge編寫後引用
-                            .offset(x: 16, y: 16)       //覆蓋在用戶頭貼上, 偏移位置
+                        PostVIPBadge(vip: post.vip)
+                            .offset(x: 14, y: 14)
                     )
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(post.name)     //以Post編寫後引用
-                        .font(Font.system(size: 21))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(post.name)
+                        .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(Color(red: 242 / 255, green: 99 / 255, blue: 4 / 255))
-                        .lineLimit(1)   //限制用戶名的行數為一行, 超出的會用"..."表示
-                    Text(post.date)     //以Post編寫後引用
-                        .font(.system(size: 17))
+                        .lineLimit(1)
+                    Text(post.date)
+                        .font(.system(size: 13))
                         .foregroundColor(.gray)
+                        .lineLimit(1)
                 }
-                .padding(.leading, 10)
-                
-                    Spacer()
-                
+
+                Spacer()
+
                 if !post.isFollowed {
                     Button(action:{
-//                        print("Click follow button")    //以Debug模式執行, 下方會print此段文字
                         post.isFollowed =  true
                         self.userData.update(post)
                     }) {
                     Text("追蹤")
-                        .font(.system(size: 17))    //原為Font.system, 在.font裡, Font可省略
-                        .foregroundColor(.orange)   //同上, forgroundColor裡, Color.顏色, Color可省略
-                        .frame(width: 50, height: 26)
-                        .overlay(                                   //覆蓋Text("追蹤")
-                            RoundedRectangle(cornerRadius: 13)      //加圓角矩形邊框, 半徑為Text高度的一半
-                                .stroke(Color.orange, lineWidth: 2) //畫圓角矩形邊框的顏色, 線寬
+                        .font(.system(size: 14))
+                        .foregroundColor(.orange)
+                        .frame(width: 56, height: 28)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14)
+                                .stroke(Color.orange, lineWidth: 1.5)
                         )
-                        
                     }
-                    .buttonStyle(BorderlessButtonStyle())   //此段為只有按鈕可以響應點擊事件 (點擊按鈕變成淺灰色效果)
+                    .buttonStyle(BorderlessButtonStyle())
                 }
             }
             Text(post.text)
-                .font(.system(size:18))
+                .font(.system(size: 16))
+                .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
             
             
             if !post.images.isEmpty {

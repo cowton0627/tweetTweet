@@ -1,0 +1,55 @@
+{
+    "list": [
+        {
+            "id": 2000,
+            "avatar": "hot001.jpg",
+            "vip": true,
+            "name": "熱門話題",
+            "date": "2020-02-01 12:30",
+            "isFollowed": false,
+            "text": "這是一則熱門分頁的測試貼文，確認左右滑動切換後可以正常載入內容。",
+            "images": [
+                "hot001001.jpg"
+            ],
+            "commentCount": 128,
+            "likeCount": 3200,
+            "isLiked": false
+        },
+        {
+            "id": 2010,
+            "avatar": "hot003.jpg",
+            "vip": false,
+            "name": "城市觀察",
+            "date": "2020-02-03 09:15",
+            "isFollowed": false,
+            "text": "今天的照片整理好了，剛好拿來測試多圖排版。",
+            "images": [
+                "hot003001.jpg",
+                "hot003002.jpg",
+                "hot003003.jpg"
+            ],
+            "commentCount": 42,
+            "likeCount": 819,
+            "isLiked": true
+        },
+        {
+            "id": 2020,
+            "avatar": "hot005.jpg",
+            "vip": true,
+            "name": "週末散步",
+            "date": "2020-02-05 18:22",
+            "isFollowed": false,
+            "text": "熱門列表也支援五張圖片，按讚與留言數會跟推薦列表一樣即時更新。",
+            "images": [
+                "hot005001.jpg",
+                "hot005002.jpg",
+                "hot005003.jpg",
+                "hot005004.jpg",
+                "hot005005.jpg"
+            ],
+            "commentCount": 0,
+            "likeCount": 76,
+            "isLiked": false
+        }
+    ]
+}

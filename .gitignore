@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Xcode build / derived
+build/
+DerivedData/
+*.xcuserstate
+
+# Xcode user-specific
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Packages/
+
+# CocoaPods (if ever added)
+Pods/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output

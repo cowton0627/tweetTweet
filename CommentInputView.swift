@@ -12,7 +12,7 @@ struct CommentInputView: View {
     @State private var text: String = ""
     @State private var showEmptyTextHUD: Bool = false   //顯示hud提示語
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     @EnvironmentObject var userData: UserData
     
@@ -25,8 +25,7 @@ struct CommentInputView: View {
             
             HStack(spacing: 0) {
                 Button(action: {
-    //                print("Cancel")
-                    self.presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }) {
                     Text("取消").padding()
                 }
@@ -34,21 +33,7 @@ struct CommentInputView: View {
                 Spacer()
                 
                 Button(action: {
-                    if self.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {  //過濾空白符號
-//                        withAnimation {
-                            self.showEmptyTextHUD = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            self.showEmptyTextHUD = false
-                        }
-                            return
-//                        }
-                    }
-                    print(self.text)
-    //                print("Send")
-                    var post = self.post
-                    post.commentCount += 1
-                    self.userData.update(post)
-                    self.presentationMode.wrappedValue.dismiss()
+                    sendComment()
                 }) {
                     Text("傳送").padding()
                 }
@@ -59,14 +44,28 @@ struct CommentInputView: View {
         .overlay(
             Text("評論不得空白")
                 .scaleEffect(showEmptyTextHUD ? 1 : 0.5)
-                .animation(.spring(dampingFraction: 0.75))
                 .opacity(showEmptyTextHUD ? 1 : 0)
-                .animation(.easeInOut)
+                .animation(.spring(dampingFraction: 0.75), value: showEmptyTextHUD)
         )
         .padding(.bottom, keyboardResponder.keyboardHeight)
         .edgesIgnoringSafeArea(keyboardResponder.keyboardShow ? .bottom : [])   //如果輸入時, 忽略底部安全區域, 使取消、輸入按鈕 與 鍵盤之間的間隙縮小 ;如果消失時, 不忽略安全區域
         
 
+    }
+
+    private func sendComment() {
+        if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            showEmptyTextHUD = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                showEmptyTextHUD = false
+            }
+            return
+        }
+
+        var post = self.post
+        post.commentCount += 1
+        userData.update(post)
+        dismiss()
     }
 }
 
