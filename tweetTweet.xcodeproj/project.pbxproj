@@ -25,6 +25,9 @@
 		01BF00000000000000000011 /* PostVIPBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000011 /* PostVIPBadge.swift */; };
 		01BF00000000000000000018 /* ComposePostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000018 /* ComposePostView.swift */; };
 		01BF00000000000000000019 /* MediaPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000019 /* MediaPickerView.swift */; };
+		01BF0000000000000000001A /* HomeChromeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001A /* HomeChromeViews.swift */; };
+		01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001B /* HomeFeedPagerView.swift */; };
+		01BF0000000000000000001C /* HomeSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001C /* HomeSearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +55,9 @@
 		01AF00000000000000000017 /* InfoForBinary.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = InfoForBinary.plist; sourceTree = "<group>"; };
 		01AF00000000000000000018 /* ComposePostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposePostView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000019 /* MediaPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPickerView.swift; sourceTree = "<group>"; };
+		01AF0000000000000000001A /* HomeChromeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeChromeViews.swift; sourceTree = "<group>"; };
+		01AF0000000000000000001B /* HomeFeedPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedPagerView.swift; sourceTree = "<group>"; };
+		01AF0000000000000000001C /* HomeSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +92,9 @@
 				01AF00000000000000000011 /* PostVIPBadge.swift */,
 				01AF00000000000000000018 /* ComposePostView.swift */,
 				01AF00000000000000000019 /* MediaPickerView.swift */,
+				01AF0000000000000000001A /* HomeChromeViews.swift */,
+				01AF0000000000000000001B /* HomeFeedPagerView.swift */,
+				01AF0000000000000000001C /* HomeSearchView.swift */,
 				01AF00000000000000000012 /* Assets.xcassets */,
 				01AF00000000000000000013 /* Info.plist */,
 				01AF00000000000000000017 /* InfoForBinary.plist */,
@@ -213,6 +222,9 @@
 				01BF00000000000000000011 /* PostVIPBadge.swift in Sources */,
 				01BF00000000000000000018 /* ComposePostView.swift in Sources */,
 				01BF00000000000000000019 /* MediaPickerView.swift in Sources */,
+				01BF0000000000000000001A /* HomeChromeViews.swift in Sources */,
+				01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */,
+				01BF0000000000000000001C /* HomeSearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
