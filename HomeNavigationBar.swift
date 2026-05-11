@@ -16,21 +16,27 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
     var body: some View {
         VStack(spacing: 3) {
             HStack(spacing: kLabelSpacing) {
-                Text("推薦")
-                    .bold()
-                    .frame(width: kLabelWidth)
-                    .opacity(Double(1 - leftPercent * 0.5))
-                    .onTapGesture {
-                        withAnimation { self.leftPercent = 0 }
-                    }
+                Button(action: {
+                    withAnimation { self.leftPercent = 0 }
+                }) {
+                    Text("推薦")
+                        .bold()
+                        .frame(width: kLabelWidth, height: 34)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+                .opacity(Double(1 - leftPercent * 0.5))
 
-                Text("熱門")
-                    .bold()
-                    .frame(width: kLabelWidth)
-                    .opacity(Double(0.5 + leftPercent * 0.5))
-                    .onTapGesture {
-                        withAnimation { self.leftPercent = 1 }
-                    }
+                Button(action: {
+                    withAnimation { self.leftPercent = 1 }
+                }) {
+                    Text("熱門")
+                        .bold()
+                        .frame(width: kLabelWidth, height: 34)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(PlainButtonStyle())
+                .opacity(Double(0.5 + leftPercent * 0.5))
             }
             .font(.system(size: 17))
 
