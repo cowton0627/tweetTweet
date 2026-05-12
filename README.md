@@ -45,9 +45,7 @@
 ```
 tweetTweet/
 ├── Controller/
-│   ├── Friend/                # (預留,目前無內容)
 │   ├── Main/                  # 首頁、分頁、搜尋、貼文詳情、發文
-│   ├── MainTabBarController/  # (預留,目前無內容)
 │   └── Scenario/              # App 啟動與 Scene 設定
 ├── Model/                     # 資料結構(`Post`、`PostList`)
 ├── Network/                   # `PostRepository` protocol + `LocalPostRepository`
@@ -55,11 +53,8 @@ tweetTweet/
 │   ├── Customised/            # 共用 SwiftUI 元件
 │   └── TableViewCell/         # 可重複使用的貼文卡片
 ├── ViewModel/                 # Shared App State(`UserData`)與輔助狀態(`KeyboardResponder`)
-├── Extension/                 # (預留,共用 extension)
 └── Resources/                 # 本地 JSON 與圖片素材
 ```
-
-幾個資料夾目前是預留位置(以 `.gitkeep` 保留),用來標示未來功能分區。
 
 注意:`Controller/Main/` 裡的檔案實際上是 SwiftUI View,不是 `UIViewController`。命名沿用 UIKit 時期的分層習慣,但實作以 SwiftUI 為主。
 

@@ -12,7 +12,7 @@
 - 改寫 README 為情境式架構
 - 加入 LICENSE、PRIVACY、pre-commit hook
 
-備份(包含整理前的完整歷史)曾保存在 `/tmp/tweetTweet-pre-cleanup.bundle`。`/tmp` 系統重啟後會被清空,所以這份備份視同短期保險,長期不可靠。
+備份(包含整理前的完整歷史)曾保存在 `/tmp/tweetTweet-pre-cleanup.bundle`。`/tmp` 系統重啟後會被清空,所以這份備份視同短期保險,長期不可靠。[2026-05-12 已手動刪除]
 
 ### 為什麼選 MIT License
 
@@ -119,3 +119,20 @@ Tech portfolio 的視覺安全牌:中性、現代、不會在 Home Screen 跟其
 第一版用 SF Compact Rounded Heavy,t 字頂端是斜切硬邊,跟「圓潤」直覺不符。SF Pro Rounded 是 Apple 自家 UI 標準圓潤字,t 的 ascender 與 stem 收尾都是真圓角,符合「親切、社群、易讀」這個情緒方向。
 
 **生成方式:** Python + PIL 腳本(`/tmp/make_tweet_icon.py`),產 1024 master 後降採樣到 16 個 iOS 要求的尺寸。腳本沒 commit 進 repo(屬一次性工具),要重生請看 git log 對應 commit。
+
+### 刪 3 個空資料夾
+
+刪掉 `Controller/Friend/`、`Controller/MainTabBarController/`、`Extension/` — 三個只含 `.gitkeep` 的預留位置。
+
+理由:Reader clone 看到空資料夾會以為功能未完成,不如直接拿掉。未來真要實作 Friend 功能,新增資料夾很快。pbxproj 同步移除這三個 `PBXGroup` 引用與定義,並用 `xcodebuild` 驗證 `** BUILD SUCCEEDED **`。
+
+### 單元測試 target 暫不建立
+
+DECISIONS 已記載「沒有單元測試」這個缺口,但今天決定不做。原因:
+
+- 手刻 minimal pbxproj 加 test target 風險不小(新增 `PBXNativeTarget`、`xctest` product、`TEST_HOST`、`BUNDLE_LOADER`、framework link、build configs,漏一個就跑不起來)
+- 目前資料全是靜態 JSON,沒有遠端 API、mutation 邏輯不複雜,寫出來多半是 sanity check
+- 真正有 ROI 的時機是接 API 時:那時候 mock repository 才開始有意義
+- 現在投入產出比偏低
+
+接 API 時再一次性把測試 target 跟 async 改造一起做。
