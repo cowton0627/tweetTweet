@@ -13,10 +13,10 @@ struct HomeFeedPagerView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            HScrollViewController(pageWidth: proxy.size.width,
-                                  contentSize: CGSize(width: proxy.size.width * 2,
-                                                      height: proxy.size.height),
-                                  leftPercent: $leftPercent) {
+            HScrollView(pageWidth: proxy.size.width,
+                        contentSize: CGSize(width: proxy.size.width * 2,
+                                            height: proxy.size.height),
+                        leftPercent: $leftPercent) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 0) {
                         PostListView(category: .recommend, onSelectPost: onSelectPost)
