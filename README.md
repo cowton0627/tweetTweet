@@ -5,9 +5,14 @@
 ## 截圖
 
 <p>
-  <img src="screenshots/home.png" alt="動態流(推薦)" width="280" />
-  <img src="screenshots/home_screen.png" alt="App Icon on Home Screen" width="280" />
+  <img src="screenshots/home.png" alt="推薦動態流" width="180" />
+  <img src="screenshots/hot.png" alt="熱門動態流" width="180" />
+  <img src="screenshots/detail.png" alt="貼文詳情" width="180" />
+  <img src="screenshots/compose.png" alt="發表新貼文" width="180" />
+  <img src="screenshots/media_picker.png" alt="選擇圖片" width="180" />
 </p>
+
+從左到右:推薦動態流 / 熱門動態流 / 貼文詳情 / 發表新貼文 / 選擇圖片。
 
 ## 專案簡介
 
