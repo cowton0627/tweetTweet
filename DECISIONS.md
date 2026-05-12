@@ -78,6 +78,12 @@ Portfolio 用途優先,MIT 對 recruiter / reviewer 來說最沒摩擦,任何人
 
 不然檔案不會被編進 app。
 
+**第二次踩坑(2026-05-12 才發現):** Asset catalog 進 Resources phase 還**不夠**讓 app icon 顯示。`actool` 雖然會編 `Assets.xcassets`,但需要 build setting `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon` 告訴它「哪個 icon set 是 primary」。沒這個設定,actool 編完不輸出任何 icon metadata,Info.plist 不會有 `CFBundleIcons`、`Assets.car` 不會被 link 進 .app,iOS Home Screen 永遠顯示空白。
+
+驗證方式:看 build 產物 `.app/Info.plist` 有沒有 `CFBundleIcons`,以及 `.app/Assets.car` 是否存在。若兩者皆無,就是這個 setting 漏了。
+
+順手把 `ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor` 也加上,避免後續 accent color 警告。
+
 ### Repository pattern:抽 `PostRepository` protocol 為接 API 的 seam
 
 原本 `UserData.swift` 直接呼叫 free function `loadPostListData(...)` 載 JSON。把這個耦合抽出來:
