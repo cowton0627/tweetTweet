@@ -2,6 +2,13 @@
 
 `tweetTweet` 是一個以 SwiftUI 實作的社群動態 App 原型,提供推薦與熱門兩種貼文情境,展示動態流、貼文詳情、發文與搜尋畫面。
 
+## 截圖
+
+<p>
+  <img src="screenshots/home.png" alt="動態流(推薦)" width="280" />
+  <img src="screenshots/home_screen.png" alt="App Icon on Home Screen" width="280" />
+</p>
+
 ## 專案簡介
 
 啟動後進入首頁,使用者可以在分頁之間切換,快速查看不同資料來源下的 UI 呈現。
