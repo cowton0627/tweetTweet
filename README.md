@@ -4,7 +4,7 @@
 
 ## 專案簡介
 
-這個 App 以社群動態頁為主軸,啟動後會進入首頁,使用者可以在不同分頁之間切換,快速查看動態流在不同資料來源下的 UI 呈現。
+啟動後進入首頁,使用者可以在分頁之間切換,快速查看不同資料來源下的 UI 呈現。
 
 目前支援兩種展示分頁:
 
@@ -54,7 +54,7 @@ tweetTweet/
 ├── View/
 │   ├── Customised/            # 共用 SwiftUI 元件
 │   └── TableViewCell/         # 可重複使用的貼文卡片
-├── ViewModel/                 # 本地資料狀態、鍵盤狀態
+├── ViewModel/                 # Shared App State(`UserData`)與輔助狀態(`KeyboardResponder`)
 ├── Extension/                 # (預留,共用 extension)
 └── Resources/                 # 本地 JSON 與圖片素材
 ```
@@ -62,6 +62,18 @@ tweetTweet/
 幾個資料夾目前是預留位置(以 `.gitkeep` 保留),用來標示未來功能分區。
 
 注意:`Controller/Main/` 裡的檔案實際上是 SwiftUI View,不是 `UIViewController`。命名沿用 UIKit 時期的分層習慣,但實作以 SwiftUI 為主。
+
+## Clone 後設定
+
+這個 repo 內附 pre-commit hook(`.githooks/pre-commit`),用來在 commit 前掃 staged 內容,擋住 Team ID、私鑰、token 等敏感字串。Clone 下來後啟用一次:
+
+```
+git config core.hooksPath .githooks
+```
+
+需要繞過時可用 `git commit --no-verify`。
+
+如需擴充偵測規則(例如加上自己的工作 email),可參考 `.githooks/patterns.local.example` 建立本機專用的 `.githooks/patterns.local`(已被 `.gitignore` 排除,不會 commit)。
 
 ## 執行環境
 
@@ -79,24 +91,10 @@ tweetTweet/
 
 ## 備註
 
-此專案主要作為 UI 與資料狀態展示用途,並非完整社群服務 App。
-
-接 API 的擴充點已預留:實作一個 `RemotePostRepository: PostRepository`,然後在啟動點(`SceneDelegate`)改成 `UserData(repository: RemotePostRepository())` 即可,UI 與 `UserData` 內部都不用動。
+此專案主要作為 UI 與資料狀態展示用途,並非完整社群服務 App。架構與接 API 的擴充方式請見「技術內容」段。
 
 ## 授權與隱私
 
 - 程式碼採用 [MIT License](LICENSE)。
 - 本 App 不收集任何使用者資料,詳見 [PRIVACY.md](PRIVACY.md)。
 - `Resources/` 內的部分圖片素材僅作為展示用途,版權仍屬原作者所有,未經授權請勿轉用。
-
-## Clone 後設定
-
-這個 repo 內附 pre-commit hook(`.githooks/pre-commit`),用來在 commit 前掃 staged 內容,擋住 Team ID、私鑰、token 等敏感字串。要啟用請執行一次:
-
-```
-git config core.hooksPath .githooks
-```
-
-需要繞過時可用 `git commit --no-verify`。
-
-如需擴充偵測規則(例如加上自己的工作 email),可參考 `.githooks/patterns.local.example` 建立本機專用的 `.githooks/patterns.local`(此檔已被 `.gitignore` 排除,不會被 commit)。
