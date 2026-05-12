@@ -7,21 +7,19 @@
 import Combine
 
 class UserData: ObservableObject {
-    @Published var recommendPostList: PostList = loadPostListData("PostListData_recommend_1.json")
-    @Published var hotPostList: PostList = loadPostListData("PostListData_hot_1.json")
-    
+    @Published var recommendPostList: PostList
+    @Published var hotPostList: PostList
+
+    private let repository: PostRepository
     private var recommendPostDic: [Int: Int] = [:]   //id: index
     private var hotPostDic: [Int: Int] = [:]
-    
-    init() {
-        for i in 0..<recommendPostList.list.count {
-            let post = recommendPostList.list[i]
-            recommendPostDic[post.id] = i
-        }
-        for i in 0..<hotPostList.list.count {
-            let post = hotPostList.list[i]
-            hotPostDic[post.id] = i
-        }
+
+    init(repository: PostRepository = LocalPostRepository()) {
+        self.repository = repository
+        self.recommendPostList = repository.loadRecommendPosts()
+        self.hotPostList = repository.loadHotPosts()
+        rebuildIndex(for: .recommend)
+        rebuildIndex(for: .hot)
     }
 }
 
