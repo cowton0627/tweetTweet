@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		01BF00000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000001 /* AppDelegate.swift */; };
 		01BF00000000000000000002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000002 /* SceneDelegate.swift */; };
-		01BF00000000000000000004 /* HScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000004 /* HScrollViewController.swift */; };
+		01BF00000000000000000004 /* HScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000004 /* HScrollView.swift */; };
 		01BF00000000000000000005 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000005 /* PostCell.swift */; };
 		01BF00000000000000000006 /* CommentTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000006 /* CommentTextView.swift */; };
 		01BF00000000000000000007 /* PostImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000007 /* PostImageCell.swift */; };
@@ -37,7 +37,7 @@
 /* Begin PBXFileReference section */
 		01AF00000000000000000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		01AF00000000000000000002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		01AF00000000000000000004 /* HScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HScrollViewController.swift; sourceTree = "<group>"; };
+		01AF00000000000000000004 /* HScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HScrollView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000005 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		01AF00000000000000000006 /* CommentTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTextView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000007 /* PostImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostImageCell.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 				01AF00000000000000000018 /* ComposePostView.swift */,
 				01AF00000000000000000019 /* MediaPickerView.swift */,
 				01AF00000000000000000010 /* PostListView.swift */,
-				01AF00000000000000000004 /* HScrollViewController.swift */,
+				01AF00000000000000000004 /* HScrollView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -288,7 +288,7 @@
 			files = (
 				01BF00000000000000000001 /* AppDelegate.swift in Sources */,
 				01BF00000000000000000002 /* SceneDelegate.swift in Sources */,
-				01BF00000000000000000004 /* HScrollViewController.swift in Sources */,
+				01BF00000000000000000004 /* HScrollView.swift in Sources */,
 				01BF00000000000000000005 /* PostCell.swift in Sources */,
 				01BF00000000000000000006 /* CommentTextView.swift in Sources */,
 				01BF00000000000000000007 /* PostImageCell.swift in Sources */,

@@ -1,13 +1,13 @@
 //
-//  HScrollViewController.swift
+//  HScrollView.swift
 //  tweetTweet
 //
-//  Created by 鄭淳澧 on 2021/5/23.
+//  SwiftUI representable for a horizontally-paged UIScrollView.
 //
 
 import SwiftUI
 
-struct HScrollViewController<Content: View>: UIViewControllerRepresentable {
+struct HScrollView<Content: View>: UIViewControllerRepresentable {
     let pageWidth: CGFloat
     let contentSize: CGSize
     let content: Content
@@ -59,11 +59,11 @@ struct HScrollViewController<Content: View>: UIViewControllerRepresentable {
     }
     
     class Coordinator: NSObject, UIScrollViewDelegate {
-        let parent: HScrollViewController
+        let parent: HScrollView
         var scrollView: UIScrollView!
         var host: UIHostingController<Content>!
         
-        init(_ parent: HScrollViewController) {
+        init(_ parent: HScrollView) {
             self.parent = parent
         }
         

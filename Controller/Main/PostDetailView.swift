@@ -12,12 +12,12 @@ struct PostDetailView: View {
     @EnvironmentObject private var userData: UserData
     @State private var showingCommentInput = false
 
-    private var bindingPost: Post {
+    private var currentPost: Post {
         userData.post(forId: post.id) ?? post
     }
 
     var body: some View {
-        let post = bindingPost
+        let post = currentPost
         VStack(spacing: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
