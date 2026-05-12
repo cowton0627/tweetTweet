@@ -25,11 +25,11 @@
 ## 技術內容
 
 - Swift 5
-- SwiftUI
-- MVVM 基本分層
-- 本地 JSON 資料載入
+- SwiftUI(視圖層 100% SwiftUI)
+- UIKit + `UIHostingController`(只負責 Scene bootstrap,把 SwiftUI 視圖掛進 `UIWindow`)
+- Shared App State 模式:`UserData` 為 `ObservableObject`,透過 `@EnvironmentObject` 注入所有 View
+- Repository pattern:資料來源以 `PostRepository` protocol 抽象,目前實作為 `LocalPostRepository`,未來可加 `RemotePostRepository` 而不動 UI
 - 自訂 View、Navigation Bar、Toolbar Button、Image Cell
-- `ObservableObject` 與 `@Published` 管理本地狀態
 
 ## 資料來源
 
@@ -49,8 +49,8 @@ tweetTweet/
 │   ├── Main/                  # 首頁、分頁、搜尋、貼文詳情、發文
 │   ├── MainTabBarController/  # (預留,目前無內容)
 │   └── Scenario/              # App 啟動與 Scene 設定
-├── Model/                     # 資料結構與資料載入
-├── Network/                   # (預留,接 API 時放網路層)
+├── Model/                     # 資料結構(`Post`、`PostList`)
+├── Network/                   # `PostRepository` protocol + `LocalPostRepository`
 ├── View/
 │   ├── Customised/            # 共用 SwiftUI 元件
 │   └── TableViewCell/         # 可重複使用的貼文卡片
@@ -60,6 +60,8 @@ tweetTweet/
 ```
 
 幾個資料夾目前是預留位置(以 `.gitkeep` 保留),用來標示未來功能分區。
+
+注意:`Controller/Main/` 裡的檔案實際上是 SwiftUI View,不是 `UIViewController`。命名沿用 UIKit 時期的分層習慣,但實作以 SwiftUI 為主。
 
 ## 執行環境
 
@@ -77,7 +79,9 @@ tweetTweet/
 
 ## 備註
 
-此專案主要作為 UI 與資料狀態展示用途,並非完整社群服務 App。畫面、資料與操作流程皆以展示社群動態頁情境為主。後續若要接後端 API,可直接替換 `Network` 與 `ViewModel` 層,UI 不需重寫。
+此專案主要作為 UI 與資料狀態展示用途,並非完整社群服務 App。
+
+接 API 的擴充點已預留:實作一個 `RemotePostRepository: PostRepository`,然後在啟動點(`SceneDelegate`)改成 `UserData(repository: RemotePostRepository())` 即可,UI 與 `UserData` 內部都不用動。
 
 ## 授權與隱私
 
