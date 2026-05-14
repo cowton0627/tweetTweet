@@ -32,6 +32,8 @@
 		01BF00000000000000000021 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000014 /* LaunchScreen.storyboard */; };
 		01BF00000000000000000023 /* PostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000023 /* PostRepository.swift */; };
 		01BF00000000000000000024 /* LocalPostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000024 /* LocalPostRepository.swift */; };
+		01BF00000000000000000025 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000025 /* CameraPicker.swift */; };
+		01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000026 /* RuntimeImageStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +66,8 @@
 		01AF0000000000000000001C /* HomeSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000023 /* PostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000024 /* LocalPostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPostRepository.swift; sourceTree = "<group>"; };
+		01AF00000000000000000025 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
+		01AF00000000000000000026 /* RuntimeImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeImageStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +175,7 @@
 				01AF00000000000000000006 /* CommentTextView.swift */,
 				01AF0000000000000000000D /* CommentInputView.swift */,
 				01AF00000000000000000007 /* PostImageCell.swift */,
+				01AF00000000000000000025 /* CameraPicker.swift */,
 			);
 			path = Customised;
 			sourceTree = "<group>";
@@ -188,6 +193,7 @@
 			children = (
 				01AF0000000000000000000A /* UserData.swift */,
 				01AF0000000000000000000B /* KeyboardResponder.swift */,
+				01AF00000000000000000026 /* RuntimeImageStore.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -309,6 +315,8 @@
 				01BF0000000000000000001C /* HomeSearchView.swift in Sources */,
 				01BF00000000000000000023 /* PostRepository.swift in Sources */,
 				01BF00000000000000000024 /* LocalPostRepository.swift in Sources */,
+				01BF00000000000000000025 /* CameraPicker.swift in Sources */,
+				01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
