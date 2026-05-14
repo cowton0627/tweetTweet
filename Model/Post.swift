@@ -72,5 +72,8 @@ func loadImage(name: String) -> Image {
        let image = UIImage(contentsOfFile: url.path) {
         return Image(uiImage: image)
     }
+    if let image = RuntimeImageStore.image(forKey: name) {
+        return Image(uiImage: image)
+    }
     return Image(systemName: "photo")
 }

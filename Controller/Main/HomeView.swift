@@ -12,6 +12,8 @@ struct HomeView: View {
     @State private var composeDraft: ComposeDraft?
     @State private var showingMediaPicker: Bool = false
     @State private var showingSearch: Bool = false
+    @State private var showingSourceSheet: Bool = false
+    @State private var cameraSource: CameraPicker.Source?
     @State private var pendingComposeImages: [String]?
     @State private var selectedPost: Post?
 
@@ -29,7 +31,7 @@ struct HomeView: View {
         }
         .safeAreaInset(edge: .top, spacing: 0) {
             HomeTopChromeView(leftPercent: $leftPercent,
-                              onCamera: { showingMediaPicker = true },
+                              onCamera: { showingSourceSheet = true },
                               onCompose: { composeDraft = ComposeDraft(attachedImages: [], initialCategory: currentCategory) })
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -37,8 +39,16 @@ struct HomeView: View {
                                  onRecommend: { withAnimation { leftPercent = 0 } },
                                  onHot: { withAnimation { leftPercent = 1 } },
                                  onSearch: { showingSearch = true },
-                                 onCamera: { showingMediaPicker = true },
+                                 onCamera: { showingSourceSheet = true },
                                  onCompose: { composeDraft = ComposeDraft(attachedImages: [], initialCategory: currentCategory) })
+        }
+        .confirmationDialog("加入圖片", isPresented: $showingSourceSheet, titleVisibility: .visible) {
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                Button("拍照") { cameraSource = .camera }
+            }
+            Button("從相簿選取") { cameraSource = .photoLibrary }
+            Button("內建素材庫") { showingMediaPicker = true }
+            Button("取消", role: .cancel) {}
         }
         .sheet(item: $composeDraft) { draft in
             ComposePostView(attachedImages: draft.attachedImages,
@@ -53,20 +63,38 @@ struct HomeView: View {
             HomeSearchView()
                 .environmentObject(userData)
         }
-        .sheet(isPresented: $showingMediaPicker, onDismiss: {
-            guard let pendingComposeImages else { return }
-            composeDraft = ComposeDraft(attachedImages: pendingComposeImages,
-                                        initialCategory: currentCategory)
-            self.pendingComposeImages = nil
-        }) {
+        .sheet(isPresented: $showingMediaPicker, onDismiss: handlePendingCompose) {
             MediaPickerView(imageNames: userData.imageLibrary()) { selectedImages in
                 pendingComposeImages = selectedImages
             }
         }
+        .sheet(item: $cameraSource, onDismiss: handlePendingCompose) { source in
+            CameraPicker(source: source) { image in
+                let key = RuntimeImageStore.store(image)
+                pendingComposeImages = [key]
+            }
+            .ignoresSafeArea()
+        }
+    }
+
+    private func handlePendingCompose() {
+        guard let pendingComposeImages else { return }
+        composeDraft = ComposeDraft(attachedImages: pendingComposeImages,
+                                    initialCategory: currentCategory)
+        self.pendingComposeImages = nil
     }
 
     private var currentCategory: PostListCategory {
         leftPercent < 0.5 ? .recommend : .hot
+    }
+}
+
+extension CameraPicker.Source: Identifiable {
+    var id: String {
+        switch self {
+        case .camera: return "camera"
+        case .photoLibrary: return "photoLibrary"
+        }
     }
 }
 
