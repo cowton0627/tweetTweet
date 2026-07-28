@@ -1,107 +1,169 @@
 # tweetTweet
 
-`tweetTweet` 是一個以 SwiftUI 實作的社群動態 App 原型,提供推薦與熱門兩種貼文情境,展示動態流、貼文詳情、發文與搜尋畫面。
+[![iOS CI](https://github.com/cowton0627/tweetTweet/actions/workflows/ios-ci.yml/badge.svg?branch=main)](https://github.com/cowton0627/tweetTweet/actions/workflows/ios-ci.yml)
 
-## 截圖
+一個以 SwiftUI 打造的社群動態 App 原型，重點不是重製既有社群產品，而是展示複合貼文版型、跨畫面共享狀態，以及可替換資料來源的 iOS 架構。
+
+目前專案採 local-first 設計：不需帳號、API key 或後端服務，clone 後即可在 Simulator 完整操作，適合作為可重現的 iOS 作品集案例。
 
 <p>
-  <img src="screenshots/home.png" alt="推薦動態流" width="180" />
-  <img src="screenshots/hot.png" alt="熱門動態流" width="180" />
-  <img src="screenshots/detail.png" alt="貼文詳情" width="180" />
-  <img src="screenshots/compose.png" alt="發表新貼文" width="180" />
-  <img src="screenshots/media_picker.png" alt="選擇圖片" width="180" />
+  <img src="screenshots/home.png" alt="tweetTweet 推薦動態流" width="240" />
 </p>
 
-從左到右:推薦動態流 / 熱門動態流 / 貼文詳情 / 發表新貼文 / 選擇圖片。
+## 一眼看懂
 
-## 專案簡介
-
-啟動後進入首頁,使用者可以在分頁之間切換,快速查看不同資料來源下的 UI 呈現。
-
-目前支援兩種展示分頁:
-
-- 推薦動態
-- 熱門動態
+| 項目 | 內容 |
+| --- | --- |
+| 平台 | iOS 15+ |
+| UI | SwiftUI |
+| 狀態管理 | `ObservableObject` + `@EnvironmentObject` |
+| 資料層 | Repository pattern + dependency injection |
+| 展示資料 | Bundle JSON + 原創生成素材 |
+| 測試 | 12 個 XCTest，全部通過 |
+| CI | GitHub Actions：main push／PR 自動 build & test |
+| 已驗證環境 | iPhone 15 Simulator / iOS 17.5 |
 
 ## 主要功能
 
-- 推薦 / 熱門雙分頁動態流
-- 動態列表與貼文卡片
-- 貼文詳情頁與留言互動
-- 追蹤、喜歡、回應等本地狀態更新
+- 推薦／熱門雙分頁動態流
+- 零圖、單圖與多圖貼文版型
+- 貼文詳情與留言輸入
+- 喜歡、追蹤與回應等本地狀態更新
 - 貼文內容即時搜尋
-- 發文流程與圖片選擇
-- 列表到底狀態提示
-- 自訂導覽列與外觀元件
+- 發文、相簿選圖與相機拍攝流程
+- 自訂導覽列、工具列按鈕與貼文元件
+- VoiceOver 語意標籤、選取狀態與圖片群組描述
 
-## 技術內容
+## 工程亮點
 
-- Swift 5
-- SwiftUI(視圖層 100% SwiftUI)
-- UIKit + `UIHostingController`(只負責 Scene bootstrap,把 SwiftUI 視圖掛進 `UIWindow`)
-- Shared App State 模式:`UserData` 為 `ObservableObject`,透過 `@EnvironmentObject` 注入所有 View
-- Repository pattern:資料來源以 `PostRepository` protocol 抽象,目前實作為 `LocalPostRepository`,未來可加 `RemotePostRepository` 而不動 UI
-- 自訂 View、Navigation Bar、Toolbar Button、Image Cell
+### 可替換的資料來源
 
-## 資料來源
+`UserData` 不直接讀取 JSON，而是依賴 `PostRepository` protocol。正式 App 預設注入 `LocalPostRepository`，測試則注入 mock repository。
 
-專案使用本地 JSON 作為展示資料:
+這個切分讓 UI 與資料來源解耦。App 預設使用可離線展示的 `LocalPostRepository`，也提供可注入 endpoint 與 `URLSession` 的 async `RemotePostRepository`；切換資料來源不需要重寫貼文畫面。
 
-- `Resources/PostListData_recommend_1.json`
-- `Resources/PostListData_hot_1.json`
-
-圖片與頭像素材放在 `Resources/` 底下,build 時打包進 App bundle。
-
-## 專案結構
-
+```mermaid
+flowchart LR
+    View["SwiftUI Views"] --> State["UserData<br/>ObservableObject"]
+    State --> Contract["PostRepository"]
+    Contract --> Local["LocalPostRepository<br/>Bundle JSON"]
+    Contract -. 測試注入 .-> Mock["MockPostRepository"]
+    Contract --> Remote["RemotePostRepository<br/>async URLSession"]
 ```
+
+### 單一共享狀態
+
+`UserData` 由 Scene 層建立，再透過 `@EnvironmentObject` 注入 View hierarchy。列表、詳情與發文流程因此讀寫同一份貼文狀態：
+
+- 在詳情頁按讚後，返回列表仍保持一致
+- 同一 ID 同時出現在推薦與熱門列表時，更新會同步套用
+- 插入新貼文後會重建 ID index，保持後續查找正確
+
+### 有目的的測試
+
+測試集中在容易回歸、且能證明架構價值的行為，而不是為了追求表面覆蓋率：
+
+- Repository dependency injection
+- 推薦／熱門列表查找與同步更新
+- 新貼文插入與索引重建
+- 跨列表產生下一個貼文 ID
+- 圖片庫去重與順序
+- 正式推薦／熱門 JSON fixture 解碼
+- loading、empty、error 與單一分頁 retry 狀態
+- 遠端成功回應、JSON decoding 與 HTTP error
+
+目前結果：**12 passed、0 failed、0 skipped**。
+
+## 一個實際解決的技術問題
+
+這個專案的 `.pbxproj` 是手刻的最小設定。早期雖然 `Assets.xcassets` 與 `LaunchScreen.storyboard` 已出現在 Xcode navigator，卻沒有真正加入 Resources Build Phase，造成：
+
+- App 上下出現舊尺寸 fallback 的黑邊
+- App Icon 更新後仍不顯示
+- Asset catalog 沒有被 `actool` 正確處理
+
+修正方式不是重建整個 project，而是補齊 file reference、build file、group 與 build phase，並設定 `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon`。最後以 build 產物中的 `CFBundleIcons` 與 `Assets.car` 驗證，而不只看 Xcode UI。
+
+完整背景與其他取捨記錄在 [`DECISIONS.md`](DECISIONS.md)。
+
+## 架構與目錄
+
+```text
 tweetTweet/
 ├── Controller/
-│   ├── Main/                  # 首頁、分頁、搜尋、貼文詳情、發文
-│   └── Scenario/              # App 啟動與 Scene 設定
-├── Model/                     # 資料結構(`Post`、`PostList`)
-├── Network/                   # `PostRepository` protocol + `LocalPostRepository`
+│   ├── Main/                  # SwiftUI 功能畫面
+│   └── Scenario/              # App / Scene bootstrap
+├── Model/                     # Post、PostList
+├── Network/                   # Repository protocol 與本地實作
 ├── View/
 │   ├── Customised/            # 共用 SwiftUI 元件
-│   └── TableViewCell/         # 可重複使用的貼文卡片
-├── ViewModel/                 # Shared App State(`UserData`)與輔助狀態(`KeyboardResponder`)
-└── Resources/                 # 本地 JSON 與圖片素材
+│   └── TableViewCell/         # 貼文卡片
+├── ViewModel/                 # Shared state 與輔助狀態
+├── tweetTweetTests/           # Unit tests 與 mock repository
+└── Resources/                 # JSON、虛構頭像與貼文圖片
 ```
 
-注意:`Controller/Main/` 裡的檔案實際上是 SwiftUI View,不是 `UIViewController`。命名沿用 UIKit 時期的分層習慣,但實作以 SwiftUI 為主。
-
-## Clone 後設定
-
-這個 repo 內附 pre-commit hook(`.githooks/pre-commit`),用來在 commit 前掃 staged 內容,擋住 Team ID、私鑰、token 等敏感字串。Clone 下來後啟用一次:
-
-```
-git config core.hooksPath .githooks
-```
-
-需要繞過時可用 `git commit --no-verify`。
-
-如需擴充偵測規則(例如加上自己的工作 email),可參考 `.githooks/patterns.local.example` 建立本機專用的 `.githooks/patterns.local`(已被 `.gitignore` 排除,不會 commit)。
-
-## 執行環境
-
-- Xcode 16 或以上
-- iOS 15.0 或以上
-- Swift 5
+`Controller/Main/` 裡實際放的是 SwiftUI View，而非 `UIViewController`。這是專案從 UIKit 命名習慣演進而來的歷史痕跡，也列在後續整理項目中。
 
 ## 如何執行
 
-1. 開啟 `tweetTweet.xcodeproj`
-2. 選擇 iOS Simulator
-3. 執行 `tweetTweet` scheme
+需求：
 
-建議使用較新的 iPhone Simulator,例如 iPhone 16 Pro / iPhone 17 Pro Max(需對應的 Xcode 版本)。
+- Xcode 16+
+- iOS 15+ Simulator
+- Swift 5
 
-## 備註
+步驟：
 
-此專案主要作為 UI 與資料狀態展示用途,並非完整社群服務 App。架構與接 API 的擴充方式請見「技術內容」段。
+1. Clone repository。
+2. 開啟 `tweetTweet.xcodeproj`。
+3. 選擇 `tweetTweet` scheme 與任一 iPhone Simulator。
+4. 按 `Command-R`。
 
-## 授權與隱私
+專案沒有第三方 dependency，也不需要建立帳號、設定 API key 或啟動後端。
 
-- 程式碼採用 [MIT License](LICENSE)。
-- 本 App 不收集任何使用者資料,詳見 [PRIVACY.md](PRIVACY.md)。
-- `Resources/` 內的部分圖片素材僅作為展示用途,版權仍屬原作者所有,未經授權請勿轉用。
+## 如何執行測試
+
+在 Xcode 選擇 `tweetTweet` scheme 後按 `Command-U`。Shared scheme 已包含 `tweetTweetTests`，不需額外設定 test plan。
+
+GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以及手動觸發時，使用乾淨的 macOS runner 執行相同的 build 與測試。Workflow 設有 20 分鐘 timeout、唯讀 repository 權限與 concurrency cancellation。
+
+## 3 分鐘 Demo 路線
+
+1. 在推薦／熱門間切換，展示不同資料集與複合圖片版型。
+2. 進入貼文詳情按讚或追蹤，再返回列表確認共享狀態。
+3. 使用搜尋快速過濾貼文內容。
+4. 進入發文流程並選擇圖片。
+5. 回到程式碼，從 `PostRepository`、`LocalPostRepository` 與 `UserData` 說明 dependency injection。
+6. 執行測試，展示 mock repository 與正式 JSON fixture 都受到驗證。
+
+## 已知限制與下一步
+
+這是一個 UI 與狀態架構原型，不是完整社群服務：
+
+- 展示版預設來自 Bundle JSON，尚未指定正式後端 endpoint
+- 遠端 Repository 已完成，但沒有登入、寫入 API 與本地持久化
+- 搜尋與貼文互動仍是本地行為
+- `Controller/` 命名仍保留早期 UIKit 專案痕跡
+
+下一階段規劃：
+
+1. 補齊全新素材版本的流程截圖或操作影片
+2. 完成 Dynamic Type、實機 VoiceOver 操作與深色模式驗證
+3. 若有正式服務，再加入認證、寫入 API、cache 與離線策略
+
+## 展示素材、隱私與授權
+
+- 展示照片與虛構人物頭像皆為本專案以生成式工具製作的原創素材，不使用真實名人、第三方品牌或受版權保護角色。
+- App 不收集使用者資料，詳見 [`PRIVACY.md`](PRIVACY.md)。
+- 程式碼採用 [`MIT License`](LICENSE)。
+
+## Clone 後的可選設定
+
+Repository 內附 pre-commit hook，可檢查 staged 內容中的 Team ID、私鑰、token 與自訂敏感字串：
+
+```sh
+git config core.hooksPath .githooks
+```
+
+如需加入自己的偵測規則，可由 `.githooks/patterns.local.example` 建立本機專用的 `.githooks/patterns.local`；此檔已被 `.gitignore` 排除。
