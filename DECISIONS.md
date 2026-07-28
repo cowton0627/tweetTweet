@@ -37,20 +37,15 @@ Portfolio 用途優先,MIT 對 recruiter / reviewer 來說最沒摩擦,任何人
 
 連帶把 `~/.gitconfig` 全域改成 noreply 格式 `83654992+cowton0627@users.noreply.github.com`,未來在任何 repo commit 都不會再洩。
 
-### 為什麼 `Resources/` 內的名人照沒移除(尚未處理)
+### 圖片素材版權風險(2026-07-27 已處理)
 
-目前仍保留 `Elsa-Pataky-*.jpg` 等檔。理由:當下優先處理 git 機密外洩,版權問題暫緩。
+公開作品集不應依賴名人照或來源不明的網路圖片。原有 `Elsa-Pataky-*.jpg` 等 54 張素材已全部移除,改成:
 
-**已知風險:**
+- 9 張虛構人物頭像(`avatar-*.jpg`)
+- 16 張台灣日常、飲食、城市與自然情境照片(`post-*.jpg`)
+- 兩份展示 JSON 改用新素材,同時保留零圖、單圖與多圖排版情境
 
-- Getty / 圖片社可能對名人照發 DMCA takedown
-- 對 portfolio 來說,看到名人照當 demo 素材會讓 reviewer 質疑對版權 / 合規的判斷
-
-**將來處理方案:**
-
-- 換 Unsplash / Pexels 等 CC0 素材
-- 或改用程式產生的 placeholder(灰底 + 文字)
-- 替換時連帶調整 `Resources/PostListData_*.json` 內的 `avatar` 與 `images` 欄位
+新素材以生成式工具製作,提示詞明確排除名人、公眾人物、品牌、Logo、可辨識文字與受版權保護角色。選擇自有生成素材而非外部圖庫,是為了讓 repo 可以獨立展示,不必逐張維護第三方作者、授權條款與下載來源。
 
 ## 2026-05-12
 
@@ -132,13 +127,58 @@ Tech portfolio 的視覺安全牌:中性、現代、不會在 Home Screen 跟其
 
 理由:Reader clone 看到空資料夾會以為功能未完成,不如直接拿掉。未來真要實作 Friend 功能,新增資料夾很快。pbxproj 同步移除這三個 `PBXGroup` 引用與定義,並用 `xcodebuild` 驗證 `** BUILD SUCCEEDED **`。
 
-### 單元測試 target 暫不建立
+### 單元測試 target(2026-07-27 已建立)
 
-DECISIONS 已記載「沒有單元測試」這個缺口,但今天決定不做。原因:
+最初因手刻 minimal pbxproj 的設定風險而暫緩建立 test target。作品集清整時重新評估後,Repository protocol 與 shared state 已有足夠的可測試行為,因此建立 `tweetTweetTests` hosted unit-test target。
 
-- 手刻 minimal pbxproj 加 test target 風險不小(新增 `PBXNativeTarget`、`xctest` product、`TEST_HOST`、`BUNDLE_LOADER`、framework link、build configs,漏一個就跑不起來)
-- 目前資料全是靜態 JSON,沒有遠端 API、mutation 邏輯不複雜,寫出來多半是 sanity check
-- 真正有 ROI 的時機是接 API 時:那時候 mock repository 才開始有意義
-- 現在投入產出比偏低
+第一批 8 個測試刻意集中在高訊號行為:
 
-接 API 時再一次性把測試 target 跟 async 改造一起做。
+- 用 mock repository 證明 dependency injection 可替換資料來源
+- 驗證貼文更新、插入、索引重建、ID 產生與圖片去重
+- 直接讀取 repo 內的正式 JSON fixture,避免展示資料格式悄悄失效
+
+測試 target 設定包含 app target dependency、`TEST_HOST`、`BUNDLE_LOADER` 與 shared scheme testable entry。首次以 iPhone 15 / iOS 17.5 Simulator 執行結果為 8 passed、0 failed。
+
+## 2026-07-28
+
+### Async Repository 與完整 feed load state
+
+把原本同步的 `PostRepository` 升級為 `async throws`,並新增:
+
+- `RemotePostRepository`:注入推薦／熱門 endpoint、`URLSession` 與 decoder
+- HTTP 2xx 驗證、JSON decoding error 與使用者可讀錯誤
+- 每個 feed 獨立的 idle、loading、loaded、empty、failed 狀態
+- 單一分頁 retry,避免一個資料源失敗時重載整個首頁
+
+App 預設仍注入 `LocalPostRepository`,讓作品集 clone 後可以離線、無設定地展示。`RemotePostRepository` 是可執行且有 URLProtocol stub 測試的 production seam,但在沒有正式後端 URL 前不硬編假 endpoint。
+
+本地 JSON loader 也從 `fatalError` 改為 `throws`,確保缺檔、讀取或 decoding 失敗會進入同一套 error/retry UI,而不是直接讓 App crash。
+
+測試從 8 個增加到 12 個,新增 empty、failed/retry、遠端成功 decoding 與 HTTP error 情境。iPhone 15 / iOS 17.5 Simulator 驗證結果為 12 passed、0 failed、0 skipped。
+
+### GitHub Actions iOS CI
+
+新增 `.github/workflows/ios-ci.yml`,在 main push、針對 main 的 Pull Request 與手動觸發時執行 `xcodebuild test`。
+
+安全與成本控制:
+
+- 使用 public repository 免費的標準 `macos-15` runner,不使用 larger runner
+- `permissions: contents: read`,不授予寫入 repository、issue 或 deployment 的權限
+- 設定 20 分鐘 timeout
+- 同一 branch 有新 commit 時取消已過時的執行
+- 不上傳 build artifact,避免不必要的儲存空間與保留成本
+- `CODE_SIGNING_ALLOWED=NO`,不需要憑證、Team ID 或 secrets
+
+### 第一輪 Accessibility semantics
+
+以 Simulator accessibility hierarchy 盤點首頁,發現 SF Symbols 直接被朗讀為英文 `Camera`、`Add`,分頁缺少選取狀態,VIP badge 會被讀成無意義的 `✓`,貼文 toolbar action 只剩數字。
+
+第一輪修正:
+
+- 圖片入口、發文與推薦／熱門分頁加入中文 label、hint 與 selected trait
+- VIP 純裝飾 badge 與頭像從重複朗讀內容中隱藏
+- 多圖版型合併成「N 張貼文圖片」
+- 回應與喜歡 action 同時描述動作、目前狀態與完整數量
+- 素材選擇器提供圖片序號與已選取狀態
+
+再次擷取 hierarchy 後,首頁已不再出現 `Camera`、`Add` 或 `✓`,貼文 custom actions 也能表達「回應,2200 則」與「取消喜歡,目前 11319 個喜歡」。Dynamic Type、VoiceOver 實際手勢順序與深色模式仍需後續人工驗證。
