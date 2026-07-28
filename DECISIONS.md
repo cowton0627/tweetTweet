@@ -181,4 +181,20 @@ App 預設仍注入 `LocalPostRepository`,讓作品集 clone 後可以離線、�
 - 回應與喜歡 action 同時描述動作、目前狀態與完整數量
 - 素材選擇器提供圖片序號與已選取狀態
 
-再次擷取 hierarchy 後,首頁已不再出現 `Camera`、`Add` 或 `✓`,貼文 custom actions 也能表達「回應,2200 則」與「取消喜歡,目前 11319 個喜歡」。Dynamic Type、VoiceOver 實際手勢順序與深色模式仍需後續人工驗證。
+再次擷取 hierarchy 後,首頁已不再出現 `Camera`、`Add` 或 `✓`,貼文 custom actions 也能表達「回應,2200 則」與「取消喜歡,目前 11319 個喜歡」。Dynamic Type 與 VoiceOver 實際手勢順序仍需後續人工驗證。
+
+### 深色模式驗證與修正
+
+實際把 Simulator 切換為深色模式後,發現 App 仍維持淺色外觀。原因不是 SwiftUI 元件不支援 Dark Mode,而是 Scene bootstrap 同時對 `UIHostingController` 與 `UIWindow` 設定 `.light`,首頁也直接使用 `Color.white`。
+
+移除固定的 interface style,並把容器背景、貼文互動按鈕與列表分隔區改為 semantic system colors。重新冷啟動後確認首頁可跟隨系統外觀,並將明暗兩種 Simulator 截圖放入 README。
+
+這次驗證也再次證明:只檢查程式碼中是否使用 `systemBackground` 不足以宣稱支援 Dark Mode,還要用實際 runtime 外觀切換與截圖確認 Scene／Window 層沒有覆寫系統設定。
+
+### Dynamic Type 最大輔助字級驗證
+
+第一次把 Simulator 設成 `accessibility-extra-extra-extra-large` 時,首頁文字幾乎沒有變化。原因是早期畫面大量使用 `.font(.system(size:))`,視覺上雖然整齊,卻繞過了使用者的 Dynamic Type 設定。
+
+這次把貼文、搜尋、詳情、載入狀態與留言操作改用 `.body`、`.headline`、`.subheadline`、`.caption` 等 semantic text styles。內容區完整跟隨最大輔助字級並允許垂直捲動;頂部與底部 chrome 則限制到 `accessibility1`,避免五個固定導覽操作在窄螢幕互相覆蓋。
+
+同時把主要導覽操作的 layout target 擴充到至少 44pt,並在最大輔助字級的 iPhone 15 Simulator 冷啟動後確認文字可讀、內容可捲動、主要操作仍可見。驗證截圖為 `screenshots/home-dynamic-type.png`。

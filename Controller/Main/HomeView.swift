@@ -21,7 +21,7 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            Color.white
+            Color(.systemBackground)
                 .ignoresSafeArea()
 
             HomeFeedPagerView(leftPercent: $leftPercent) { post in

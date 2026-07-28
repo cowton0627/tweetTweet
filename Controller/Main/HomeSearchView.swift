@@ -50,7 +50,7 @@ struct HomeSearchView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
 
                     Text(posts.isEmpty ? "沒有找到符合的內容" : "共 \(posts.count) 則結果")
-                        .font(.system(size: 13))
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 16)
@@ -61,12 +61,12 @@ struct HomeSearchView: View {
                 if posts.isEmpty {
                     VStack(spacing: 10) {
                         Image(systemName: "magnifyingglass")
-                            .font(.system(size: 28, weight: .regular))
+                            .font(.title)
                             .foregroundColor(.secondary)
                         Text("找不到內容")
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.headline)
                         Text("換個關鍵字再試一次。")
-                            .font(.system(size: 13))
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
                     .frame(maxWidth: .infinity)

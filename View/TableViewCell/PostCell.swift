@@ -34,12 +34,12 @@ struct PostCell: View {
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(post.name)
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.headline.weight(.semibold))
                         .foregroundColor(Color(red: 242 / 255, green: 99 / 255, blue: 4 / 255))
                         .lineLimit(1)
                     Text(post.date)
-                        .font(.system(size: 13))
-                        .foregroundColor(.gray)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                         .lineLimit(1)
                 }
 
@@ -51,11 +51,12 @@ struct PostCell: View {
                         self.userData.update(post)
                     }) {
                     Text("追蹤")
-                        .font(.system(size: 14))
+                        .font(.subheadline)
                         .foregroundColor(.orange)
-                        .frame(width: 56, height: 28)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 14)
+                            Capsule()
                                 .stroke(Color.orange, lineWidth: 1.5)
                         )
                     }
@@ -64,7 +65,7 @@ struct PostCell: View {
                 }
             }
             Text(post.text)
-                .font(.system(size: 16))
+                .font(.body)
                 .lineSpacing(4)
                 .fixedSize(horizontal: false, vertical: true)
             
@@ -80,7 +81,7 @@ struct PostCell: View {
                 
                 PostCellToolbarButton(image: "message",
                                       text: post.commentCountText,
-                                      color: .black)
+                                      color: .primary)
                 {
 //                    print("Click comment button")
                     self.presentComment =  true //點擊取消讓頁面消失
@@ -94,7 +95,7 @@ struct PostCell: View {
                 
                 PostCellToolbarButton(image: post.isLiked ? "heart.fill" : "heart",
                                       text: post.likeCountText,
-                                      color: post.isLiked ? .red : .black)
+                                      color: post.isLiked ? .red : .primary)
                 {
 //                    print("Click like button")
                     if post.isLiked {
@@ -118,7 +119,7 @@ struct PostCell: View {
             Rectangle()
                 .padding(.horizontal, -15)
                 .frame(height: 10)
-                .foregroundColor(Color(red: 238 / 255, green: 238 / 255, blue: 238 / 255))
+                .foregroundColor(Color(.secondarySystemBackground))
         }
         .padding(.horizontal, 15)
         .padding(.top, 15)

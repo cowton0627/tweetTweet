@@ -16,8 +16,9 @@ struct HomeTopChromeView: View {
         HStack(spacing: 12) {
             Button(action: onCamera) {
                 Image(systemName: "camera")
-                    .font(.system(size: 17, weight: .regular))
-                    .frame(width: 40, height: 40)
+                    .font(.body)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
             .foregroundColor(.blue)
             .buttonStyle(PlainButtonStyle())
@@ -32,8 +33,9 @@ struct HomeTopChromeView: View {
 
             Button(action: onCompose) {
                 Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 20))
-                    .frame(width: 40, height: 40)
+                    .font(.title3)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
             .foregroundColor(.orange)
             .buttonStyle(PlainButtonStyle())
@@ -44,6 +46,7 @@ struct HomeTopChromeView: View {
         .padding(.bottom, 10)
         .background(Color(.systemBackground))
         .overlay(Divider(), alignment: .bottom)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
 
@@ -85,16 +88,18 @@ struct BottomChromeButton: View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Image(systemName: systemImage)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.body.weight(.semibold))
                 Text(title)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.caption2.weight(.medium))
             }
-            .frame(width: 52, height: 44)
+            .frame(minWidth: 56, minHeight: 56)
+            .contentShape(Rectangle())
         }
         .foregroundColor(isSelected ? .orange : .secondary)
         .buttonStyle(PlainButtonStyle())
         .accessibilityLabel(title)
         .accessibilityValue(isSelected ? "已選取" : "")
         .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
