@@ -26,6 +26,9 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 }
                 .buttonStyle(PlainButtonStyle())
                 .opacity(Double(1 - leftPercent * 0.5))
+                .accessibilityLabel("推薦動態")
+                .accessibilityValue(leftPercent < 0.5 ? "已選取" : "")
+                .accessibilityAddTraits(leftPercent < 0.5 ? .isSelected : [])
 
                 Button(action: {
                     withAnimation { self.leftPercent = 1 }
@@ -37,6 +40,9 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 }
                 .buttonStyle(PlainButtonStyle())
                 .opacity(Double(0.5 + leftPercent * 0.5))
+                .accessibilityLabel("熱門動態")
+                .accessibilityValue(leftPercent >= 0.5 ? "已選取" : "")
+                .accessibilityAddTraits(leftPercent >= 0.5 ? .isSelected : [])
             }
             .font(.system(size: 17))
 
@@ -44,6 +50,7 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 .foregroundColor(.red)
                 .frame(width: kIndicatorWidth, height: 3)
                 .offset(x: (kLabelWidth + kLabelSpacing) * 0.5 * (leftPercent * 2 - 1))
+                .accessibilityHidden(true)
         }
     }
 }

@@ -71,6 +71,9 @@ struct CommentInputView: View {
 
 struct CommentInputView_Previews: PreviewProvider {
     static var previews: some View {
-        CommentInputView(post: UserData().recommendPostList.list[0])
+        CommentInputView(post: .preview)
+            .environmentObject(
+                UserData(initialRecommendPosts: PostList(list: [.preview]))
+            )
     }
 }

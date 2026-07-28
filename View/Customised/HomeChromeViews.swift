@@ -21,6 +21,8 @@ struct HomeTopChromeView: View {
             }
             .foregroundColor(.blue)
             .buttonStyle(PlainButtonStyle())
+            .accessibilityLabel("加入圖片")
+            .accessibilityHint("選擇相機、相簿或內建素材")
 
             Spacer(minLength: 0)
 
@@ -35,6 +37,7 @@ struct HomeTopChromeView: View {
             }
             .foregroundColor(.orange)
             .buttonStyle(PlainButtonStyle())
+            .accessibilityLabel("發表新貼文")
         }
         .padding(.horizontal, 12)
         .padding(.top, 8)
@@ -90,5 +93,8 @@ struct BottomChromeButton: View {
         }
         .foregroundColor(isSelected ? .orange : .secondary)
         .buttonStyle(PlainButtonStyle())
+        .accessibilityLabel(title)
+        .accessibilityValue(isSelected ? "已選取" : "")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
