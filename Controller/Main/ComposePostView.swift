@@ -91,7 +91,7 @@ struct ComposePostView: View {
 
         let post = Post(
             id: userData.nextPostID(),
-            avatar: "head001001.jpg",
+            avatar: "avatar-01.jpg",
             vip: false,
             name: "我",
             date: composeDateString(),
@@ -117,7 +117,7 @@ struct ComposePostView: View {
 
 struct ComposePostView_Previews: PreviewProvider {
     static var previews: some View {
-        ComposePostView(attachedImages: ["head001001.jpg"], initialCategory: .recommend)
+        ComposePostView(attachedImages: ["post-01.jpg"], initialCategory: .recommend)
             .environmentObject(UserData())
     }
 }

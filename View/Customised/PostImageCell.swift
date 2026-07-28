@@ -41,6 +41,8 @@ struct PostImageCell: View {
                 }
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(images.count) 張貼文圖片")
     }
 }
 
@@ -64,8 +66,14 @@ struct PostImageCellRow: View {
 
 struct PostImageCell_Previews: PreviewProvider {
     static var previews: some View {
-//        let images = postList.list[0].images
-        let images = UserData().recommendPostList.list[0].images
+        let images = [
+            "post-01.jpg",
+            "post-02.jpg",
+            "post-03.jpg",
+            "post-04.jpg",
+            "post-05.jpg",
+            "post-06.jpg"
+        ]
 
         let width = UIScreen.main.bounds.width
         return Group {

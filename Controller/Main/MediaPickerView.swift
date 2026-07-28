@@ -22,7 +22,7 @@ struct MediaPickerView: View {
         NavigationView {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(imageNames, id: \.self) { name in
+                    ForEach(Array(imageNames.enumerated()), id: \.element) { index, name in
                         Button(action: {
                             selectedImage = name
                         }) {
@@ -37,6 +37,9 @@ struct MediaPickerView: View {
                                 )
                         }
                         .buttonStyle(PlainButtonStyle())
+                        .accessibilityLabel("圖片 \(index + 1)")
+                        .accessibilityValue(selectedImage == name ? "已選取" : "")
+                        .accessibilityAddTraits(selectedImage == name ? .isSelected : [])
                     }
                 }
                 .padding(16)

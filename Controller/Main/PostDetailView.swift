@@ -106,9 +106,10 @@ struct PostDetailView: View {
 
 struct PostDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let userData = UserData()
+        let post = Post.preview
+        let userData = UserData(initialRecommendPosts: PostList(list: [post]))
         return NavigationView {
-            PostDetailView(post: userData.recommendPostList.list[0])
+            PostDetailView(post: post)
         }
         .environmentObject(userData)
     }

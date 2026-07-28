@@ -30,6 +30,7 @@ struct PostCell: View {
                         PostVIPBadge(vip: post.vip)
                             .offset(x: 14, y: 14)
                     )
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(post.name)
@@ -59,6 +60,7 @@ struct PostCell: View {
                         )
                     }
                     .buttonStyle(BorderlessButtonStyle())
+                    .accessibilityHint("追蹤 \(post.name)")
                 }
             }
             Text(post.text)
@@ -86,6 +88,7 @@ struct PostCell: View {
                 .sheet(isPresented: $presentComment) {
                     CommentInputView(post: post).environmentObject(self.userData)
                 }
+                .accessibilityLabel("回應，\(post.commentCount) 則")
                 
                 Spacer()
                 
@@ -103,6 +106,11 @@ struct PostCell: View {
                     }
                     self.userData.update(post)
                 }
+                .accessibilityLabel(
+                    post.isLiked
+                        ? "取消喜歡，目前 \(post.likeCount) 個喜歡"
+                        : "喜歡，目前 \(post.likeCount) 個喜歡"
+                )
                 
                 Spacer()
             }
@@ -121,14 +129,8 @@ struct PostCell: View {
 
 struct PostCell_Previews: PreviewProvider {
     static var previews: some View {
-        let userData = UserData()
-//        PostCell(post: postList.list[7])
-        return PostCell(post: userData.recommendPostList.list[7]).environmentObject(userData)
+        let post = Post.preview
+        let userData = UserData(initialRecommendPosts: PostList(list: [post]))
+        return PostCell(post: post).environmentObject(userData)
     }
 }
-
-//Post(avatar: "head001.jpg",
-//                vip: true,
-//                name: "用戶暱稱",
-//                date: "2020-01-01 00:00",
-//                isFollowed: false) )
