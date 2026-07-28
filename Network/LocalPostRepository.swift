@@ -8,11 +8,11 @@
 import Foundation
 
 struct LocalPostRepository: PostRepository {
-    func loadRecommendPosts() -> PostList {
-        loadPostListData("PostListData_recommend_1.json")
+    func loadRecommendPosts() async throws -> PostList {
+        try loadPostListData("PostListData_recommend_1.json")
     }
 
-    func loadHotPosts() -> PostList {
-        loadPostListData("PostListData_hot_1.json")
+    func loadHotPosts() async throws -> PostList {
+        try loadPostListData("PostListData_hot_1.json")
     }
 }

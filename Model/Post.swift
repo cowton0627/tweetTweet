@@ -49,18 +49,39 @@ struct Post: Codable, Identifiable {    //Data Model(資料模型)是不可見�
 
 //let postList = loadPostListData("PostListData_recommend_1.json")    //解析名為 PostListData_recommend_1.json的 PostList, 回傳List; 屬全域變量
 
-func loadPostListData(_ fileName: String) -> PostList {               //解析PostList回傳List
+func loadPostListData(_ fileName: String) throws -> PostList {               //解析PostList回傳List
     guard let url = Bundle.main.url(forResource: fileName, withExtension: nil)
             ?? Bundle.main.url(forResource: fileName, withExtension: nil, subdirectory: "AppResources") else {       //guard 保證取得
-        fatalError("Can not find \(fileName) in main bundle")
+        throw PostDataError.fileNotFound(fileName)
     }
-    guard let data = try? Data(contentsOf: url) else {                //try? 表嘗試解析, data可能為空, 所以用 guard來保證取得
-        fatalError("Can not load \(url)")
+    let data: Data
+    do {
+        data = try Data(contentsOf: url)
+    } catch {
+        throw PostDataError.unreadableFile(url, underlyingError: error)
     }
-    guard let list = try? JSONDecoder().decode(PostList.self, from: data) else {    //PostList.self 把類型作為參數要加.self
-        fatalError("Can not parse post list json data")
+    do {
+        return try JSONDecoder().decode(PostList.self, from: data)
+    } catch {
+        throw PostDataError.decodingFailed(fileName, underlyingError: error)
     }
-    return list
+}
+
+enum PostDataError: LocalizedError {
+    case fileNotFound(String)
+    case unreadableFile(URL, underlyingError: Error)
+    case decodingFailed(String, underlyingError: Error)
+
+    var errorDescription: String? {
+        switch self {
+        case .fileNotFound(let fileName):
+            return "找不到貼文資料 \(fileName)。"
+        case .unreadableFile:
+            return "無法讀取本地貼文資料。"
+        case .decodingFailed:
+            return "無法解析本地貼文資料。"
+        }
+    }
 }
 
 
@@ -77,3 +98,21 @@ func loadImage(name: String) -> Image {
     }
     return Image(systemName: "photo")
 }
+
+#if DEBUG
+extension Post {
+    static let preview = Post(
+        id: 1,
+        avatar: "avatar-01.jpg",
+        vip: true,
+        name: "預覽使用者",
+        date: "2026-07-28 12:00",
+        isFollowed: false,
+        text: "這是一則用於 Xcode Preview 的貼文。",
+        images: ["post-01.jpg", "post-02.jpg", "post-03.jpg"],
+        commentCount: 12,
+        likeCount: 88,
+        isLiked: true
+    )
+}
+#endif

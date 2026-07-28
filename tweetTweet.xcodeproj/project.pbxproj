@@ -34,7 +34,20 @@
 		01BF00000000000000000024 /* LocalPostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000024 /* LocalPostRepository.swift */; };
 		01BF00000000000000000025 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000025 /* CameraPicker.swift */; };
 		01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000026 /* RuntimeImageStore.swift */; };
+		01BF00000000000000000027 /* RemotePostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000027 /* RemotePostRepository.swift */; };
+		02BF00000000000000000001 /* UserDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000001 /* UserDataTests.swift */; };
+		02BF00000000000000000002 /* PostDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000002 /* PostDecodingTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		02AB00000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01EF00000000000000000002 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01EF00000000000000000001;
+			remoteInfo = tweetTweet;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		01AF00000000000000000001 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,10 +81,21 @@
 		01AF00000000000000000024 /* LocalPostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000025 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		01AF00000000000000000026 /* RuntimeImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeImageStore.swift; sourceTree = "<group>"; };
+		01AF00000000000000000027 /* RemotePostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePostRepository.swift; sourceTree = "<group>"; };
+		02AF00000000000000000001 /* UserDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000002 /* PostDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDecodingTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000003 /* tweetTweetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tweetTweetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		01CF00000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		02CF00000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -94,6 +118,7 @@
 				01AF00000000000000000017 /* InfoForBinary.plist */,
 				01AF00000000000000000014 /* LaunchScreen.storyboard */,
 				01AF00000000000000000015 /* Resources */,
+				02DF00000000000000000001 /* tweetTweetTests */,
 				01DF00000000000000000002 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -102,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				01AF00000000000000000016 /* tweetTweet.app */,
+				02AF00000000000000000003 /* tweetTweetTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,6 +178,7 @@
 			children = (
 				01AF00000000000000000023 /* PostRepository.swift */,
 				01AF00000000000000000024 /* LocalPostRepository.swift */,
+				01AF00000000000000000027 /* RemotePostRepository.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -198,6 +225,15 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		02DF00000000000000000001 /* tweetTweetTests */ = {
+			isa = PBXGroup;
+			children = (
+				02AF00000000000000000001 /* UserDataTests.swift */,
+				02AF00000000000000000002 /* PostDecodingTests.swift */,
+			);
+			path = tweetTweetTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -219,6 +255,24 @@
 			productReference = 01AF00000000000000000016 /* tweetTweet.app */;
 			productType = "com.apple.product-type.application";
 		};
+		02EF00000000000000000001 /* tweetTweetTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 02FF00000000000000000003 /* Build configuration list for PBXNativeTarget "tweetTweetTests" */;
+			buildPhases = (
+				02CF00000000000000000002 /* Sources */,
+				02CF00000000000000000001 /* Frameworks */,
+				02CF00000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				02ED00000000000000000001 /* PBXTargetDependency */,
+			);
+			name = tweetTweetTests;
+			productName = tweetTweetTests;
+			productReference = 02AF00000000000000000003 /* tweetTweetTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -231,6 +285,10 @@
 				TargetAttributes = {
 					01EF00000000000000000001 = {
 						CreatedOnToolsVersion = 26.4.1;
+					};
+					02EF00000000000000000001 = {
+						CreatedOnToolsVersion = 26.4.1;
+						TestTargetID = 01EF00000000000000000001;
 					};
 				};
 			};
@@ -248,6 +306,7 @@
 			projectRoot = "";
 			targets = (
 				01EF00000000000000000001 /* tweetTweet */,
+				02EF00000000000000000001 /* tweetTweetTests */,
 			);
 		};
 /* End PBXProject section */
@@ -259,6 +318,13 @@
 			files = (
 				01BF00000000000000000020 /* Assets.xcassets in Resources */,
 				01BF00000000000000000021 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		02CF00000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,10 +383,28 @@
 				01BF00000000000000000024 /* LocalPostRepository.swift in Sources */,
 				01BF00000000000000000025 /* CameraPicker.swift in Sources */,
 				01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */,
+				01BF00000000000000000027 /* RemotePostRepository.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		02CF00000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				02BF00000000000000000001 /* UserDataTests.swift in Sources */,
+				02BF00000000000000000002 /* PostDecodingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		02ED00000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01EF00000000000000000001 /* tweetTweet */;
+			targetProxy = 02AB00000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		01FF00000000000000000002 /* Debug */ = {
@@ -482,6 +566,40 @@
 			};
 			name = Release;
 		};
+		02FF00000000000000000004 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.tweettweetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tweetTweet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/tweetTweet";
+			};
+			name = Debug;
+		};
+		02FF00000000000000000005 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.tweettweetTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tweetTweet.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/tweetTweet";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -499,6 +617,15 @@
 			buildConfigurations = (
 				01FF00000000000000000004 /* Debug */,
 				01FF00000000000000000005 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		02FF00000000000000000003 /* Build configuration list for PBXNativeTarget "tweetTweetTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				02FF00000000000000000004 /* Debug */,
+				02FF00000000000000000005 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -75,6 +75,9 @@ struct HomeView: View {
             }
             .ignoresSafeArea()
         }
+        .task {
+            await userData.loadAll()
+        }
     }
 
     private func handlePendingCompose() {

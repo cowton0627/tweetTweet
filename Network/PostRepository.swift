@@ -6,6 +6,6 @@
 import Foundation
 
 protocol PostRepository {
-    func loadRecommendPosts() -> PostList
-    func loadHotPosts() -> PostList
+    func loadRecommendPosts() async throws -> PostList
+    func loadHotPosts() async throws -> PostList
 }
