@@ -7,7 +7,9 @@
 目前專案採 local-first 設計：不需帳號、API key 或後端服務，clone 後即可在 Simulator 完整操作，適合作為可重現的 iOS 作品集案例。
 
 <p>
-  <img src="screenshots/home.png" alt="tweetTweet 推薦動態流" width="240" />
+  <img src="screenshots/home.png" alt="tweetTweet 推薦動態流（淺色模式）" width="240" />
+  <img src="screenshots/home-dark.png" alt="tweetTweet 推薦動態流（深色模式）" width="240" />
+  <img src="screenshots/home-dynamic-type.png" alt="tweetTweet 推薦動態流（最大輔助字級）" width="240" />
 </p>
 
 ## 一眼看懂
@@ -33,6 +35,8 @@
 - 發文、相簿選圖與相機拍攝流程
 - 自訂導覽列、工具列按鈕與貼文元件
 - VoiceOver 語意標籤、選取狀態與圖片群組描述
+- 自動跟隨系統淺色／深色外觀
+- 內容文字支援 Dynamic Type，並以最大輔助字級驗證
 
 ## 工程亮點
 
@@ -149,8 +153,12 @@ GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以�
 下一階段規劃：
 
 1. 補齊全新素材版本的流程截圖或操作影片
-2. 完成 Dynamic Type、實機 VoiceOver 操作與深色模式驗證
+2. 完成實機 VoiceOver 操作驗證
 3. 若有正式服務，再加入認證、寫入 API、cache 與離線策略
+
+另有一份尚在探索、供後端研究使用的
+[`Private Family Network 產品與架構 Brief`](docs/PRIVATE_FAMILY_NETWORK_BRIEF.md)。
+它討論家庭私密分群、BYOS 儲存、權限模型與 MVP；目前不是本專案已承諾的功能範圍。
 
 ## 展示素材、隱私與授權
 
