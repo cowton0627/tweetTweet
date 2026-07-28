@@ -38,8 +38,8 @@ struct CommentInputView: View {
                     Text("傳送").padding()
                 }
             }
-            .font(.system(size: 18))
-            .foregroundColor(.black)
+            .font(.body)
+            .foregroundColor(.primary)
         }
         .overlay(
             Text("評論不得空白")

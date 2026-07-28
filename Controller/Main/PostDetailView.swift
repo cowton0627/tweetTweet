@@ -28,19 +28,19 @@ struct PostDetailView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
                             Text("回應")
-                                .font(.system(size: 17, weight: .semibold))
+                                .font(.headline)
                             Spacer()
                             Text(post.commentCountText)
-                                .font(.system(size: 15))
+                                .font(.subheadline)
                                 .foregroundColor(.secondary)
                         }
 
                         if post.commentCount == 0 {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("這則貼文還沒有回應")
-                                    .font(.system(size: 15, weight: .medium))
+                                    .font(.subheadline.weight(.medium))
                                 Text("按右上角或底部按鈕開始回應。")
-                                    .font(.system(size: 13))
+                                    .font(.caption)
                                     .foregroundColor(.secondary)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -71,7 +71,7 @@ struct PostDetailView: View {
                         .frame(maxWidth: .infinity)
                 }
             }
-            .font(.system(size: 16, weight: .medium))
+            .font(.body.weight(.medium))
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(Color(.systemBackground))

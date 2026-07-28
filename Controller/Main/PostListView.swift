@@ -99,27 +99,27 @@ private struct FeedStatusView: View {
             case .loading:
                 ProgressView()
                 Text("正在載入動態")
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.headline)
                 Text("請稍候一下。")
-                    .font(.system(size: 13))
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
             case .empty:
                 Image(systemName: "tray")
                     .font(.system(size: 30))
                     .foregroundColor(.secondary)
                 Text("目前沒有貼文")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.headline)
                 Text("稍後再回來看看。")
-                    .font(.system(size: 13))
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
             case .error(let message, let retry):
                 Image(systemName: "wifi.exclamationmark")
                     .font(.system(size: 30))
                     .foregroundColor(.secondary)
                 Text("無法載入動態")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.headline)
                 Text(message)
-                    .font(.system(size: 13))
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                 Button("重試", action: retry)
@@ -151,7 +151,7 @@ private struct BottomStatusView: View {
             }
 
             Text(state == .loading ? "載入下一批內容中" : "已經沒有更多內容了")
-                .font(.system(size: 14))
+                .font(.subheadline)
                 .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity)

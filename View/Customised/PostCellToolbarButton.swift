@@ -16,11 +16,8 @@ struct PostCellToolbarButton: View {
         Button(action: action) {
             HStack(spacing: 5) {
                 Image(systemName: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 18, height: 18)
                 Text(text)
-                    .font(.system(size: 16))
+                    .font(.subheadline)
             }
         }
         .foregroundColor(color)

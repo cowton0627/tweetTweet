@@ -21,7 +21,7 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 }) {
                     Text("推薦")
                         .bold()
-                        .frame(width: kLabelWidth, height: 34)
+                        .frame(width: kLabelWidth, height: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -35,7 +35,7 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 }) {
                     Text("熱門")
                         .bold()
-                        .frame(width: kLabelWidth, height: 34)
+                        .frame(width: kLabelWidth, height: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -44,7 +44,7 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 .accessibilityValue(leftPercent >= 0.5 ? "已選取" : "")
                 .accessibilityAddTraits(leftPercent >= 0.5 ? .isSelected : [])
             }
-            .font(.system(size: 17))
+            .font(.headline)
 
             RoundedRectangle(cornerRadius: 2)
                 .foregroundColor(.red)
@@ -52,6 +52,7 @@ struct HomeNavigationBar: View {    //中央的「推薦/熱門」切換 (toolba
                 .offset(x: (kLabelWidth + kLabelSpacing) * 0.5 * (leftPercent * 2 - 1))
                 .accessibilityHidden(true)
         }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
     }
 }
 
