@@ -46,6 +46,7 @@ struct PostListView: View { //顯示推特列表
                         PostCell(post: post)
                     }
                     .buttonStyle(PlainButtonStyle())
+                    .accessibilityHint("開啟貼文詳情")
                     .onAppear {
                         if index == posts.count - 1 {
                             triggerBottomCheckIfNeeded()
