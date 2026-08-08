@@ -163,6 +163,9 @@ GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以�
 Accessibility 的 Simulator 驗證結果與實體裝置測試清單記錄在
 [`docs/ACCESSIBILITY_VALIDATION.md`](docs/ACCESSIBILITY_VALIDATION.md)。
 
+目前的完成項目、待辦事項與續作順序記錄在
+[`docs/PROJECT_STATUS.md`](docs/PROJECT_STATUS.md)。
+
 ## 展示素材、隱私與授權
 
 - 展示照片與虛構人物頭像皆為本專案以生成式工具製作的原創素材，不使用真實名人、第三方品牌或受版權保護角色。

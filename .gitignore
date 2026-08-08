@@ -27,3 +27,6 @@ fastlane/test_output
 
 # Pre-commit hook: local-only sensitive patterns
 .githooks/patterns.local
+
+# Local signing settings (Team ID stays off git)
+Config/Signing.local.xcconfig
