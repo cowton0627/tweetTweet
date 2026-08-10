@@ -23,7 +23,7 @@
 | 狀態管理 | `ObservableObject` + `@EnvironmentObject` |
 | 資料層 | Repository pattern + dependency injection |
 | 展示資料 | Bundle JSON + 原創生成素材（可切換為後端 API） |
-| 測試 | 17 個 XCTest，全部通過 |
+| 測試 | 21 個 XCTest，全部通過 |
 | CI | GitHub Actions：main push／PR 自動 build & test |
 | 已驗證環境 | iPhone 15 Simulator / iOS 17.5 |
 
@@ -81,8 +81,9 @@ flowchart LR
 - loading、empty、error 與單一分頁 retry 狀態
 - 遠端成功回應、JSON decoding 與 HTTP error
 - 後端位址的組裝、空值處理與未設定時的 fallback
+- 網路與 HTTP 失敗的使用者訊息（依原因分類，不外洩框架的英文描述）
 
-目前結果：**17 passed、0 failed、0 skipped**。
+目前結果：**21 passed、0 failed、0 skipped**。
 
 ## 一個實際解決的技術問題
 

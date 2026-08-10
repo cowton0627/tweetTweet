@@ -240,3 +240,35 @@ SQLite 也留著沒換 Postgres。已經有可用的 migration 機制,換 DB 換
 改成從最後一個 `|` 切開(label 是人寫的描述,不含 `|`),並且讓不合法的 pattern 直接中止 commit:grep 的 exit 1(沒找到)與 2+(跑不起來)不能再等同處理。**跑不起來的檢查不可以回報安全。**
 
 全域 hook 的同名檢查不受影響——它用單一 pattern 字串,沒有這個解析問題,而且會在 repo hook 結尾被 exec——所以第二道防線一直有效,Team ID 沒有實際外流風險。
+
+## 2026-08-10（下午）
+
+### 後端對外曝露前先補中介層,順序不能顛倒
+
+在開 tunnel 之前先在後端加上 helmet、rate limit 與 request log。一旦有公開網域,這個 API 就是任何人都打得到的端點,先開洞再補防護等於賭沒人在那段空窗期找到它。
+
+`TRUST_PROXY` 的取捨值得記:在 tunnel 後面,所有請求都從同一個本機位址進來,rate limiter 若不看 `X-Forwarded-For` 就會把全世界算成同一個來源,形同虛設;但無條件信任那個 header 更糟——直接連上來的人可以自行偽造,每個請求換一個假位址就取得無限額度。所以參數收的是「信任幾層 hop」而不是布林開關,而且預設不信任。細節記在後端 repo 的 README。
+
+### 錯誤訊息不能外洩框架的語言
+
+實機驗收前做了一次負向測試(把後端位址改成不存在的網域),畫面顯示的是 `A server with the specified hostname could not be found.`——URLSession 的 `localizedDescription`,出現在一個全繁體中文的介面裡。
+
+原因是連線在 `session.data(for:)` 就拋 `URLError`,`RemotePostRepositoryError` 寫好的中文訊息一句都走不到,`UserData` 又直接把 `error.localizedDescription` 塞進畫面。現在傳輸錯誤會被包起來並依原因分類(沒網路、連線中斷、逾時、找不到主機、主機拒絕連線),HTTP 狀態碼也一樣——包含 `429`,因為後端現在真的會限流。無法辨識的狀態碼會把數字留在訊息裡,讓沒預期到的失敗至少講得出名字。
+
+這件事在 local-first 時代不重要:沒有網路請求就沒有網路錯誤。接上後端之後,它變成使用者最可能看到的畫面之一。
+
+### bundle id 與 Team ID:三個連在一起的坑
+
+實機安裝一次踩到三個問題,值得完整記下來。
+
+**一,`com.example.tweettweet` 註冊不到 profile。** `com.example.*` 早被其他開發者帳號佔走,Apple 直接回「not available」。改用 `io.github.cowton0627.tweettweet`——以 GitHub handle 當反向網域,對公開作品集而言唯一且不暴露私人資訊。順帶解決了另一個問題:手機上舊版是 `example.tweettweet`,bundle id 不同就是兩個 App,不再有跨 Team ID 覆蓋安裝的衝突。
+
+**二,`security find-identity` 括號裡的不是 Team ID。** 那是憑證擁有者的 member ID。真正的 Team ID 要從簽好的產物讀:`codesign -dvv <app> 2>&1 | grep TeamIdentifier`。用錯值的症狀是 `No Account for Team "..."`,而錯誤訊息不會告訴你是拿錯了 ID 種類。
+
+**三,Xcode 會把 `DEVELOPMENT_TEAM` 寫回 `project.pbxproj`,而它的優先序高於 xcconfig。** 所以 `Config/Signing.xcconfig` 不是靠「沒人去寫」來生效,而是必須主動確保 pbxproj 裡沒有那個 key——只要有,xcconfig 就被靜默覆蓋。這正是那個 pre-commit hook 存在的理由,而它在同一天稍早才被修好。
+
+### xcconfig 的 file reference 不要重複宣告路徑
+
+Xcode 開過一次專案之後,把 `Config` group 變成 `Recovered References`,並丟掉四個 xcconfig 的 file reference。原因是 group 宣告了 `path = Config`,而每個 file reference 又以 `SOURCE_ROOT` 為基準重複寫成 `Config/<檔名>`——路徑等於宣告兩次,Xcode 重新解讀時就判定檔案不存在。
+
+改成 file reference 只寫檔名、`sourceTree = "<group>"`,相對於 group 的路徑。build 其實從頭到尾都正常(`baseConfigurationReference` 仍指得到檔案),壞掉的只有 Xcode 導覽列與每次開啟就被改寫的 pbxproj。
