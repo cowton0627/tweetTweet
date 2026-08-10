@@ -30,3 +30,7 @@ fastlane/test_output
 
 # Local signing settings (Team ID stays off git)
 Config/Signing.local.xcconfig
+
+# Local backend address (differs per developer, and a tunnel hostname is
+# not something to publish)
+Config/API.local.xcconfig

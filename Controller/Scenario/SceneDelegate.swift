@@ -19,7 +19,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         configureNavigationBarAppearance()
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = HomeView().environmentObject(UserData())
+        //
+        // The repository is chosen here rather than defaulted inside UserData:
+        // this is the one place that should reach for the network. Previews and
+        // tests construct UserData directly and keep the bundled JSON.
+        let userData = UserData(repository: PostRepositoryFactory.makeDefault())
+        let contentView = HomeView().environmentObject(userData)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {

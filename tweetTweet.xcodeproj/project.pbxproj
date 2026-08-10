@@ -35,8 +35,10 @@
 		01BF00000000000000000025 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000025 /* CameraPicker.swift */; };
 		01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000026 /* RuntimeImageStore.swift */; };
 		01BF00000000000000000027 /* RemotePostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000027 /* RemotePostRepository.swift */; };
+		01BF00000000000000000028 /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000028 /* APIConfiguration.swift */; };
 		02BF00000000000000000001 /* UserDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000001 /* UserDataTests.swift */; };
 		02BF00000000000000000002 /* PostDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000002 /* PostDecodingTests.swift */; };
+		02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000004 /* APIConfigurationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,11 +84,16 @@
 		01AF00000000000000000025 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		01AF00000000000000000026 /* RuntimeImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeImageStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000027 /* RemotePostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePostRepository.swift; sourceTree = "<group>"; };
+		01AF00000000000000000028 /* APIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
 		02AF00000000000000000001 /* UserDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000002 /* PostDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDecodingTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000003 /* tweetTweetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tweetTweetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FEED00000000000000000000 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
+		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Base.xcconfig; sourceTree = SOURCE_ROOT; };
 		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config/Signing.local.xcconfig.example; sourceTree = SOURCE_ROOT; };
+		FEED00000000000000000003 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
+		FEED00000000000000000004 /* API.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/API.xcconfig; sourceTree = SOURCE_ROOT; };
+		FEED00000000000000000005 /* API.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config/API.local.xcconfig.example; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +188,7 @@
 				01AF00000000000000000023 /* PostRepository.swift */,
 				01AF00000000000000000024 /* LocalPostRepository.swift */,
 				01AF00000000000000000027 /* RemotePostRepository.swift */,
+				01AF00000000000000000028 /* APIConfiguration.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -232,6 +240,7 @@
 			children = (
 				02AF00000000000000000001 /* UserDataTests.swift */,
 				02AF00000000000000000002 /* PostDecodingTests.swift */,
+				02AF00000000000000000004 /* APIConfigurationTests.swift */,
 			);
 			path = tweetTweetTests;
 			sourceTree = "<group>";
@@ -239,7 +248,10 @@
 		FEED00000000000000000001 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				FEED00000000000000000000 /* Signing.xcconfig */,
+				FEED00000000000000000000 /* Base.xcconfig */,
+				FEED00000000000000000004 /* API.xcconfig */,
+				FEED00000000000000000005 /* API.local.xcconfig.example */,
+				FEED00000000000000000003 /* Signing.xcconfig */,
 				FEED00000000000000000002 /* Signing.local.xcconfig.example */,
 			);
 			path = Config;
@@ -395,6 +407,7 @@
 				01BF00000000000000000025 /* CameraPicker.swift in Sources */,
 				01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */,
 				01BF00000000000000000027 /* RemotePostRepository.swift in Sources */,
+				01BF00000000000000000028 /* APIConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,6 +417,7 @@
 			files = (
 				02BF00000000000000000001 /* UserDataTests.swift in Sources */,
 				02BF00000000000000000002 /* PostDecodingTests.swift in Sources */,
+				02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,7 +491,7 @@
 		};
 		01FF00000000000000000004 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FEED00000000000000000000 /* Signing.xcconfig */;
+			baseConfigurationReference = FEED00000000000000000000 /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -501,7 +515,7 @@
 		};
 		01FF00000000000000000005 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FEED00000000000000000000 /* Signing.xcconfig */;
+			baseConfigurationReference = FEED00000000000000000000 /* Base.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -579,7 +593,7 @@
 		};
 		02FF00000000000000000004 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FEED00000000000000000000 /* Signing.xcconfig */;
+			baseConfigurationReference = FEED00000000000000000000 /* Base.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -597,7 +611,7 @@
 		};
 		02FF00000000000000000005 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FEED00000000000000000000 /* Signing.xcconfig */;
+			baseConfigurationReference = FEED00000000000000000000 /* Base.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;

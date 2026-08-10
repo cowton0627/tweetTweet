@@ -1,0 +1,8 @@
+// Base.xcconfig — tracked by git.
+//
+// The single base configuration every build configuration points at. It only
+// pulls in the focused files below, so adding a new area of settings means
+// adding an include here rather than rewiring project.pbxproj.
+
+#include "Signing.xcconfig"
+#include "API.xcconfig"

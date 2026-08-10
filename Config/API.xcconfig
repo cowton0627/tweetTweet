@@ -1,0 +1,25 @@
+// API.xcconfig — tracked by git.
+//
+// Where the app looks for its backend. Split into scheme and host on
+// purpose: "//" starts a comment in an xcconfig, so a setting written as
+// http://localhost:3000 silently truncates to "http:".
+//
+// Debug points at a backend running on this machine. Release needs a host
+// reachable from outside it, which differs per developer, so it lives in
+// API.local.xcconfig (ignored by git):
+//
+//   cp Config/API.local.xcconfig.example Config/API.local.xcconfig
+//
+// With nothing configured the values resolve empty and the app falls back to
+// the JSON bundled with it, which is also what keeps CI builds working.
+
+#include? "API.local.xcconfig"
+
+API_SCHEME_Debug = http
+API_HOST_Debug = localhost:3000
+
+API_SCHEME_Release = $(LOCAL_API_SCHEME)
+API_HOST_Release = $(LOCAL_API_HOST)
+
+API_SCHEME = $(API_SCHEME_$(CONFIGURATION))
+API_HOST = $(API_HOST_$(CONFIGURATION))
