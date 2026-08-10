@@ -52,10 +52,26 @@ violation_output=""
 
 check_patterns() {
     for entry in "$@"; do
-        pattern="${entry%%|*}"
-        label="${entry#*|}"
+        # Split on the LAST '|', not the first: a pattern may legitimately
+        # contain alternation, and splitting on the first one truncated the
+        # DEVELOPMENT_TEAM pattern to "(^" — an invalid regex whose error was
+        # then swallowed, silently disabling the check this hook exists for.
+        # Labels are prose and do not contain '|'.
+        pattern="${entry%|*}"
+        label="${entry##*|}"
 
-        matches=$(echo "$STAGED_DIFF" | grep -E '^\+' | grep -vE '^\+\+\+' | grep -E -e "$pattern" || true)
+        matches=""
+        rc=0
+        matches=$(echo "$STAGED_DIFF" | grep -E '^\+' | grep -vE '^\+\+\+' | grep -E -e "$pattern") || rc=$?
+
+        # grep exits 1 for "no match" and 2+ for a real failure. Treating those
+        # alike is how a broken pattern passes for a clean commit, so refuse to
+        # run rather than report safety this hook cannot vouch for.
+        if [ "$rc" -ge 2 ]; then
+            echo "pre-commit: the pattern for [$label] is not a valid regex." >&2
+            echo "Refusing to commit with a check that cannot run." >&2
+            exit 1
+        fi
 
         if [ -n "$matches" ]; then
             violation_output+="  [$label]\n"
