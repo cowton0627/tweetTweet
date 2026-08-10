@@ -23,7 +23,7 @@
 | 狀態管理 | `ObservableObject` + `@EnvironmentObject` |
 | 資料層 | Repository pattern + dependency injection |
 | 展示資料 | Bundle JSON + 原創生成素材（可切換為後端 API） |
-| 測試 | 30 個 XCTest，全部通過 |
+| 測試 | 39 個 XCTest，全部通過 |
 | CI | GitHub Actions：main push／PR 自動 build & test |
 | 已驗證環境 | iPhone 15 Simulator / iOS 17.5 |
 
@@ -85,8 +85,9 @@ flowchart LR
 - 後端位址的組裝、空值處理與未設定時的 fallback
 - 網路與 HTTP 失敗的使用者訊息（依原因分類，不外洩框架的英文描述）
 - 圖片載入的記憶體快取、同 URL 併發請求去重，以及失敗不被當成結果快取
+- 發文流程：只上傳伺服器沒有的圖片、失敗時不留下只存在本機的貼文、手寫 multipart body 的格式
 
-目前結果：**30 passed、0 failed、0 skipped**。
+目前結果：**39 passed、0 failed、0 skipped**。
 
 ## 一個實際解決的技術問題
 
@@ -172,19 +173,21 @@ GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以�
 5. 回到程式碼，從 `PostRepository`、`LocalPostRepository` 與 `UserData` 說明 dependency injection。
 6. 執行測試，展示 mock repository 與正式 JSON fixture 都受到驗證。
 7. 起後端、直接改一筆 SQLite 資料再重啟 App，證明畫面內容真的來自 API。
+8. 拍一張照片發文，回到列表看它出現在最上面——那則貼文與那張圖現在都在伺服器上。
 
 ## 已知限制與下一步
 
 這是一個 UI 與狀態架構原型，不是完整社群服務：
 
-- 沒有登入、寫入 API 與本地持久化；發文只存在記憶體
+- 沒有登入；讚與追蹤仍是本地狀態，重開即失
+- 沒有本地持久化與離線佇列：沒有網路時發文只留在記憶體
 - 搜尋與貼文互動（讚、追蹤）仍是本地行為
 - `Controller/` 命名仍保留早期 UIKit 專案痕跡
 
 下一階段規劃：
 
-1. 發文寫回後端，含圖片上傳
-2. 後端 Docker 化並部署到雲端，讓展示不依賴特定機器保持開機
+1. 後端 Docker 化並部署到雲端，讓展示不依賴特定機器保持開機
+2. 讚與追蹤寫回後端
 3. 完成實機 VoiceOver 操作驗證
 4. 補齊全新素材版本的流程截圖或操作影片
 
