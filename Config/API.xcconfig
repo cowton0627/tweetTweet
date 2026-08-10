@@ -1,25 +1,18 @@
 // API.xcconfig — tracked by git.
 //
-// Where the app looks for its backend. Split into scheme and host on
-// purpose: "//" starts a comment in an xcconfig, so a setting written as
-// http://localhost:3000 silently truncates to "http:".
+// Where the app looks for its backend. Nothing is set here on purpose: with
+// no address configured the app falls back to the JSON bundled with it, so a
+// fresh clone still runs offline in a Simulator and CI needs no local file.
 //
-// Debug points at a backend running on this machine. Release needs a host
-// reachable from outside it, which differs per developer, so it lives in
-// API.local.xcconfig (ignored by git):
+// To point the app at a backend, create the ignored local override:
 //
 //   cp Config/API.local.xcconfig.example Config/API.local.xcconfig
 //
-// With nothing configured the values resolve empty and the app falls back to
-// the JSON bundled with it, which is also what keeps CI builds working.
+// The address is split into a scheme and a host because "//" starts a comment
+// in an xcconfig — a full URL written here would silently lose everything from
+// the slashes onwards.
 
 #include? "API.local.xcconfig"
 
-API_SCHEME_Debug = http
-API_HOST_Debug = localhost:3000
-
-API_SCHEME_Release = $(LOCAL_API_SCHEME)
-API_HOST_Release = $(LOCAL_API_HOST)
-
-API_SCHEME = $(API_SCHEME_$(CONFIGURATION))
-API_HOST = $(API_HOST_$(CONFIGURATION))
+API_SCHEME = $(LOCAL_API_SCHEME)
+API_HOST = $(LOCAL_API_HOST)

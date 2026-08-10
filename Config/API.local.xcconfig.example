@@ -1,9 +1,13 @@
-// Copy to API.local.xcconfig (gitignored) to point Release builds at your
-// own backend. Debug builds already default to localhost and need nothing
-// here.
+// Copy to API.local.xcconfig (ignored by git) to point the app at a backend.
+// Without it the app reads the JSON bundled with it and needs no server.
 //
 // Write the host without a scheme and without "//" — an xcconfig treats "//"
-// as the start of a comment.
+// as the start of a comment, so a full URL would be truncated.
 
-LOCAL_API_SCHEME = https
-LOCAL_API_HOST = your-tunnel-hostname.example.com
+// A backend running on this machine (see the backend-practice repository):
+LOCAL_API_SCHEME = http
+LOCAL_API_HOST = localhost:3000
+
+// A backend reachable from a device, e.g. through a tunnel:
+// LOCAL_API_SCHEME = https
+// LOCAL_API_HOST = your-tunnel-hostname.example.com
