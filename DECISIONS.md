@@ -198,3 +198,45 @@ App 預設仍注入 `LocalPostRepository`,讓作品集 clone 後可以離線、�
 這次把貼文、搜尋、詳情、載入狀態與留言操作改用 `.body`、`.headline`、`.subheadline`、`.caption` 等 semantic text styles。內容區完整跟隨最大輔助字級並允許垂直捲動;頂部與底部 chrome 則限制到 `accessibility1`,避免五個固定導覽操作在窄螢幕互相覆蓋。
 
 同時把主要導覽操作的 layout target 擴充到至少 44pt,並在最大輔助字級的 iPhone 15 Simulator 冷啟動後確認文字可讀、內容可捲動、主要操作仍可見。驗證截圖為 `screenshots/home-dynamic-type.png`。
+
+## 2026-08-10
+
+### 後端沿用既有 Express 專案,不照原方案重寫 FastAPI
+
+`docs/BACKEND_FEASIBILITY.md` 當初建議 FastAPI + Postgres,理由是「複用既有 Python / uv 技能」。實際盤點後發現另一個 repo `backend-practice` 已經是帶測試、CI 與版本化 migration 的 Express + TypeScript + SQLite 專案,那個理由就不存在了。為了貼合一份研究文件而重寫一遍能跑的後端是純粹的浪費。
+
+同理也放棄 monorepo:後端已有自己的 commit 歷史與 CI,併進來會丟掉這些。改成雙 repo,兩邊 README 互相連結。
+
+SQLite 也留著沒換 Postgres。已經有可用的 migration 機制,換 DB 換不到展示價值,單機 demo 的併發量下也綽綽有餘。
+
+### API 契約對齊既有 fixture,而不是讓 App 遷就後端
+
+後端的 `GET /api/feeds/:category` 回傳 `{ "list": [...] }`,欄位與 `Resources/PostListData_*.json` 逐字相同。`Post`、`PostList` 與 `RemotePostRepository` 因此一行都沒改,連既有測試都原封不動。
+
+代價落在後端:DB 用 snake_case,對外輸出 camelCase,中間多一層 row → DTO 映射。這本來就是該有的分層——API 契約不該讓呼叫端知道資料表長什麼樣——所以代價其實是把設計做對的成本。
+
+布林值的轉換是硬性的而非美觀問題:SQLite 沒有 boolean 型別,欄位存 0/1,而 Swift 的 `JSONDecoder` 不接受用 0/1 解 `Bool`。少了這層轉換,client 根本解不開 feed。
+
+### base URL 走 xcconfig,而且拆成 scheme 與 host
+
+沿用 `Signing.xcconfig` 已經在用的模式:tracked 檔提供結構,gitignored 的 `API.local.xcconfig` 提供實際值。新增 `Base.xcconfig` 當唯一的 base configuration 入口,往後要加設定只需多一個 `#include`,不必再動 `project.pbxproj`。
+
+拆成 `APIScheme` 與 `APIHost` 兩個變數不是潔癖:**xcconfig 把 `//` 當註解起始**,寫成 `http://localhost:3000` 會被靜默截成 `http:`。之後填 tunnel 網域的人會撞到同一個坑,所以 example 檔直接寫明。
+
+### 沒有設定時退回 bundle JSON,而且預設就是沒有設定
+
+第一版讓 Debug 預設指向 `localhost:3000`,結果是 clone 下來沒跑後端的人會看到載入失敗,而不是內容——為那個情境寫的 fallback 永遠觸發不到。「clone 後即可在 Simulator 完整操作」是這個 repo 對外的宣稱,不該為了開發方便犧牲。
+
+改成兩個 configuration 都從 local override 讀,沒有 override 就解析成空值並退回 bundle JSON。接後端變成一次性的明確設定,CI 也因此不需要任何本機檔案。
+
+### repository 在 SceneDelegate 注入,不放進 `UserData` 的預設參數
+
+把 `RemotePostRepository` 設成預設參數只要改一行,但 `UserData()` 同時被十幾個 SwiftUI preview 使用,那樣等於讓每個 preview 都去打網路。composition root 是唯一該知道「有伺服器存在」的地方,preview 與測試繼續拿 bundle JSON。
+
+### pre-commit hook 的 Team ID 檢查其實從未執行過
+
+`.githooks/pre-commit` 的規則格式是 `"pattern|label"`,用 `${entry%%|*}` 取 pattern。但 DEVELOPMENT_TEAM 那條 pattern 自己就含 alternation `(^|[^_A-Za-z0-9])`,從第一個 `|` 切開會把它截成 `(^`——不合法的 regex。grep 回 exit 2,再被 `|| true` 吞掉,於是這個 hook 存在的主要理由靜默失效。唯一症狀是每次 commit `project.pbxproj` 都會印一行 `grep: parentheses not balanced`,看起來像雜訊。
+
+改成從最後一個 `|` 切開(label 是人寫的描述,不含 `|`),並且讓不合法的 pattern 直接中止 commit:grep 的 exit 1(沒找到)與 2+(跑不起來)不能再等同處理。**跑不起來的檢查不可以回報安全。**
+
+全域 hook 的同名檢查不受影響——它用單一 pattern 字串,沒有這個解析問題,而且會在 repo hook 結尾被 exec——所以第二道防線一直有效,Team ID 沒有實際外流風險。

@@ -4,7 +4,9 @@
 
 一個以 SwiftUI 打造的社群動態 App 原型，重點不是重製既有社群產品，而是展示複合貼文版型、跨畫面共享狀態，以及可替換資料來源的 iOS 架構。
 
-目前專案採 local-first 設計：不需帳號、API key 或後端服務，clone 後即可在 Simulator 完整操作，適合作為可重現的 iOS 作品集案例。
+專案採 local-first 設計：不需帳號、API key 或後端服務，clone 後即可在 Simulator 完整操作，適合作為可重現的 iOS 作品集案例。
+
+同時它也可以接上真正的後端。加一個本機設定檔，動態牆就改由 [backend-practice](https://github.com/cowton0627/backend-practice)（Express + TypeScript + SQLite）供應，App 的 model 與 decoder 完全不用改；沒設定時自動退回內建 JSON。
 
 <p>
   <img src="screenshots/home.png" alt="tweetTweet 推薦動態流（淺色模式）" width="240" />
@@ -20,8 +22,8 @@
 | UI | SwiftUI |
 | 狀態管理 | `ObservableObject` + `@EnvironmentObject` |
 | 資料層 | Repository pattern + dependency injection |
-| 展示資料 | Bundle JSON + 原創生成素材 |
-| 測試 | 12 個 XCTest，全部通過 |
+| 展示資料 | Bundle JSON + 原創生成素材（可切換為後端 API） |
+| 測試 | 17 個 XCTest，全部通過 |
 | CI | GitHub Actions：main push／PR 自動 build & test |
 | 已驗證環境 | iPhone 15 Simulator / iOS 17.5 |
 
@@ -42,9 +44,9 @@
 
 ### 可替換的資料來源
 
-`UserData` 不直接讀取 JSON，而是依賴 `PostRepository` protocol。正式 App 預設注入 `LocalPostRepository`，測試則注入 mock repository。
+`UserData` 不直接讀取 JSON，而是依賴 `PostRepository` protocol：正式 App 依設定注入本地或遠端實作，測試則注入 mock repository。
 
-這個切分讓 UI 與資料來源解耦。App 預設使用可離線展示的 `LocalPostRepository`，也提供可注入 endpoint 與 `URLSession` 的 async `RemotePostRepository`；切換資料來源不需要重寫貼文畫面。
+這個切分讓 UI 與資料來源解耦，而且已經被實際兌現——接上後端時，`Post`、`PostList` 與 `RemotePostRepository` 一行都沒有改。做到這件事的是讓後端去對齊既有的 JSON 契約，而不是讓 App 遷就後端。
 
 ```mermaid
 flowchart LR
@@ -53,7 +55,10 @@ flowchart LR
     Contract --> Local["LocalPostRepository<br/>Bundle JSON"]
     Contract -. 測試注入 .-> Mock["MockPostRepository"]
     Contract --> Remote["RemotePostRepository<br/>async URLSession"]
+    Remote --> API["backend-practice<br/>Express + SQLite"]
 ```
+
+實際選哪一個由 `SceneDelegate` 決定：設定了後端位址就注入 `RemotePostRepository`，否則退回 `LocalPostRepository`。這個判斷刻意不放在 `UserData` 的預設參數裡——那樣會讓每個 SwiftUI preview 都去打網路。
 
 ### 單一共享狀態
 
@@ -75,8 +80,9 @@ flowchart LR
 - 正式推薦／熱門 JSON fixture 解碼
 - loading、empty、error 與單一分頁 retry 狀態
 - 遠端成功回應、JSON decoding 與 HTTP error
+- 後端位址的組裝、空值處理與未設定時的 fallback
 
-目前結果：**12 passed、0 failed、0 skipped**。
+目前結果：**17 passed、0 failed、0 skipped**。
 
 ## 一個實際解決的技術問題
 
@@ -97,8 +103,9 @@ tweetTweet/
 ├── Controller/
 │   ├── Main/                  # SwiftUI 功能畫面
 │   └── Scenario/              # App / Scene bootstrap
+├── Config/                    # xcconfig：簽章與後端位址
 ├── Model/                     # Post、PostList
-├── Network/                   # Repository protocol 與本地實作
+├── Network/                   # Repository protocol、本地／遠端實作與設定
 ├── View/
 │   ├── Customised/            # 共用 SwiftUI 元件
 │   └── TableViewCell/         # 貼文卡片
@@ -126,6 +133,26 @@ tweetTweet/
 
 專案沒有第三方 dependency，也不需要建立帳號、設定 API key 或啟動後端。
 
+### 可選：改由後端供應動態牆
+
+預設不指向任何後端。要接上 [backend-practice](https://github.com/cowton0627/backend-practice)：
+
+```sh
+cp Config/API.local.xcconfig.example Config/API.local.xcconfig
+```
+
+檔案裡已經寫好本機後端的位址（`http` / `localhost:3000`），改成自己的即可。這個檔案被 `.gitignore` 排除，因為每個人的後端位址不同。
+
+後端側：
+
+```sh
+npm ci && npm run seed && npm run dev
+```
+
+重新 build App 後，動態牆就改由 API 供應。沒有這個設定檔時 App 一切照舊，讀取內建 JSON。
+
+位址拆成 scheme 與 host 兩個變數，是因為 **xcconfig 把 `//` 當成註解起始**——寫成 `http://localhost:3000` 會被靜默截斷成 `http:`。
+
 ## 如何執行測試
 
 在 Xcode 選擇 `tweetTweet` scheme 後按 `Command-U`。Shared scheme 已包含 `tweetTweetTests`，不需額外設定 test plan。
@@ -140,21 +167,23 @@ GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以�
 4. 進入發文流程並選擇圖片。
 5. 回到程式碼，從 `PostRepository`、`LocalPostRepository` 與 `UserData` 說明 dependency injection。
 6. 執行測試，展示 mock repository 與正式 JSON fixture 都受到驗證。
+7. 起後端、直接改一筆 SQLite 資料再重啟 App，證明畫面內容真的來自 API。
 
 ## 已知限制與下一步
 
 這是一個 UI 與狀態架構原型，不是完整社群服務：
 
-- 展示版預設來自 Bundle JSON，尚未指定正式後端 endpoint
-- 遠端 Repository 已完成，但沒有登入、寫入 API 與本地持久化
-- 搜尋與貼文互動仍是本地行為
+- 動態牆可以來自後端，但貼文圖片仍讀取 App bundle 內的檔案
+- 沒有登入、寫入 API 與本地持久化；發文只存在記憶體
+- 搜尋與貼文互動（讚、追蹤）仍是本地行為
 - `Controller/` 命名仍保留早期 UIKit 專案痕跡
 
 下一階段規劃：
 
-1. 補齊全新素材版本的流程截圖或操作影片
-2. 完成實機 VoiceOver 操作驗證
-3. 若有正式服務，再加入認證、寫入 API、cache 與離線策略
+1. 圖片改由後端供應，`loadImage(name:)` 換成非同步載入與快取
+2. 發文寫回後端，含圖片上傳
+3. 完成實機 VoiceOver 操作驗證
+4. 補齊全新素材版本的流程截圖或操作影片
 
 另有一份尚在探索、供後端研究使用的
 [`Private Family Network 產品與架構 Brief`](docs/PRIVATE_FAMILY_NETWORK_BRIEF.md)。
