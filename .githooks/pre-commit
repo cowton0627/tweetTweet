@@ -14,7 +14,10 @@ set -e
 # ---- Layer 1: generic shape patterns (committed, public-safe) ----
 # Format: "pattern|label"
 GENERIC_PATTERNS=(
-    'DEVELOPMENT_TEAM[[:space:]]*=[[:space:]]*[A-Z0-9]{8,}|DEVELOPMENT_TEAM with a real value'
+    # The leading class excludes '_', or LOCAL_DEVELOPMENT_TEAM = <placeholder>
+    # trips it; the optional bracket covers "DEVELOPMENT_TEAM[sdk=iphoneos*]",
+    # which overrides an xcconfig value just as effectively as the plain form.
+    '(^|[^_A-Za-z0-9])"?DEVELOPMENT_TEAM(\[[^]]*\])?"?[[:space:]]*=[[:space:]]*"?[A-Z0-9]{8,12}"?|DEVELOPMENT_TEAM with a real value'
     'PROVISIONING_PROFILE_SPECIFIER[[:space:]]*=[[:space:]]*[^"'"'"';[:space:]]+|PROVISIONING_PROFILE_SPECIFIER set'
     'PROVISIONING_PROFILE[[:space:]]*=[[:space:]]*[A-F0-9-]{20,}|PROVISIONING_PROFILE UUID'
     '-----BEGIN[[:space:]]+[A-Z[:space:]]*PRIVATE KEY-----|private key block'
@@ -76,6 +79,17 @@ if [ "$violations" -gt 0 ]; then
     printf "%b" "$violation_output"
     echo "If this is intentional, bypass with: git commit --no-verify"
     exit 1
+fi
+
+# Hand off to the global hook. core.hooksPath replaces rather than adds, so
+# setting it to .githooks here means ~/.config/git/hooks never runs — and its
+# gitleaks content scan would be lost with it.
+global_hooks=$(git config --global --get core.hooksPath || true)
+if [ -n "$global_hooks" ]; then
+    global_hook="$global_hooks/pre-commit"
+    if [ -x "$global_hook" ] && [ "$global_hook" != "$0" ]; then
+        exec "$global_hook" "$@"
+    fi
 fi
 
 exit 0
