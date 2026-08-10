@@ -6,7 +6,7 @@
 
 專案採 local-first 設計：不需帳號、API key 或後端服務，clone 後即可在 Simulator 完整操作，適合作為可重現的 iOS 作品集案例。
 
-同時它也可以接上真正的後端。加一個本機設定檔，動態牆就改由 [backend-practice](https://github.com/cowton0627/backend-practice)（Express + TypeScript + SQLite）供應，App 的 model 與 decoder 完全不用改；沒設定時自動退回內建 JSON。
+同時它也可以接上真正的後端。加一個本機設定檔，動態牆就改由 [tweettweet-api](https://github.com/cowton0627/tweettweet-api)（Express + TypeScript + SQLite）供應，App 的 model 與 decoder 完全不用改；沒設定時自動退回內建 JSON。
 
 <p>
   <img src="screenshots/home.png" alt="tweetTweet 推薦動態流（淺色模式）" width="240" />
@@ -55,7 +55,7 @@ flowchart LR
     Contract --> Local["LocalPostRepository<br/>Bundle JSON"]
     Contract -. 測試注入 .-> Mock["MockPostRepository"]
     Contract --> Remote["RemotePostRepository<br/>async URLSession"]
-    Remote --> API["backend-practice<br/>Express + SQLite"]
+    Remote --> API["tweettweet-api<br/>Express + SQLite"]
 ```
 
 實際選哪一個由 `SceneDelegate` 決定：設定了後端位址就注入 `RemotePostRepository`，否則退回 `LocalPostRepository`。這個判斷刻意不放在 `UserData` 的預設參數裡——那樣會讓每個 SwiftUI preview 都去打網路。
@@ -135,7 +135,7 @@ tweetTweet/
 
 ### 可選：改由後端供應動態牆
 
-預設不指向任何後端。要接上 [backend-practice](https://github.com/cowton0627/backend-practice)：
+預設不指向任何後端。要接上 [tweettweet-api](https://github.com/cowton0627/tweettweet-api)：
 
 ```sh
 cp Config/API.local.xcconfig.example Config/API.local.xcconfig

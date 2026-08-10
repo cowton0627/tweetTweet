@@ -4,7 +4,7 @@
 // Write the host without a scheme and without "//" — an xcconfig treats "//"
 // as the start of a comment, so a full URL would be truncated.
 
-// A backend running on this machine (see the backend-practice repository):
+// A backend running on this machine (see the tweettweet-api repository):
 LOCAL_API_SCHEME = http
 LOCAL_API_HOST = localhost:3000
 

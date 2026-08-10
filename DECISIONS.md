@@ -203,7 +203,7 @@ App 預設仍注入 `LocalPostRepository`,讓作品集 clone 後可以離線、�
 
 ### 後端沿用既有 Express 專案,不照原方案重寫 FastAPI
 
-`docs/BACKEND_FEASIBILITY.md` 當初建議 FastAPI + Postgres,理由是「複用既有 Python / uv 技能」。實際盤點後發現另一個 repo `backend-practice` 已經是帶測試、CI 與版本化 migration 的 Express + TypeScript + SQLite 專案,那個理由就不存在了。為了貼合一份研究文件而重寫一遍能跑的後端是純粹的浪費。
+`docs/BACKEND_FEASIBILITY.md` 當初建議 FastAPI + Postgres,理由是「複用既有 Python / uv 技能」。實際盤點後發現另一個 repo `tweettweet-api`(當時名為 `backend-practice`)已經是帶測試、CI 與版本化 migration 的 Express + TypeScript + SQLite 專案,那個理由就不存在了。為了貼合一份研究文件而重寫一遍能跑的後端是純粹的浪費。
 
 同理也放棄 monorepo:後端已有自己的 commit 歷史與 CI,併進來會丟掉這些。改成雙 repo,兩邊 README 互相連結。
 

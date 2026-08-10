@@ -4,7 +4,7 @@
 
 ## 目前狀態
 
-tweetTweet 已從純本地原型變成可接後端的 App。動態牆能由 [backend-practice](https://github.com/cowton0627/backend-practice)（Express + TypeScript + SQLite）供應，沒有設定後端位址時仍讀取內建 JSON，clone 後即可離線操作的性質沒有改變。
+tweetTweet 已從純本地原型變成可接後端的 App。動態牆能由 [tweettweet-api](https://github.com/cowton0627/tweettweet-api)（Express + TypeScript + SQLite）供應，沒有設定後端位址時仍讀取內建 JSON，clone 後即可離線操作的性質沒有改變。
 
 貼文圖片目前仍來自 App bundle，是刻意保留的過渡狀態。
 
