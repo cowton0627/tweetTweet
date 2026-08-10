@@ -23,7 +23,7 @@
 | 狀態管理 | `ObservableObject` + `@EnvironmentObject` |
 | 資料層 | Repository pattern + dependency injection |
 | 展示資料 | Bundle JSON + 原創生成素材（可切換為後端 API） |
-| 測試 | 21 個 XCTest，全部通過 |
+| 測試 | 30 個 XCTest，全部通過 |
 | CI | GitHub Actions：main push／PR 自動 build & test |
 | 已驗證環境 | iPhone 15 Simulator / iOS 17.5 |
 
@@ -56,6 +56,8 @@ flowchart LR
     Contract -. 測試注入 .-> Mock["MockPostRepository"]
     Contract --> Remote["RemotePostRepository<br/>async URLSession"]
     Remote --> API["tweettweet-api<br/>Express + SQLite"]
+    View --> Images["PostImage<br/>RemoteImageLoader"]
+    Images --> API
 ```
 
 實際選哪一個由 `SceneDelegate` 決定：設定了後端位址就注入 `RemotePostRepository`，否則退回 `LocalPostRepository`。這個判斷刻意不放在 `UserData` 的預設參數裡——那樣會讓每個 SwiftUI preview 都去打網路。
@@ -82,8 +84,9 @@ flowchart LR
 - 遠端成功回應、JSON decoding 與 HTTP error
 - 後端位址的組裝、空值處理與未設定時的 fallback
 - 網路與 HTTP 失敗的使用者訊息（依原因分類，不外洩框架的英文描述）
+- 圖片載入的記憶體快取、同 URL 併發請求去重，以及失敗不被當成結果快取
 
-目前結果：**21 passed、0 failed、0 skipped**。
+目前結果：**30 passed、0 failed、0 skipped**。
 
 ## 一個實際解決的技術問題
 
@@ -174,15 +177,14 @@ GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以�
 
 這是一個 UI 與狀態架構原型，不是完整社群服務：
 
-- 動態牆可以來自後端，但貼文圖片仍讀取 App bundle 內的檔案
 - 沒有登入、寫入 API 與本地持久化；發文只存在記憶體
 - 搜尋與貼文互動（讚、追蹤）仍是本地行為
 - `Controller/` 命名仍保留早期 UIKit 專案痕跡
 
 下一階段規劃：
 
-1. 圖片改由後端供應，`loadImage(name:)` 換成非同步載入與快取
-2. 發文寫回後端，含圖片上傳
+1. 發文寫回後端，含圖片上傳
+2. 後端 Docker 化並部署到雲端，讓展示不依賴特定機器保持開機
 3. 完成實機 VoiceOver 操作驗證
 4. 補齊全新素材版本的流程截圖或操作影片
 

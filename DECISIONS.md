@@ -272,3 +272,19 @@ SQLite 也留著沒換 Postgres。已經有可用的 migration 機制,換 DB 換
 Xcode 開過一次專案之後,把 `Config` group 變成 `Recovered References`,並丟掉四個 xcconfig 的 file reference。原因是 group 宣告了 `path = Config`,而每個 file reference 又以 `SOURCE_ROOT` 為基準重複寫成 `Config/<檔名>`——路徑等於宣告兩次,Xcode 重新解讀時就判定檔案不存在。
 
 改成 file reference 只寫檔名、`sourceTree = "<group>"`,相對於 group 的路徑。build 其實從頭到尾都正常(`baseConfigurationReference` 仍指得到檔案),壞掉的只有 Xcode 導覽列與每次開啟就被改寫的 pbxproj。
+
+### 圖片:相對路徑由 repository 解析,快取存解碼後的結果
+
+後端回傳的是 `/media/post-01.jpg` 這樣的相對路徑,不是完整網址。伺服器沒有可靠的方法知道自己被用什麼網域連上,而 quick tunnel 每次重啟都換一個;把絕對網址寫進資料庫等於把一個臨時網域烤進每一列資料。
+
+解析放在 `RemotePostRepository` 解碼回應的當下,而不是 view 層。這樣「base URL 是什麼」這件事留在網路層邊界,下游每個顯示圖片的元件都不需要知道;也讓 `LocalPostRepository` 回傳的純檔名原封不動通過,離線路徑因此還能運作。
+
+`RemoteImageLoader` 快取的是**解碼後的 `UIImage`,不是位元組**。URLSession 自己的快取已經能避免重複下載,但避不掉重複解碼——而 cell 每次捲動重建時,解碼才是貴的那一半。同一個 URL 的併發請求也會收斂成一次下載:一個畫面上好幾個 cell 會同時要同一張頭像。
+
+失敗不進快取。這聽起來理所當然,但如果把 `Task` 直接留在 in-flight 表裡不清掉,一次 500 就會讓那張圖在整個 App 生命週期內都失敗。
+
+### bundle 裡的圖片留著,它們不是殘留物
+
+M2 的驗收標準原本寫的是「把 `Resources/` 的圖片從 bundle 移除,App 仍能正常顯示」。實際做完才發現這個標準是錯的:那些檔案是 `LocalPostRepository` 的素材,也就是沒設定後端時的離線 fallback。移除它們不會證明圖片來自後端,只會弄壞離線模式。
+
+真正的驗收是後端的 request log——一次冷啟動產生 23 個 `/media/*.jpg` 請求,而 `PostImage` 對絕對 URL 只走遠端分支,不會回頭找 bundle。
