@@ -23,7 +23,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // The repository is chosen here rather than defaulted inside UserData:
         // this is the one place that should reach for the network. Previews and
         // tests construct UserData directly and keep the bundled JSON.
-        let userData = UserData(repository: PostRepositoryFactory.makeDefault())
+        let backend = PostRepositoryFactory.makeDefault()
+        let userData = UserData(
+            repository: backend.repository,
+            composer: backend.composer
+        )
         let contentView = HomeView().environmentObject(userData)
 
         // Use a UIHostingController as window root view controller.

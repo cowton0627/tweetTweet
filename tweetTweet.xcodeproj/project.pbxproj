@@ -42,6 +42,7 @@
 		02BF00000000000000000002 /* PostDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000002 /* PostDecodingTests.swift */; };
 		02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000004 /* APIConfigurationTests.swift */; };
 		02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000005 /* RemoteImageLoaderTests.swift */; };
+		02BF00000000000000000006 /* ComposeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000006 /* ComposeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		02AF00000000000000000003 /* tweetTweetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tweetTweetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000005 /* RemoteImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000006 /* ComposeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeTests.swift; sourceTree = "<group>"; };
 		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 		FEED00000000000000000003 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				02AF00000000000000000002 /* PostDecodingTests.swift */,
 				02AF00000000000000000004 /* APIConfigurationTests.swift */,
 				02AF00000000000000000005 /* RemoteImageLoaderTests.swift */,
+				02AF00000000000000000006 /* ComposeTests.swift */,
 			);
 			path = tweetTweetTests;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				02BF00000000000000000002 /* PostDecodingTests.swift in Sources */,
 				02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */,
 				02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */,
+				02BF00000000000000000006 /* ComposeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

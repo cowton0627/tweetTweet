@@ -45,7 +45,14 @@ final class APIConfigurationTests: XCTestCase {
     // The test bundle carries no APIScheme/APIHost, so this exercises the
     // fallback that keeps the app usable with no backend configured.
     func testFactoryFallsBackToBundledDataWithoutConfiguration() {
-        let repository = PostRepositoryFactory.makeDefault(bundle: Bundle(for: Self.self))
-        XCTAssertTrue(repository is LocalPostRepository)
+        let backend = PostRepositoryFactory.makeDefault(bundle: Bundle(for: Self.self))
+        XCTAssertTrue(backend.repository is LocalPostRepository)
+    }
+
+    // Offline there is nowhere to publish to, and that is expressed by having
+    // no composer at all rather than by one that always fails.
+    func testNoComposerWithoutABackend() {
+        let backend = PostRepositoryFactory.makeDefault(bundle: Bundle(for: Self.self))
+        XCTAssertNil(backend.composer)
     }
 }

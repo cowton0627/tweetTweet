@@ -14,15 +14,22 @@ final class UserData: ObservableObject {
     @Published private(set) var loadStates: [PostListCategory: FeedLoadState]
 
     private let repository: PostRepository
+    private let composer: PostComposer?
     private var recommendPostDic: [Int: Int] = [:]
     private var hotPostDic: [Int: Int] = [:]
 
+    /// Whether posts can be published. False offline, where composing still
+    /// works but never leaves the device.
+    var canPublish: Bool { composer != nil }
+
     init(
         repository: PostRepository = LocalPostRepository(),
+        composer: PostComposer? = nil,
         initialRecommendPosts: PostList? = nil,
         initialHotPosts: PostList? = nil
     ) {
         self.repository = repository
+        self.composer = composer
         self.recommendPostList = initialRecommendPosts ?? PostList(list: [])
         self.hotPostList = initialHotPosts ?? PostList(list: [])
         self.loadStates = [
@@ -111,6 +118,59 @@ final class UserData: ObservableObject {
             setLoadState(.loaded, for: .hot)
             rebuildIndex(for: .hot)
         }
+    }
+
+    /// Publishes a post, or records it locally when there is no backend.
+    ///
+    /// Image references are whatever the compose screen collected: URLs of
+    /// pictures the server already holds, or keys into `RuntimeImageStore` for
+    /// a photo just taken. Only the latter need uploading, so a post reusing an
+    /// existing picture costs no bandwidth.
+    func compose(
+        text: String,
+        images: [String],
+        into category: PostListCategory
+    ) async throws {
+        guard let composer else {
+            insert(makeLocalPost(text: text, images: images), into: category)
+            return
+        }
+
+        var uploaded: [String] = []
+        for reference in images {
+            if let url = URL(string: reference), url.scheme != nil, url.host != nil {
+                uploaded.append(reference)
+            } else if let image = RuntimeImageStore.image(forKey: reference) {
+                uploaded.append(try await composer.upload(image))
+            }
+            // Anything else is a bundled asset with no counterpart on the
+            // server; it is dropped rather than sent as a broken reference.
+        }
+
+        let post = try await composer.compose(
+            text: text,
+            images: uploaded,
+            category: category
+        )
+        insert(post, into: category)
+    }
+
+    private func makeLocalPost(text: String, images: [String]) -> Post {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return Post(
+            id: nextPostID(),
+            avatar: "avatar-01.jpg",
+            vip: false,
+            name: "我",
+            date: formatter.string(from: Date()),
+            isFollowed: true,
+            text: text,
+            images: images,
+            commentCount: 0,
+            likeCount: 0,
+            isLiked: false
+        )
     }
 
     func nextPostID() -> Int {

@@ -31,6 +31,31 @@ struct Post: Codable, Identifiable {    //Data Model(資料模型)是不可見�
 }
     
     extension Post {    //因為Post裡面是不可視的資料, 所以, 欲將可視的物件加進Post裡用extension
+        // The API sends an instant (2020-01-05T14:51:00.000Z), never a display
+        // string: a server cannot know which clock a reader is looking at.
+        // Turning it into local wall-clock time is this side's job.
+        private static let instantParser: ISO8601DateFormatter = {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            return formatter
+        }()
+
+        private static let displayFormatter: DateFormatter = {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd HH:mm"
+            return formatter
+        }()
+
+        /// Local wall-clock time. Falls back to the raw value so a post is
+        /// never rendered blank just because its timestamp was unexpected.
+        var displayDate: String {
+            guard let instant = Post.instantParser.date(from: date) else {
+                return date
+            }
+            return Post.displayFormatter.string(from: instant)
+        }
+
         var commentCountText: String {  //只讀屬性(Calculate Property), 即不能賦值
             if commentCount <= 0 { return "回應" }
             if commentCount < 1000 { return "\(commentCount)" }

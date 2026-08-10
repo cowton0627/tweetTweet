@@ -5,7 +5,7 @@
 //  Loads the two feed categories from a backend.
 //
 
-import Foundation
+import UIKit
 
 struct RemotePostRepository: PostRepository {
     let baseURL: URL
@@ -86,11 +86,127 @@ struct RemotePostRepository: PostRepository {
     }
 }
 
+extension RemotePostRepository: PostComposer {
+    func upload(_ image: UIImage) async throws -> String {
+        guard let jpeg = image.jpegData(compressionQuality: 0.85) else {
+            throw RemotePostRepositoryError.imageEncodingFailed
+        }
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        var request = URLRequest(url: baseURL.appendingPathComponent("api/posts/media"))
+        request.httpMethod = "POST"
+        request.timeoutInterval = 60
+        request.setValue(
+            "multipart/form-data; boundary=\(boundary)",
+            forHTTPHeaderField: "Content-Type"
+        )
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        var body = Data()
+        body.appendASCII("--\(boundary)\r\n")
+        // The server names the file after a hash of its contents, so what is
+        // claimed here is only a formality.
+        body.appendASCII(
+            "Content-Disposition: form-data; name=\"image\"; filename=\"upload.jpg\"\r\n"
+        )
+        body.appendASCII("Content-Type: image/jpeg\r\n\r\n")
+        body.append(jpeg)
+        body.appendASCII("\r\n--\(boundary)--\r\n")
+        request.httpBody = body
+
+        let data = try await send(request)
+        struct UploadResponse: Decodable { let path: String }
+        do {
+            return try decoder.decode(UploadResponse.self, from: data).path
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    func compose(
+        text: String,
+        images: [String],
+        category: PostListCategory
+    ) async throws -> Post {
+        struct Payload: Encodable {
+            let text: String
+            let images: [String]
+            let category: String
+        }
+
+        var request = URLRequest(url: baseURL.appendingPathComponent("api/posts"))
+        request.httpMethod = "POST"
+        request.timeoutInterval = 30
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpBody = try JSONEncoder().encode(
+            Payload(
+                text: text,
+                // Sent back as server-relative paths: the absolute URLs this
+                // client holds were built from a base URL the server does not
+                // know about.
+                images: images.map(relativeMediaReference),
+                category: category.rawValue
+            )
+        )
+
+        let data = try await send(request)
+        do {
+            var post = try decoder.decode(Post.self, from: data)
+            post.avatar = absoluteMediaReference(post.avatar)
+            post.images = post.images.map(absoluteMediaReference)
+            return post
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    /// Performs a request and returns its body, mapping failures the same way
+    /// the read path does.
+    private func send(_ request: URLRequest) async throws -> Data {
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(for: request)
+        } catch let error as URLError {
+            throw RemotePostRepositoryError.transportFailed(error)
+        }
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw RemotePostRepositoryError.invalidResponse
+        }
+        guard 200..<300 ~= httpResponse.statusCode else {
+            throw RemotePostRepositoryError.httpStatus(httpResponse.statusCode)
+        }
+        return data
+    }
+
+    private func relativeMediaReference(_ reference: String) -> String {
+        guard
+            let url = URL(string: reference),
+            url.scheme != nil,
+            url.host != nil
+        else {
+            return reference
+        }
+        return url.path
+    }
+}
+
+private extension Data {
+    /// Multipart framing is ASCII by definition; the payload itself is
+    /// appended as raw bytes.
+    mutating func appendASCII(_ string: String) {
+        append(Data(string.utf8))
+    }
+}
+
 enum RemotePostRepositoryError: LocalizedError {
     case transportFailed(URLError)
     case invalidResponse
     case httpStatus(Int)
     case decodingFailed(Error)
+    case imageEncodingFailed
 
     /// Surfaced directly to the reader, so each case says what happened and
     /// whether retrying is worth it — never what the framework called it.
@@ -130,6 +246,8 @@ enum RemotePostRepositoryError: LocalizedError {
             }
         case .decodingFailed:
             return "無法解析伺服器回傳的貼文資料。"
+        case .imageEncodingFailed:
+            return "無法處理選取的圖片。"
         }
     }
 }

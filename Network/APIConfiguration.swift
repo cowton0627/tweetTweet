@@ -42,10 +42,17 @@ enum APIConfiguration {
 enum PostRepositoryFactory {
     /// The remote repository when a backend is configured, bundled JSON when
     /// it is not, so the app stays usable with no server running.
-    static func makeDefault(bundle: Bundle = .main) -> PostRepository {
+    ///
+    /// The composer comes back alongside it and is nil offline: without a
+    /// server there is nowhere to publish to, and the app says so by having
+    /// nothing rather than by throwing later.
+    static func makeDefault(
+        bundle: Bundle = .main
+    ) -> (repository: PostRepository, composer: PostComposer?) {
         guard let baseURL = APIConfiguration.baseURL(from: bundle) else {
-            return LocalPostRepository()
+            return (LocalPostRepository(), nil)
         }
-        return RemotePostRepository(baseURL: baseURL)
+        let remote = RemotePostRepository(baseURL: baseURL)
+        return (remote, remote)
     }
 }

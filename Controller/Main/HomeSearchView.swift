@@ -23,7 +23,7 @@ struct HomeSearchView: View {
         return unique.filter {
             $0.name.localizedCaseInsensitiveContains(trimmed) ||
             $0.text.localizedCaseInsensitiveContains(trimmed) ||
-            $0.date.localizedCaseInsensitiveContains(trimmed)
+            $0.displayDate.localizedCaseInsensitiveContains(trimmed)
         }
     }
 

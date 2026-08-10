@@ -35,7 +35,7 @@ struct PostCell: View {
                         .font(.headline.weight(.semibold))
                         .foregroundColor(Color(red: 242 / 255, green: 99 / 255, blue: 4 / 255))
                         .lineLimit(1)
-                    Text(post.date)
+                    Text(post.displayDate)
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)

@@ -5,7 +5,7 @@
       "avatar": "avatar-03.jpg",
       "vip": true,
       "name": "熱門話題",
-      "date": "2020-02-01 12:30",
+      "date": "2020-02-01T04:30:00.000Z",
       "isFollowed": false,
       "text": "這是一則熱門分頁的測試貼文，確認左右滑動切換後可以正常載入內容。",
       "images": [
@@ -20,7 +20,7 @@
       "avatar": "avatar-05.jpg",
       "vip": false,
       "name": "城市觀察",
-      "date": "2020-02-03 09:15",
+      "date": "2020-02-03T01:15:00.000Z",
       "isFollowed": false,
       "text": "今天的照片整理好了，剛好拿來測試多圖排版。",
       "images": [
@@ -37,7 +37,7 @@
       "avatar": "avatar-07.jpg",
       "vip": true,
       "name": "週末散步",
-      "date": "2020-02-05 18:22",
+      "date": "2020-02-05T10:22:00.000Z",
       "isFollowed": false,
       "text": "熱門列表也支援五張圖片，按讚與留言數會跟推薦列表一樣即時更新。",
       "images": [
@@ -56,7 +56,7 @@
       "avatar": "avatar-09.jpg",
       "vip": false,
       "name": "早餐店觀察員",
-      "date": "2020-02-06 08:10",
+      "date": "2020-02-06T00:10:00.000Z",
       "isFollowed": false,
       "text": "熱門頁放一則很日常的內容，反而比較像真的時間線：早餐、上班、補眠、再看手機。",
       "images": [
@@ -74,7 +74,7 @@
       "avatar": "avatar-08.jpg",
       "vip": true,
       "name": "晚間跑圖",
-      "date": "2020-02-07 20:45",
+      "date": "2020-02-07T12:45:00.000Z",
       "isFollowed": false,
       "text": "跑完一輪相簿之後，才發現單圖和多圖混著排，閱讀節奏會比較有變化。",
       "images": [
@@ -93,7 +93,7 @@
       "avatar": "avatar-04.jpg",
       "vip": false,
       "name": "展場紀錄",
-      "date": "2020-02-08 14:22",
+      "date": "2020-02-08T06:22:00.000Z",
       "isFollowed": true,
       "text": "這種偏敘事的貼文適合留在熱門頁，內容比較長，搭配多張照片會讓列表更像真的社群流。",
       "images": [

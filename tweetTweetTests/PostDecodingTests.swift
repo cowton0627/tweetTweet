@@ -250,6 +250,117 @@ final class RemotePostRepositoryTests: XCTestCase {
         XCTAssertEqual(post.images, ["https://cdn.example.test/already-absolute.jpg"])
     }
 
+    // The multipart body is hand-assembled, so its framing is asserted here:
+    // a stray CRLF or a missing boundary terminator is rejected by the server
+    // with a message that says nothing about which part was wrong.
+    func testUploadSendsAWellFormedMultipartBody() async throws {
+        var captured: URLRequest?
+        URLProtocolStub.requestHandler = { request in
+            captured = request
+            let response = HTTPURLResponse(
+                url: try XCTUnwrap(request.url),
+                statusCode: 201,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )
+            let body = #"{"path":"/media/abc.jpg"}"#
+            return (try XCTUnwrap(response), Data(body.utf8))
+        }
+
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 2, height: 2))
+            .image { context in
+                UIColor.blue.setFill()
+                context.fill(CGRect(x: 0, y: 0, width: 2, height: 2))
+            }
+
+        let path = try await makeRemoteRepository().upload(image)
+        XCTAssertEqual(path, "/media/abc.jpg")
+
+        let request = try XCTUnwrap(captured)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertEqual(request.url?.path, "/api/posts/media")
+
+        let contentType = try XCTUnwrap(
+            request.value(forHTTPHeaderField: "Content-Type")
+        )
+        XCTAssertTrue(contentType.hasPrefix("multipart/form-data; boundary="))
+        let boundary = String(contentType.dropFirst("multipart/form-data; boundary=".count))
+        XCTAssertFalse(boundary.isEmpty)
+
+        // URLProtocol moves a set httpBody into a stream, so read it back.
+        let body = try XCTUnwrap(request.httpBody ?? request.httpBodyStream.map(Self.drain))
+        // Decoded leniently: 200 bytes in, the JPEG payload has already
+        // started and would make a strict UTF-8 decode fail.
+        let prefix = String(decoding: body.prefix(200), as: UTF8.self)
+        XCTAssertTrue(prefix.hasPrefix("--\(boundary)\r\n"), prefix)
+        XCTAssertTrue(prefix.contains("name=\"image\""))
+        XCTAssertTrue(prefix.contains("Content-Type: image/jpeg\r\n\r\n"))
+
+        // The payload has to survive as raw bytes, not as text.
+        // Data.contains(Data) is iOS 16+; this project targets 15.
+        XCTAssertNotNil(body.range(of: Data([0xff, 0xd8, 0xff])), "JPEG marker missing")
+
+        let tail = String(decoding: body.suffix(boundary.count + 8), as: UTF8.self)
+        XCTAssertEqual(tail, "\r\n--\(boundary)--\r\n")
+    }
+
+    func testComposeSendsServerRelativeImagePaths() async throws {
+        var capturedBody: Data?
+        URLProtocolStub.requestHandler = { request in
+            capturedBody = request.httpBody
+                ?? request.httpBodyStream.map(Self.drain)
+            let response = HTTPURLResponse(
+                url: try XCTUnwrap(request.url),
+                statusCode: 201,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )
+            let body = """
+            {
+              "id": 2051, "avatar": "/media/avatar-01.jpg", "vip": false,
+              "name": "我", "date": "2026-08-10T11:01:47.436Z",
+              "isFollowed": true, "text": "hi",
+              "images": ["/media/abc.jpg"],
+              "commentCount": 0, "likeCount": 0, "isLiked": false
+            }
+            """
+            return (try XCTUnwrap(response), Data(body.utf8))
+        }
+
+        let post = try await makeRemoteRepository().compose(
+            text: "hi",
+            images: ["https://example.test/media/abc.jpg"],
+            category: .recommend
+        )
+
+        // Absolute URLs are this client's own construction; the server only
+        // knows its own paths.
+        let sent = try XCTUnwrap(capturedBody)
+        let json = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: sent) as? [String: Any]
+        )
+        XCTAssertEqual(json["images"] as? [String], ["/media/abc.jpg"])
+        XCTAssertEqual(json["category"] as? String, "recommend")
+
+        // And what comes back is resolved for display.
+        XCTAssertEqual(post.images, ["https://example.test/media/abc.jpg"])
+        XCTAssertEqual(post.avatar, "https://example.test/media/avatar-01.jpg")
+    }
+
+    private static func drain(_ stream: InputStream) -> Data {
+        stream.open()
+        defer { stream.close() }
+        var data = Data()
+        let size = 4096
+        var buffer = [UInt8](repeating: 0, count: size)
+        while stream.hasBytesAvailable {
+            let read = stream.read(&buffer, maxLength: size)
+            if read <= 0 { break }
+            data.append(buffer, count: read)
+        }
+        return data
+    }
+
     private func makeRemoteRepository(
         baseURL: String = "https://example.test"
     ) -> RemotePostRepository {

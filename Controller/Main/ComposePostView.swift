@@ -17,6 +17,8 @@ struct ComposePostView: View {
     @State private var text: String = ""
     @State private var category: PostListCategory
     @State private var showEmptyTextHUD: Bool = false
+    @State private var isSending: Bool = false
+    @State private var failureMessage: String?
 
     init(attachedImages: [String] = [], initialCategory: PostListCategory = .recommend) {
         self.attachedImages = attachedImages
@@ -61,10 +63,27 @@ struct ComposePostView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("送出") {
-                        sendPost()
+                    if isSending {
+                        ProgressView()
+                    } else {
+                        Button("送出") {
+                            Task { await sendPost() }
+                        }
                     }
                 }
+            }
+            .disabled(isSending)
+            .alert(
+                "無法發表",
+                isPresented: Binding(
+                    get: { failureMessage != nil },
+                    set: { if !$0 { failureMessage = nil } }
+                ),
+                presenting: failureMessage
+            ) { _ in
+                Button("好", role: .cancel) {}
+            } message: { message in
+                Text(message)
             }
             .overlay(
                 Text("內容不能空白")
@@ -79,39 +98,30 @@ struct ComposePostView: View {
         }
     }
 
-    private func sendPost() {
+    private func sendPost() async {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
             showEmptyTextHUD = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                showEmptyTextHUD = false
-            }
+            try? await Task.sleep(nanoseconds: 1_200_000_000)
+            showEmptyTextHUD = false
             return
         }
 
-        let post = Post(
-            id: userData.nextPostID(),
-            avatar: "avatar-01.jpg",
-            vip: false,
-            name: "我",
-            date: composeDateString(),
-            isFollowed: true,
-            text: trimmed,
-            images: attachedImages,
-            commentCount: 0,
-            likeCount: 0,
-            isLiked: false
-        )
+        isSending = true
+        defer { isSending = false }
 
-        userData.insert(post, into: category)
-        dismiss()
-    }
-
-    private func composeDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        return formatter.string(from: Date())
+        do {
+            try await userData.compose(
+                text: trimmed,
+                images: attachedImages,
+                into: category
+            )
+            dismiss()
+        } catch {
+            // Stays on screen with the text intact, so a failed send does not
+            // cost the reader what they wrote.
+            failureMessage = error.localizedDescription
+        }
     }
 }
 
