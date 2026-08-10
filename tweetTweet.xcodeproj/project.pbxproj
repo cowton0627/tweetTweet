@@ -87,13 +87,13 @@
 		01AF00000000000000000028 /* APIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
 		02AF00000000000000000001 /* UserDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000002 /* PostDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDecodingTests.swift; sourceTree = "<group>"; };
-		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000003 /* tweetTweetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tweetTweetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Base.xcconfig; sourceTree = SOURCE_ROOT; };
-		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config/Signing.local.xcconfig.example; sourceTree = SOURCE_ROOT; };
-		FEED00000000000000000003 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/Signing.xcconfig; sourceTree = SOURCE_ROOT; };
-		FEED00000000000000000004 /* API.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config/API.xcconfig; sourceTree = SOURCE_ROOT; };
-		FEED00000000000000000005 /* API.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config/API.local.xcconfig.example; sourceTree = SOURCE_ROOT; };
+		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
+		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
+		FEED00000000000000000003 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
+		FEED00000000000000000004 /* API.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = API.xcconfig; sourceTree = "<group>"; };
+		FEED00000000000000000005 /* API.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = API.local.xcconfig.example; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +129,7 @@
 				01AF00000000000000000015 /* Resources */,
 				02DF00000000000000000001 /* tweetTweetTests */,
 				01DF00000000000000000002 /* Products */,
+				FEED00000000000000000001 /* Config */,
 			);
 			sourceTree = "<group>";
 		};
@@ -503,7 +504,7 @@
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = "-Wl,-sectcreate,__TEXT,__info_plist,InfoForBinary.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = example.tweettweet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.cowton0627.tweettweet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -527,7 +528,7 @@
 				INFOPLIST_FILE = Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = "-Wl,-sectcreate,__TEXT,__info_plist,InfoForBinary.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = example.tweettweet;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.cowton0627.tweettweet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -599,7 +600,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.tweettweetTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.cowton0627.tweettweetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -617,7 +618,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.tweettweetTests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.cowton0627.tweettweetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
