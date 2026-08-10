@@ -21,9 +21,7 @@ struct PostCell: View {
         var post = bindingPost
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
-                post.avatarImage
-                    .resizable()
-                    .scaledToFill()
+                PostImage(reference: post.avatar)
                     .frame(width: 48, height: 48)
                     .clipShape(Circle())
                     .overlay(

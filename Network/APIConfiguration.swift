@@ -46,9 +46,6 @@ enum PostRepositoryFactory {
         guard let baseURL = APIConfiguration.baseURL(from: bundle) else {
             return LocalPostRepository()
         }
-        return RemotePostRepository(
-            recommendURL: baseURL.appendingPathComponent("api/feeds/recommend"),
-            hotURL: baseURL.appendingPathComponent("api/feeds/hot")
-        )
+        return RemotePostRepository(baseURL: baseURL)
     }
 }

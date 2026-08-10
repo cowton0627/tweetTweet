@@ -186,15 +186,79 @@ final class RemotePostRepositoryTests: XCTestCase {
         }
     }
 
-    private func makeRemoteRepository() -> RemotePostRepository {
+    // The server sends relative paths because it cannot know the hostname it
+    // was reached by. Resolving them here keeps every view downstream from
+    // needing to know a base URL.
+    func testResolvesServerRelativeMediaPaths() async throws {
+        URLProtocolStub.requestHandler = { request in
+            let body = """
+            {
+              "list": [{
+                "id": 1, "avatar": "/media/avatar-01.jpg", "vip": false,
+                "name": "n", "date": "d", "isFollowed": false, "text": "t",
+                "images": ["/media/post-01.jpg", "/media/post-02.jpg"],
+                "commentCount": 0, "likeCount": 0, "isLiked": false
+              }]
+            }
+            """
+            let response = HTTPURLResponse(
+                url: try XCTUnwrap(request.url),
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )
+            return (try XCTUnwrap(response), Data(body.utf8))
+        }
+
+        let feed = try await makeRemoteRepository().loadRecommendPosts()
+        let post = try XCTUnwrap(feed.list.first)
+
+        XCTAssertEqual(post.avatar, "https://example.test/media/avatar-01.jpg")
+        XCTAssertEqual(post.images, [
+            "https://example.test/media/post-01.jpg",
+            "https://example.test/media/post-02.jpg"
+        ])
+    }
+
+    // Bundled filenames carry no leading slash and must survive untouched, so
+    // the offline repository keeps working.
+    func testLeavesNonPathReferencesAlone() async throws {
+        URLProtocolStub.requestHandler = { request in
+            let body = """
+            {
+              "list": [{
+                "id": 1, "avatar": "avatar-01.jpg", "vip": false,
+                "name": "n", "date": "d", "isFollowed": false, "text": "t",
+                "images": ["https://cdn.example.test/already-absolute.jpg"],
+                "commentCount": 0, "likeCount": 0, "isLiked": false
+              }]
+            }
+            """
+            let response = HTTPURLResponse(
+                url: try XCTUnwrap(request.url),
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )
+            return (try XCTUnwrap(response), Data(body.utf8))
+        }
+
+        let feed = try await makeRemoteRepository().loadRecommendPosts()
+        let post = try XCTUnwrap(feed.list.first)
+
+        XCTAssertEqual(post.avatar, "avatar-01.jpg")
+        XCTAssertEqual(post.images, ["https://cdn.example.test/already-absolute.jpg"])
+    }
+
+    private func makeRemoteRepository(
+        baseURL: String = "https://example.test"
+    ) -> RemotePostRepository {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: configuration)
-        let endpoint = URL(string: "https://example.test/posts")!
 
         return RemotePostRepository(
-            recommendURL: endpoint,
-            hotURL: endpoint,
+            baseURL: URL(string: baseURL)!,
             session: session
         )
     }

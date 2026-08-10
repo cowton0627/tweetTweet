@@ -13,15 +13,17 @@ struct PostList: Codable {
 
 struct Post: Codable, Identifiable {    //Data Model(資料模型)是不可見的, 或說不可預覽的; 相對視圖來說
     let id: Int
-    let avatar: String  //頭貼, 圖片名; 實例變量, 有定義Post才有
+    // Either a bundled filename, a RuntimeImageStore key, or an absolute URL:
+    // the repository resolves server-relative paths before the view sees them.
+    var avatar: String
     let vip: Bool       //是否為VIP; 實例變量, 有定義Post才有
     let name: String
     let date: String
-    
+
     var isFollowed: Bool
-    
+
     let text: String
-    let images: [String]    //圖片是陣列, 陣列的元素是string類型
+    var images: [String]    //圖片是陣列, 陣列的元素是string類型
     
     var commentCount: Int
     var likeCount: Int
@@ -29,10 +31,6 @@ struct Post: Codable, Identifiable {    //Data Model(資料模型)是不可見�
 }
     
     extension Post {    //因為Post裡面是不可視的資料, 所以, 欲將可視的物件加進Post裡用extension
-        var avatarImage: Image {
-            return loadImage(name: avatar)
-        }
-        
         var commentCountText: String {  //只讀屬性(Calculate Property), 即不能賦值
             if commentCount <= 0 { return "回應" }
             if commentCount < 1000 { return "\(commentCount)" }

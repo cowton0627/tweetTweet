@@ -2,40 +2,37 @@
 //  RemotePostRepository.swift
 //  tweetTweet
 //
-//  Loads the two feed categories from configurable HTTP endpoints.
+//  Loads the two feed categories from a backend.
 //
 
 import Foundation
 
 struct RemotePostRepository: PostRepository {
-    let recommendURL: URL
-    let hotURL: URL
+    let baseURL: URL
 
     private let session: URLSession
     private let decoder: JSONDecoder
 
     init(
-        recommendURL: URL,
-        hotURL: URL,
+        baseURL: URL,
         session: URLSession = .shared,
         decoder: JSONDecoder = JSONDecoder()
     ) {
-        self.recommendURL = recommendURL
-        self.hotURL = hotURL
+        self.baseURL = baseURL
         self.session = session
         self.decoder = decoder
     }
 
     func loadRecommendPosts() async throws -> PostList {
-        try await load(from: recommendURL)
+        try await load(path: "api/feeds/recommend")
     }
 
     func loadHotPosts() async throws -> PostList {
-        try await load(from: hotURL)
+        try await load(path: "api/feeds/hot")
     }
 
-    private func load(from url: URL) async throws -> PostList {
-        var request = URLRequest(url: url)
+    private func load(path: String) async throws -> PostList {
+        var request = URLRequest(url: baseURL.appendingPathComponent(path))
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -59,10 +56,33 @@ struct RemotePostRepository: PostRepository {
         }
 
         do {
-            return try decoder.decode(PostList.self, from: data)
+            return resolvingMedia(in: try decoder.decode(PostList.self, from: data))
+        } catch let error as RemotePostRepositoryError {
+            throw error
         } catch {
             throw RemotePostRepositoryError.decodingFailed(error)
         }
+    }
+
+    /// Turns the server's relative media paths into absolute URLs.
+    ///
+    /// The server sends `/media/post-01.jpg` rather than a full URL, because it
+    /// cannot know which hostname it was reached by — behind a tunnel that
+    /// changes on every restart. Resolving here, at the edge of the network
+    /// layer, keeps every view downstream from needing to know a base URL, and
+    /// leaves the bundled repository's plain filenames untouched.
+    private func resolvingMedia(in list: PostList) -> PostList {
+        PostList(list: list.list.map { post in
+            var post = post
+            post.avatar = absoluteMediaReference(post.avatar)
+            post.images = post.images.map(absoluteMediaReference)
+            return post
+        })
+    }
+
+    private func absoluteMediaReference(_ reference: String) -> String {
+        guard reference.hasPrefix("/") else { return reference }
+        return URL(string: reference, relativeTo: baseURL)?.absoluteString ?? reference
     }
 }
 

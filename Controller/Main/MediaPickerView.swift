@@ -26,9 +26,7 @@ struct MediaPickerView: View {
                         Button(action: {
                             selectedImage = name
                         }) {
-                            loadImage(name: name)
-                                .resizable()
-                                .scaledToFill()
+                            PostImage(reference: name)
                                 .frame(width: 96, height: 96)
                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                                 .overlay(

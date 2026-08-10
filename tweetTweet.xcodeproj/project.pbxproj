@@ -36,9 +36,12 @@
 		01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000026 /* RuntimeImageStore.swift */; };
 		01BF00000000000000000027 /* RemotePostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000027 /* RemotePostRepository.swift */; };
 		01BF00000000000000000028 /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000028 /* APIConfiguration.swift */; };
+		01BF0000000000000000002A /* PostImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000002A /* PostImage.swift */; };
+		01BF00000000000000000029 /* RemoteImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000029 /* RemoteImageLoader.swift */; };
 		02BF00000000000000000001 /* UserDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000001 /* UserDataTests.swift */; };
 		02BF00000000000000000002 /* PostDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000002 /* PostDecodingTests.swift */; };
 		02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000004 /* APIConfigurationTests.swift */; };
+		02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000005 /* RemoteImageLoaderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,10 +88,13 @@
 		01AF00000000000000000026 /* RuntimeImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeImageStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000027 /* RemotePostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000028 /* APIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
+		01AF0000000000000000002A /* PostImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostImage.swift; sourceTree = "<group>"; };
+		01AF00000000000000000029 /* RemoteImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoader.swift; sourceTree = "<group>"; };
 		02AF00000000000000000001 /* UserDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000002 /* PostDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDecodingTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000003 /* tweetTweetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tweetTweetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000005 /* RemoteImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderTests.swift; sourceTree = "<group>"; };
 		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 		FEED00000000000000000003 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
@@ -190,6 +196,7 @@
 				01AF00000000000000000024 /* LocalPostRepository.swift */,
 				01AF00000000000000000027 /* RemotePostRepository.swift */,
 				01AF00000000000000000028 /* APIConfiguration.swift */,
+				01AF00000000000000000029 /* RemoteImageLoader.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -213,6 +220,7 @@
 				01AF00000000000000000006 /* CommentTextView.swift */,
 				01AF0000000000000000000D /* CommentInputView.swift */,
 				01AF00000000000000000007 /* PostImageCell.swift */,
+				01AF0000000000000000002A /* PostImage.swift */,
 				01AF00000000000000000025 /* CameraPicker.swift */,
 			);
 			path = Customised;
@@ -242,6 +250,7 @@
 				02AF00000000000000000001 /* UserDataTests.swift */,
 				02AF00000000000000000002 /* PostDecodingTests.swift */,
 				02AF00000000000000000004 /* APIConfigurationTests.swift */,
+				02AF00000000000000000005 /* RemoteImageLoaderTests.swift */,
 			);
 			path = tweetTweetTests;
 			sourceTree = "<group>";
@@ -409,6 +418,8 @@
 				01BF00000000000000000026 /* RuntimeImageStore.swift in Sources */,
 				01BF00000000000000000027 /* RemotePostRepository.swift in Sources */,
 				01BF00000000000000000028 /* APIConfiguration.swift in Sources */,
+				01BF0000000000000000002A /* PostImage.swift in Sources */,
+				01BF00000000000000000029 /* RemoteImageLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +430,7 @@
 				02BF00000000000000000001 /* UserDataTests.swift in Sources */,
 				02BF00000000000000000002 /* PostDecodingTests.swift in Sources */,
 				02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */,
+				02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
