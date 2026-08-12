@@ -25,12 +25,14 @@ tweetTweet 已從純本地原型變成真正的前後端專案。動態牆由 [t
 - Simulator accessibility hierarchy 驗證，包含 VoiceOver 語意、圖片群組、custom actions、選取狀態與最大輔助字級。
 - 39 個 XCTest 與 GitHub Actions build/test 流程。
 - 端到端驗證：直接修改 SQLite 資料列後重啟 App，畫面內容隨之改變；把後端位址改成不存在的網域則顯示錯誤而非退回內建資料，確認畫面內容確實來自 API。
+- 發文端到端驗證：在 Simulator 選相簿照片發文，後端依序收到 `POST /api/posts/media`（201）與 `POST /api/posts`（201），檔案以內容雜湊落地，App 隨即取回該圖並顯示於列表最上方。
 - Private Family Network 產品 brief 與後端可行性分析；兩者仍屬探索文件，不代表已承諾的產品範圍。後端選型已不採用其中的 FastAPI 建議，理由記於 `DECISIONS.md`。
 
 ## 尚未完成
 
 - 讚與追蹤仍是本地狀態，未持久化。
 - 沒有離線佇列：未設定後端時發文只留在記憶體。
+- 上傳前未降取樣：相簿原圖經 `jpegData(0.85)` 後實測仍有 2.8 MB，而顯示時最寬只到螢幕寬度。建議上傳前限制最長邊（如 2048px），在行動網路下差別明顯。
 - 實體 iPhone VoiceOver 操作驗證；驗證清單見 [`ACCESSIBILITY_VALIDATION.md`](ACCESSIBILITY_VALIDATION.md)。
 - 補齊全新素材版本的流程截圖或操作影片。
 - `Controller/` 仍保留早期 UIKit 命名，尚未進行目錄整理。
