@@ -11,13 +11,22 @@ struct PostList: Codable {
 }
 
 
+/// Who wrote a post.
+///
+/// Nested rather than flattened onto Post: these describe the person, and the
+/// same person appears on many posts. The shape matches what the API sends.
+struct Author: Codable, Equatable {
+    let handle: String
+    let displayName: String
+    // Either a bundled filename or an absolute URL: the repository resolves
+    // server-relative paths before any view sees them.
+    var avatar: String
+    let vip: Bool
+}
+
 struct Post: Codable, Identifiable {    //Data Model(資料模型)是不可見的, 或說不可預覽的; 相對視圖來說
     let id: Int
-    // Either a bundled filename, a RuntimeImageStore key, or an absolute URL:
-    // the repository resolves server-relative paths before the view sees them.
-    var avatar: String
-    let vip: Bool       //是否為VIP; 實例變量, 有定義Post才有
-    let name: String
+    var author: Author
     let date: String
 
     var isFollowed: Bool
@@ -126,10 +135,13 @@ func loadImage(name: String) -> Image {
 extension Post {
     static let preview = Post(
         id: 1,
-        avatar: "avatar-01.jpg",
-        vip: true,
-        name: "預覽使用者",
-        date: "2026-07-28 12:00",
+        author: Author(
+            handle: "preview",
+            displayName: "預覽使用者",
+            avatar: "avatar-01.jpg",
+            vip: true
+        ),
+        date: "2026-07-28T04:00:00.000Z",
         isFollowed: false,
         text: "這是一則用於 Xcode Preview 的貼文。",
         images: ["post-01.jpg", "post-02.jpg", "post-03.jpg"],

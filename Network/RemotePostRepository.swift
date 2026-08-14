@@ -74,7 +74,7 @@ struct RemotePostRepository: PostRepository {
     private func resolvingMedia(in list: PostList) -> PostList {
         PostList(list: list.list.map { post in
             var post = post
-            post.avatar = absoluteMediaReference(post.avatar)
+            post.author.avatar = absoluteMediaReference(post.author.avatar)
             post.images = post.images.map(absoluteMediaReference)
             return post
         })
@@ -153,7 +153,7 @@ extension RemotePostRepository: PostComposer {
         let data = try await send(request)
         do {
             var post = try decoder.decode(Post.self, from: data)
-            post.avatar = absoluteMediaReference(post.avatar)
+            post.author.avatar = absoluteMediaReference(post.author.avatar)
             post.images = post.images.map(absoluteMediaReference)
             return post
         } catch {

@@ -21,17 +21,17 @@ struct PostCell: View {
         var post = bindingPost
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
-                PostImage(reference: post.avatar)
+                PostImage(reference: post.author.avatar)
                     .frame(width: 48, height: 48)
                     .clipShape(Circle())
                     .overlay(
-                        PostVIPBadge(vip: post.vip)
+                        PostVIPBadge(vip: post.author.vip)
                             .offset(x: 14, y: 14)
                     )
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(post.name)
+                    Text(post.author.displayName)
                         .font(.headline.weight(.semibold))
                         .foregroundColor(Color(red: 242 / 255, green: 99 / 255, blue: 4 / 255))
                         .lineLimit(1)
@@ -59,7 +59,7 @@ struct PostCell: View {
                         )
                     }
                     .buttonStyle(BorderlessButtonStyle())
-                    .accessibilityHint("追蹤 \(post.name)")
+                    .accessibilityHint("追蹤 \(post.author.displayName)")
                 }
             }
             Text(post.text)

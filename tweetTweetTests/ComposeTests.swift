@@ -36,9 +36,12 @@ final class ComposeTests: XCTestCase {
         let composer = SpyComposer()
         composer.result = Post(
             id: 900,
-            avatar: "https://example.test/media/avatar-01.jpg",
-            vip: false,
-            name: "我",
+            author: Author(
+                handle: "me",
+                displayName: "我",
+                avatar: "https://example.test/media/avatar-01.jpg",
+                vip: false
+            ),
             date: "2026-08-10T11:01:47.436Z",
             isFollowed: true,
             text: "伺服器記下的版本",
@@ -143,9 +146,7 @@ private final class SpyComposer: PostComposer {
         composedImages = images
         return result ?? Post(
             id: 1,
-            avatar: "a",
-            vip: false,
-            name: "n",
+            author: Author(handle: "n", displayName: "n", avatar: "a", vip: false),
             date: "2026-08-10T00:00:00.000Z",
             isFollowed: true,
             text: text,

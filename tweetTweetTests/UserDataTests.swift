@@ -14,8 +14,8 @@ final class UserDataTests: XCTestCase {
 
         XCTAssertEqual(userData.recommendPostList.list.map(\.id), [1])
         XCTAssertEqual(userData.hotPostList.list.map(\.id), [2])
-        XCTAssertEqual(userData.post(forId: 1)?.name, "推薦")
-        XCTAssertEqual(userData.post(forId: 2)?.name, "熱門")
+        XCTAssertEqual(userData.post(forId: 1)?.author.displayName, "推薦")
+        XCTAssertEqual(userData.post(forId: 2)?.author.displayName, "熱門")
         XCTAssertEqual(userData.loadState(for: .recommend), .loaded)
         XCTAssertEqual(userData.loadState(for: .hot), .loaded)
     }
@@ -75,7 +75,7 @@ final class UserDataTests: XCTestCase {
         userData.insert(makePost(id: 2, name: "新貼文"), into: .recommend)
 
         XCTAssertEqual(userData.recommendPostList.list.map(\.id), [2, 1])
-        XCTAssertEqual(userData.post(forId: 2)?.name, "新貼文")
+        XCTAssertEqual(userData.post(forId: 2)?.author.displayName, "新貼文")
     }
 
     func testInsertClampsIndexToEndOfList() {
@@ -174,10 +174,13 @@ private func makePost(
 ) -> Post {
     Post(
         id: id,
-        avatar: avatar,
-        vip: false,
-        name: name,
-        date: "2026-07-27 12:00",
+        author: Author(
+            handle: name,
+            displayName: name,
+            avatar: avatar,
+            vip: false
+        ),
+        date: "2026-07-27T04:00:00.000Z",
         isFollowed: false,
         text: "測試貼文",
         images: images,

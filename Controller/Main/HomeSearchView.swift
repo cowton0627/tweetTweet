@@ -20,7 +20,8 @@ struct HomeSearchView: View {
         guard !trimmed.isEmpty else { return unique }
 
         return unique.filter {
-            $0.name.localizedCaseInsensitiveContains(trimmed) ||
+            $0.author.displayName.localizedCaseInsensitiveContains(trimmed) ||
+            $0.author.handle.localizedCaseInsensitiveContains(trimmed) ||
             $0.text.localizedCaseInsensitiveContains(trimmed) ||
             $0.displayDate.localizedCaseInsensitiveContains(trimmed)
         }

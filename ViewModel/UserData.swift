@@ -160,9 +160,14 @@ final class UserData: ObservableObject {
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return Post(
             id: nextPostID(),
-            avatar: "avatar-01.jpg",
-            vip: false,
-            name: "我",
+            // Mirrors the account the server attributes composed posts to,
+            // so an offline post looks the same as one that was published.
+            author: Author(
+                handle: "me",
+                displayName: "我",
+                avatar: "avatar-04.jpg",
+                vip: false
+            ),
             date: formatter.string(from: Date()),
             isFollowed: true,
             text: text,
@@ -182,8 +187,8 @@ final class UserData: ObservableObject {
     func imageLibrary() -> [String] {
         var seen: Set<String> = []
         var result: [String] = []
-        let names = recommendPostList.list.flatMap { [$0.avatar] + $0.images }
-            + hotPostList.list.flatMap { [$0.avatar] + $0.images }
+        let names = recommendPostList.list.flatMap { [$0.author.avatar] + $0.images }
+            + hotPostList.list.flatMap { [$0.author.avatar] + $0.images }
         for name in names where seen.insert(name).inserted {
             result.append(name)
         }

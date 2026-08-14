@@ -15,7 +15,7 @@ final class PostDecodingTests: XCTestCase {
 
         XCTAssertFalse(postList.list.isEmpty)
         XCTAssertEqual(Set(postList.list.map(\.id)).count, postList.list.count)
-        XCTAssertTrue(postList.list.allSatisfy { !$0.avatar.isEmpty })
+        XCTAssertTrue(postList.list.allSatisfy { !$0.author.avatar.isEmpty })
     }
 
     private func decodeFixture(named name: String) throws -> PostList {
@@ -43,9 +43,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         {
           "list": [{
             "id": 42,
-            "avatar": "avatar-01.jpg",
-            "vip": false,
-            "name": "遠端貼文",
+            "author": { "handle": "remote", "displayName": "遠端貼文", "avatar": "avatar-01.jpg", "vip": false },
             "date": "2026-07-28 09:00",
             "isFollowed": false,
             "text": "由測試伺服器回傳",
@@ -70,7 +68,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         let result = try await repository.loadRecommendPosts()
 
         XCTAssertEqual(result.list.map(\.id), [42])
-        XCTAssertEqual(result.list.first?.name, "遠端貼文")
+        XCTAssertEqual(result.list.first?.author.displayName, "遠端貼文")
     }
 
     func testRemoteRepositoryRejectsHTTPError() async {
@@ -194,8 +192,7 @@ final class RemotePostRepositoryTests: XCTestCase {
             let body = """
             {
               "list": [{
-                "id": 1, "avatar": "/media/avatar-01.jpg", "vip": false,
-                "name": "n", "date": "d", "isFollowed": false, "text": "t",
+                "id": 1, "author": { "handle": "n", "displayName": "n", "avatar": "/media/avatar-01.jpg", "vip": false }, "date": "d", "isFollowed": false, "text": "t",
                 "images": ["/media/post-01.jpg", "/media/post-02.jpg"],
                 "commentCount": 0, "likeCount": 0, "isLiked": false
               }]
@@ -213,7 +210,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         let feed = try await makeRemoteRepository().loadRecommendPosts()
         let post = try XCTUnwrap(feed.list.first)
 
-        XCTAssertEqual(post.avatar, "https://example.test/media/avatar-01.jpg")
+        XCTAssertEqual(post.author.avatar, "https://example.test/media/avatar-01.jpg")
         XCTAssertEqual(post.images, [
             "https://example.test/media/post-01.jpg",
             "https://example.test/media/post-02.jpg"
@@ -227,8 +224,8 @@ final class RemotePostRepositoryTests: XCTestCase {
             let body = """
             {
               "list": [{
-                "id": 1, "avatar": "avatar-01.jpg", "vip": false,
-                "name": "n", "date": "d", "isFollowed": false, "text": "t",
+                "id": 1,
+                "author": { "handle": "n", "displayName": "n", "avatar": "avatar-01.jpg", "vip": false }, "date": "d", "isFollowed": false, "text": "t",
                 "images": ["https://cdn.example.test/already-absolute.jpg"],
                 "commentCount": 0, "likeCount": 0, "isLiked": false
               }]
@@ -246,7 +243,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         let feed = try await makeRemoteRepository().loadRecommendPosts()
         let post = try XCTUnwrap(feed.list.first)
 
-        XCTAssertEqual(post.avatar, "avatar-01.jpg")
+        XCTAssertEqual(post.author.avatar, "avatar-01.jpg")
         XCTAssertEqual(post.images, ["https://cdn.example.test/already-absolute.jpg"])
     }
 
@@ -317,8 +314,8 @@ final class RemotePostRepositoryTests: XCTestCase {
             )
             let body = """
             {
-              "id": 2051, "avatar": "/media/avatar-01.jpg", "vip": false,
-              "name": "我", "date": "2026-08-10T11:01:47.436Z",
+              "id": 2051,
+              "author": { "handle": "me", "displayName": "我", "avatar": "/media/avatar-01.jpg", "vip": false }, "date": "2026-08-10T11:01:47.436Z",
               "isFollowed": true, "text": "hi",
               "images": ["/media/abc.jpg"],
               "commentCount": 0, "likeCount": 0, "isLiked": false
@@ -344,7 +341,7 @@ final class RemotePostRepositoryTests: XCTestCase {
 
         // And what comes back is resolved for display.
         XCTAssertEqual(post.images, ["https://example.test/media/abc.jpg"])
-        XCTAssertEqual(post.avatar, "https://example.test/media/avatar-01.jpg")
+        XCTAssertEqual(post.author.avatar, "https://example.test/media/avatar-01.jpg")
     }
 
     private static func drain(_ stream: InputStream) -> Data {
