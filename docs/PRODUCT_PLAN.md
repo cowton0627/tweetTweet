@@ -284,12 +284,20 @@ Comments/
 - **未登入仍可發文**，會歸到 demo 帳號。原本打算擋，但那會讓沒帳號的人
   連 App 在做什麼都看不出來。登入的意義改成「貼文掛你的名字」。
 
-**Phase 3 — 互動移到關聯表**（一到兩天）← 下一步
+**Phase 3 — 互動移到關聯表** ✅ 已完成
 `likes`、`follows`，feed 查詢加入 viewer。
-⚠️ `ALTER TABLE posts DROP COLUMN` 已在 Turso 上驗證可用（v5 migration 走過
-一次，`post_images` 沒被波及）。
+`ALTER TABLE posts DROP COLUMN` 在 Turso 上驗證可用，`post_images` 未受影響。
 
-**Phase 4 — 回文**（兩天）
+實際與規劃的差異：
+- **種子資料的 `isLiked`／`isFollowed` 直接刪掉**，沒有搬成關係。那兩個欄位
+  描述的是「唯一那個讀者」的狀態；有了帳號之後要嘛憑空幫使用者製造追蹤關係，
+  要嘛承認沒人按過。選後者。`likeCount` 留著，因為那是貼文的屬性。
+- **端點用 PUT／DELETE 而不是 POST**：兩者都在描述一個狀態而非事件，重複呼叫
+  不該有副作用——連點兩下和重送一次請求需要的是同一件事。
+- **like 與 follow 的 router 沒有放進 posts router**，因為後者只在設定了圖片
+  儲存時才掛載。按讚跟圖片存哪裡無關，不該跟著消失。
+
+**Phase 4 — 回文**（兩天）← 下一步
 `comments` 表、端點、詳情頁列表、底部輸入列、feed 帶最新 2 則。
 
 **Phase 5 — 個人頁與通知**（兩天）
