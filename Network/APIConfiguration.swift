@@ -48,11 +48,11 @@ enum PostRepositoryFactory {
     /// nothing rather than by throwing later.
     static func makeDefault(
         bundle: Bundle = .main
-    ) -> (repository: PostRepository, composer: PostComposer?) {
+    ) -> (repository: PostRepository, composer: PostComposer?, auth: AuthService?) {
         guard let baseURL = APIConfiguration.baseURL(from: bundle) else {
-            return (LocalPostRepository(), nil)
+            return (LocalPostRepository(), nil, nil)
         }
         let remote = RemotePostRepository(baseURL: baseURL)
-        return (remote, remote)
+        return (remote, remote, RemoteAuthService(baseURL: baseURL))
     }
 }

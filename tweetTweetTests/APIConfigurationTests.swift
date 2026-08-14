@@ -54,5 +54,6 @@ final class APIConfigurationTests: XCTestCase {
     func testNoComposerWithoutABackend() {
         let backend = PostRepositoryFactory.makeDefault(bundle: Bundle(for: Self.self))
         XCTAssertNil(backend.composer)
+        XCTAssertNil(backend.auth)
     }
 }

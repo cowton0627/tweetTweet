@@ -301,6 +301,38 @@ final class RemotePostRepositoryTests: XCTestCase {
         XCTAssertEqual(tail, "\r\n--\(boundary)--\r\n")
     }
 
+    func testComposeCarriesTheSessionToken() async throws {
+        var authorization: String??
+        URLProtocolStub.requestHandler = { request in
+            authorization = request.value(forHTTPHeaderField: "Authorization")
+            let response = HTTPURLResponse(
+                url: try XCTUnwrap(request.url),
+                statusCode: 201,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )
+            let body = """
+            {
+              "id": 7, "author": { "handle": "ling", "displayName": "\u{9748}", "avatar": "/media/avatar-02.jpg", "vip": false },
+              "date": "2026-08-10T11:01:47.436Z", "isFollowed": false, "text": "hi",
+              "images": [], "commentCount": 0, "likeCount": 0, "isLiked": false
+            }
+            """
+            return (try XCTUnwrap(response), Data(body.utf8))
+        }
+
+        let post = try await makeRemoteRepository().compose(
+            text: "hi",
+            images: [],
+            category: .recommend,
+            token: "a.b.c"
+        )
+
+        XCTAssertEqual(authorization ?? nil, "Bearer a.b.c")
+        // And the server's attribution is what the app shows, not a guess.
+        XCTAssertEqual(post.author.handle, "ling")
+    }
+
     func testComposeSendsServerRelativeImagePaths() async throws {
         var capturedBody: Data?
         URLProtocolStub.requestHandler = { request in
@@ -327,7 +359,8 @@ final class RemotePostRepositoryTests: XCTestCase {
         let post = try await makeRemoteRepository().compose(
             text: "hi",
             images: ["https://example.test/media/abc.jpg"],
-            category: .recommend
+            category: .recommend,
+            token: nil
         )
 
         // Absolute URLs are this client's own construction; the server only

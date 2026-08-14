@@ -42,6 +42,7 @@ struct RootView: View {
     @State private var composeDraft: ComposeDraft?
 
     @EnvironmentObject private var userData: UserData
+    @EnvironmentObject private var authStore: AuthStore
 
     var body: some View {
         ZStack {
@@ -67,8 +68,11 @@ struct RootView: View {
         .sheet(item: $composeDraft) { _ in
             ComposePostView()
                 .environmentObject(userData)
+                .environmentObject(authStore)
         }
         .task {
+            // Restoring the session first, so a feed request can carry it.
+            await authStore.restore()
             await userData.loadAll()
         }
     }

@@ -136,14 +136,18 @@ private final class SpyComposer: PostComposer {
         return "/media/uploaded.jpg"
     }
 
+    private(set) var composedToken: String?
+
     func compose(
         text: String,
         images: [String],
-        category: PostListCategory
+        category: PostListCategory,
+        token: String?
     ) async throws -> Post {
         if let error { throw error }
         composedText = text
         composedImages = images
+        composedToken = token
         return result ?? Post(
             id: 1,
             author: Author(handle: "n", displayName: "n", avatar: "a", vip: false),

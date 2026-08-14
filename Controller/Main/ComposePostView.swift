@@ -12,6 +12,7 @@ struct ComposePostView: View {
 
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var userData: UserData
+    @EnvironmentObject private var authStore: AuthStore
 
     @State private var text: String = ""
     @State private var category: PostListCategory
@@ -165,7 +166,8 @@ struct ComposePostView: View {
             try await userData.compose(
                 text: trimmed,
                 images: attachedImages,
-                into: category
+                into: category,
+                token: authStore.token
             )
             dismiss()
         } catch {

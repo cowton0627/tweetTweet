@@ -20,9 +20,14 @@ protocol PostComposer {
     func upload(_ image: UIImage) async throws -> String
 
     /// Publishes a post and returns it as the server recorded it.
+    ///
+    /// The token identifies the author. Without one the server attributes the
+    /// post to its demo account, which is what keeps composing usable before
+    /// anyone signs in.
     func compose(
         text: String,
         images: [String],
-        category: PostListCategory
+        category: PostListCategory,
+        token: String?
     ) async throws -> Post
 }

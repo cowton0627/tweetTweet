@@ -126,7 +126,8 @@ extension RemotePostRepository: PostComposer {
     func compose(
         text: String,
         images: [String],
-        category: PostListCategory
+        category: PostListCategory,
+        token: String?
     ) async throws -> Post {
         struct Payload: Encodable {
             let text: String
@@ -139,6 +140,9 @@ extension RemotePostRepository: PostComposer {
         request.timeoutInterval = 30
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         request.httpBody = try JSONEncoder().encode(
             Payload(
                 text: text,

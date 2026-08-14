@@ -129,7 +129,8 @@ final class UserData: ObservableObject {
     func compose(
         text: String,
         images: [String],
-        into category: PostListCategory
+        into category: PostListCategory,
+        token: String? = nil
     ) async throws {
         guard let composer else {
             insert(makeLocalPost(text: text, images: images), into: category)
@@ -150,7 +151,8 @@ final class UserData: ObservableObject {
         let post = try await composer.compose(
             text: text,
             images: uploaded,
-            category: category
+            category: category,
+            token: token
         )
         insert(post, into: category)
     }

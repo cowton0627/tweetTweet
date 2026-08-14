@@ -28,7 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             repository: backend.repository,
             composer: backend.composer
         )
-        let contentView = RootView().environmentObject(userData)
+        let authStore = AuthStore(service: backend.auth)
+        let contentView = RootView()
+            .environmentObject(userData)
+            .environmentObject(authStore)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
