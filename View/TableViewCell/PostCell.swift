@@ -8,12 +8,15 @@ import SwiftUI
 
 struct PostCell: View {
     let post: Post
+
+    /// What tapping "回應" does. Nil on the detail screen, where the thread is
+    /// already below and there is nowhere to go.
+    var onComment: (() -> Void)?
     
     var bindingPost: Post {
         userData.post(forId: post.id) ?? post
     }
     
-    @State var presentComment: Bool = false
     @State private var failureMessage: String?
 
     @EnvironmentObject var userData: UserData
@@ -76,7 +79,38 @@ struct PostCell: View {
             if !post.images.isEmpty {
                 PostImageCell(images: post.images, width: UIScreen.main.bounds.width - 30)
             }
-            
+
+            // The newest replies, inline. A reply is part of what a post says,
+            // and a feed where every post is silent until tapped reads as
+            // empty — which is why the server sends these with the post.
+            if !post.recentComments.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(post.recentComments) { comment in
+                        (
+                            Text(comment.author.displayName)
+                                .font(.subheadline.weight(.semibold))
+                            + Text("  ")
+                            + Text(comment.text).font(.subheadline)
+                        )
+                        .lineLimit(2)
+                        .accessibilityLabel(
+                            "\(comment.author.displayName) 回應：\(comment.text)"
+                        )
+                    }
+
+                    if post.commentCount > post.recentComments.count {
+                        Button(action: { onComment?() }) {
+                            Text("查看全部 \(post.commentCountText) 則回應")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .accessibilityHidden(onComment == nil)
+                    }
+                }
+                .padding(.top, 2)
+            }
+
             Divider()
             
             HStack(spacing: 0) {
@@ -86,13 +120,13 @@ struct PostCell: View {
                                       text: post.commentCountText,
                                       color: .primary)
                 {
-//                    print("Click comment button")
-                    self.presentComment =  true //點擊取消讓頁面消失
-                }
-                .sheet(isPresented: $presentComment) {
-                    CommentInputView(post: post).environmentObject(self.userData)
+                    // Opens the post rather than a sheet over it: the thread
+                    // lives on the detail screen now, beside what is being
+                    // replied to.
+                    onComment?()
                 }
                 .accessibilityLabel("回應，\(post.commentCount) 則")
+                .accessibilityHidden(onComment == nil)
                 
                 Spacer()
                 

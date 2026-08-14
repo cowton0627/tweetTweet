@@ -27,7 +27,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let userData = UserData(
             repository: backend.repository,
             composer: backend.composer,
-            interactions: backend.interactions
+            interactions: backend.interactions,
+            commentService: backend.comments
         )
         let authStore = AuthStore(service: backend.auth)
         let contentView = RootView()

@@ -6,13 +6,38 @@
 
 import SwiftUI
 
+/// A post and its replies, on one screen.
+///
+/// The thread used to open in a sheet over the post. Reading and writing now
+/// share the screen with what is being replied to, which is what Facebook,
+/// Threads and Instagram all do — a reply is a response to what you can see,
+/// and covering it up to write one throws that away.
 struct PostDetailView: View {
     let post: Post
-    
+
     @EnvironmentObject private var userData: UserData
     @EnvironmentObject private var authStore: AuthStore
-    @State private var showingCommentInput = false
+
+    @StateObject private var thread: CommentThread
+    @State private var draft: String = ""
     @State private var failureMessage: String?
+
+    /// The service is passed in rather than reached for: choosing what talks to
+    /// the network is the composition root's job, and a view that reads the
+    /// configuration itself would build a fresh client every time it appears.
+    /// Nil offline and in previews, where the thread is read-only.
+    init(post: Post, commentService: CommentService? = nil) {
+        self.post = post
+        // The feed's copy of the newest replies seeds the list, so the screen
+        // is never blank while the first page is in flight.
+        _thread = StateObject(
+            wrappedValue: CommentThread(
+                postID: post.id,
+                service: commentService,
+                seeded: post.recentComments
+            )
+        )
+    }
 
     private var isOwnPost: Bool {
         authStore.user?.handle == post.author.handle
@@ -31,7 +56,7 @@ struct PostDetailView: View {
 
                     Divider()
 
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             Text("回應")
                                 .font(.headline)
@@ -41,17 +66,15 @@ struct PostDetailView: View {
                                 .foregroundColor(.secondary)
                         }
 
-                        if post.commentCount == 0 {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text("這則貼文還沒有回應")
-                                    .font(.subheadline.weight(.medium))
-                                Text("按右上角或底部按鈕開始回應。")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
+                        CommentListView(
+                            thread: thread,
+                            onLoadEarlier: {
+                                Task { await thread.loadEarlier(token: authStore.token) }
+                            },
+                            onDelete: { comment in
+                                Task { await thread.delete(comment, token: authStore.token) }
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.vertical, 8)
-                        }
+                        )
                     }
                     .padding(.horizontal, 15)
                     .padding(.vertical, 16)
@@ -73,34 +96,63 @@ struct PostDetailView: View {
                     Label(post.isLiked ? "已喜歡" : "喜歡", systemImage: post.isLiked ? "heart.fill" : "heart")
                         .frame(maxWidth: .infinity)
                 }
-
-                Button(action: { showingCommentInput = true }) {
-                    Label("回應", systemImage: "message")
-                        .frame(maxWidth: .infinity)
-                }
             }
             .font(.body.weight(.medium))
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(Color(.systemBackground))
             .buttonStyle(BorderlessButtonStyle())
+
+            if thread.canWrite {
+                Divider()
+                CommentComposer(
+                    text: $draft,
+                    isSending: thread.isSending,
+                    onSend: sendComment
+                )
+            }
         }
         .navigationBarTitle("詳情", displayMode: .inline)
+        .task {
+            // The seeded replies are only the newest two; this fetches the
+            // real page and replaces them.
+            await thread.load(token: authStore.token)
+        }
+        // The server owns the count. Writing it back keeps the feed's number
+        // in step with a thread the reader just changed.
+        .onChange(of: thread.latestCount) { count in
+            guard let count, var updated = userData.post(forId: post.id) else { return }
+            updated.commentCount = count
+            userData.update(updated)
+        }
         .alert(
             "無法完成",
             isPresented: Binding(
-                get: { failureMessage != nil },
-                set: { if !$0 { failureMessage = nil } }
+                get: { message != nil },
+                set: { if !$0 { failureMessage = nil; thread.failureMessage = nil } }
             ),
-            presenting: failureMessage
+            presenting: message
         ) { _ in
             Button("好", role: .cancel) {}
         } message: { message in
             Text(message)
         }
-        .sheet(isPresented: $showingCommentInput) {
-            CommentInputView(post: post)
-                .environmentObject(userData)
+    }
+
+    /// Whichever complaint is outstanding. The thread reports its own failures
+    /// and the post's actions report theirs; one alert shows either.
+    private var message: String? {
+        failureMessage ?? thread.failureMessage
+    }
+
+    private func sendComment() {
+        let text = draft
+        Task {
+            if await thread.send(text, token: authStore.token) {
+                // Cleared only on success, so a failed send does not cost the
+                // reader what they wrote. The count follows from latestCount.
+                draft = ""
+            }
         }
     }
 

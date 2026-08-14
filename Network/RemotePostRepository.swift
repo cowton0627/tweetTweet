@@ -213,13 +213,15 @@ extension RemotePostRepository: PostInteractions {
     private func interaction(
         path: String,
         method: String,
-        token: String
+        token: String?
     ) -> URLRequest {
         var request = URLRequest(url: baseURL.appendingPathComponent(path))
         request.httpMethod = method
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        if let token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         return request
     }
 
@@ -311,5 +313,84 @@ enum RemotePostRepositoryError: LocalizedError {
         case .imageEncodingFailed:
             return "無法處理選取的圖片。"
         }
+    }
+}
+
+extension RemotePostRepository: CommentService {
+    func comments(
+        forPost postID: Int,
+        before: Int?,
+        token: String?
+    ) async throws -> CommentPage {
+        // The token is optional here: reading a thread is as public as reading
+        // the feed. It only decides whether `isMine` can be true.
+        var path = "api/posts/\(postID)/comments"
+        if let before {
+            path += "?before=\(before)"
+        }
+        var request = interaction(path: path, method: "GET", token: token)
+        // appendingPathComponent would percent-encode the query string, so the
+        // URL is built from the base rather than appended to it.
+        request.url = URL(string: path, relativeTo: baseURL)
+
+        let data = try await send(request)
+        do {
+            var page = try decoder.decode(CommentPage.self, from: data)
+            page = CommentPage(
+                list: page.list.map(resolvingAvatar),
+                hasMore: page.hasMore
+            )
+            return page
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    func addComment(
+        toPost postID: Int,
+        text: String,
+        token: String
+    ) async throws -> (comment: Comment, commentCount: Int) {
+        struct Payload: Encodable { let text: String }
+        struct Response: Decodable {
+            let comment: Comment
+            let commentCount: Int
+        }
+
+        var request = interaction(
+            path: "api/posts/\(postID)/comments",
+            method: "POST",
+            token: token
+        )
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(Payload(text: text))
+
+        let data = try await send(request)
+        do {
+            let response = try decoder.decode(Response.self, from: data)
+            return (resolvingAvatar(response.comment), response.commentCount)
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    func deleteComment(id: Int, token: String) async throws -> CommentMutation {
+        struct Response: Decodable { let commentCount: Int }
+
+        let data = try await send(
+            interaction(path: "api/comments/\(id)", method: "DELETE", token: token)
+        )
+        do {
+            let response = try decoder.decode(Response.self, from: data)
+            return CommentMutation(commentCount: response.commentCount)
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    private func resolvingAvatar(_ comment: Comment) -> Comment {
+        var comment = comment
+        comment.author.avatar = absoluteMediaReference(comment.author.avatar)
+        return comment
     }
 }

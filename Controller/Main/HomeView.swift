@@ -35,7 +35,7 @@ struct HomeView: View {
             // A sheet does not inherit environment objects, so both have to be
             // handed across explicitly — the cells inside need the account to
             // know whose posts these are.
-            PostDetailView(post: post)
+            PostDetailView(post: post, commentService: userData.commentService)
                 .environmentObject(userData)
                 .environmentObject(authStore)
         }

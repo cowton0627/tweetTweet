@@ -37,6 +37,55 @@ struct Post: Codable, Identifiable {    //Data Model(資料模型)是不可見�
     var commentCount: Int
     var likeCount: Int
     var isLiked: Bool
+
+    /// The newest few replies, oldest first.
+    ///
+    /// Carried with the post because a comment is part of what a post says —
+    /// a feed where every post is silent until tapped reads as empty.
+    var recentComments: [Comment]
+
+    init(
+        id: Int,
+        author: Author,
+        date: String,
+        isFollowed: Bool,
+        text: String,
+        images: [String],
+        commentCount: Int,
+        likeCount: Int,
+        isLiked: Bool,
+        recentComments: [Comment] = []
+    ) {
+        self.id = id
+        self.author = author
+        self.date = date
+        self.isFollowed = isFollowed
+        self.text = text
+        self.images = images
+        self.commentCount = commentCount
+        self.likeCount = likeCount
+        self.isLiked = isLiked
+        self.recentComments = recentComments
+    }
+
+    // Written out rather than synthesised so `recentComments` may be absent.
+    // The bundled JSON predates comments and a server one version behind will
+    // not send the key; neither is a reason to fail to show a post.
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        author = try container.decode(Author.self, forKey: .author)
+        date = try container.decode(String.self, forKey: .date)
+        isFollowed = try container.decode(Bool.self, forKey: .isFollowed)
+        text = try container.decode(String.self, forKey: .text)
+        images = try container.decode([String].self, forKey: .images)
+        commentCount = try container.decode(Int.self, forKey: .commentCount)
+        likeCount = try container.decode(Int.self, forKey: .likeCount)
+        isLiked = try container.decode(Bool.self, forKey: .isLiked)
+        recentComments =
+            try container.decodeIfPresent([Comment].self, forKey: .recentComments)
+            ?? []
+    }
 }
     
     extension Post {    //因為Post裡面是不可視的資料, 所以, 欲將可視的物件加進Post裡用extension
@@ -147,7 +196,8 @@ extension Post {
         images: ["post-01.jpg", "post-02.jpg", "post-03.jpg"],
         commentCount: 12,
         likeCount: 88,
-        isLiked: true
+        isLiked: true,
+        recentComments: [.preview]
     )
 }
 #endif

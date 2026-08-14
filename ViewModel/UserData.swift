@@ -16,6 +16,9 @@ final class UserData: ObservableObject {
     private let repository: PostRepository
     private let composer: PostComposer?
     private let interactions: PostInteractions?
+    /// Handed to each detail screen rather than used here: a thread belongs to
+    /// the screen showing it, not to the shared store.
+    let commentService: CommentService?
     private var recommendPostDic: [Int: Int] = [:]
     private var hotPostDic: [Int: Int] = [:]
 
@@ -31,12 +34,14 @@ final class UserData: ObservableObject {
         repository: PostRepository = LocalPostRepository(),
         composer: PostComposer? = nil,
         interactions: PostInteractions? = nil,
+        commentService: CommentService? = nil,
         initialRecommendPosts: PostList? = nil,
         initialHotPosts: PostList? = nil
     ) {
         self.repository = repository
         self.composer = composer
         self.interactions = interactions
+        self.commentService = commentService
         self.recommendPostList = initialRecommendPosts ?? PostList(list: [])
         self.hotPostList = initialHotPosts ?? PostList(list: [])
         self.loadStates = [

@@ -14,8 +14,10 @@
 		01BF00000000000000000006 /* CommentTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000006 /* CommentTextView.swift */; };
 		01BF00000000000000000007 /* PostImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000007 /* PostImageCell.swift */; };
 		01BF00000000000000000008 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000008 /* Post.swift */; };
+		01BF00000000000000000038 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000038 /* Comment.swift */; };
 		01BF00000000000000000009 /* PostCellToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000009 /* PostCellToolbarButton.swift */; };
 		01BF0000000000000000000A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000A /* UserData.swift */; };
+		01BF0000000000000000003A /* CommentThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000003A /* CommentThread.swift */; };
 		01BF0000000000000000000B /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000B /* KeyboardResponder.swift */; };
 		01BF0000000000000000000C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000C /* HomeView.swift */; };
 		01BF0000000000000000000D /* CommentInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000D /* CommentInputView.swift */; };
@@ -34,6 +36,7 @@
 		01BF00000000000000000036 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000036 /* SignInView.swift */; };
 		01BF00000000000000000035 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000035 /* AuthStore.swift */; };
 		01BF00000000000000000034 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000034 /* AuthService.swift */; };
+		01BF00000000000000000039 /* CommentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000039 /* CommentService.swift */; };
 		01BF00000000000000000037 /* PostInteractions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000037 /* PostInteractions.swift */; };
 		01BF00000000000000000033 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000033 /* KeychainStore.swift */; };
 		01BF00000000000000000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000012 /* Assets.xcassets */; };
@@ -45,12 +48,14 @@
 		01BF00000000000000000027 /* RemotePostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000027 /* RemotePostRepository.swift */; };
 		01BF00000000000000000028 /* APIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000028 /* APIConfiguration.swift */; };
 		01BF0000000000000000002A /* PostImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000002A /* PostImage.swift */; };
+		01BF0000000000000000003B /* CommentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000003B /* CommentListView.swift */; };
 		01BF00000000000000000029 /* RemoteImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000029 /* RemoteImageLoader.swift */; };
 		02BF00000000000000000001 /* UserDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000001 /* UserDataTests.swift */; };
 		02BF00000000000000000002 /* PostDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000002 /* PostDecodingTests.swift */; };
 		02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000004 /* APIConfigurationTests.swift */; };
 		02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000005 /* RemoteImageLoaderTests.swift */; };
 		02BF00000000000000000006 /* ComposeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000006 /* ComposeTests.swift */; };
+		02BF00000000000000000008 /* CommentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000008 /* CommentTests.swift */; };
 		02BF00000000000000000007 /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000007 /* InteractionTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -72,8 +77,10 @@
 		01AF00000000000000000006 /* CommentTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTextView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000007 /* PostImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostImageCell.swift; sourceTree = "<group>"; };
 		01AF00000000000000000008 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		01AF00000000000000000038 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		01AF00000000000000000009 /* PostCellToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellToolbarButton.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000A /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		01AF0000000000000000003A /* CommentThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentThread.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000B /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000D /* CommentInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputView.swift; sourceTree = "<group>"; };
@@ -98,6 +105,7 @@
 		01AF00000000000000000036 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000035 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000034 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		01AF00000000000000000039 /* CommentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentService.swift; sourceTree = "<group>"; };
 		01AF00000000000000000037 /* PostInteractions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInteractions.swift; sourceTree = "<group>"; };
 		01AF00000000000000000033 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000023 /* PostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostRepository.swift; sourceTree = "<group>"; };
@@ -107,6 +115,7 @@
 		01AF00000000000000000027 /* RemotePostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000028 /* APIConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfiguration.swift; sourceTree = "<group>"; };
 		01AF0000000000000000002A /* PostImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostImage.swift; sourceTree = "<group>"; };
+		01AF0000000000000000003B /* CommentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentListView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000029 /* RemoteImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoader.swift; sourceTree = "<group>"; };
 		02AF00000000000000000001 /* UserDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000002 /* PostDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDecodingTests.swift; sourceTree = "<group>"; };
@@ -114,6 +123,7 @@
 		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000005 /* RemoteImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000006 /* ComposeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000008 /* CommentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000007 /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
@@ -209,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				01AF00000000000000000008 /* Post.swift */,
+				01AF00000000000000000038 /* Comment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -221,6 +232,7 @@
 				01AF00000000000000000027 /* RemotePostRepository.swift */,
 				01AF00000000000000000028 /* APIConfiguration.swift */,
 				01AF00000000000000000034 /* AuthService.swift */,
+				01AF00000000000000000039 /* CommentService.swift */,
 				01AF00000000000000000037 /* PostInteractions.swift */,
 				01AF00000000000000000033 /* KeychainStore.swift */,
 				01AF00000000000000000029 /* RemoteImageLoader.swift */,
@@ -248,6 +260,7 @@
 				01AF0000000000000000000D /* CommentInputView.swift */,
 				01AF00000000000000000007 /* PostImageCell.swift */,
 				01AF0000000000000000002A /* PostImage.swift */,
+				01AF0000000000000000003B /* CommentListView.swift */,
 				01AF00000000000000000025 /* CameraPicker.swift */,
 			);
 			path = Customised;
@@ -265,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				01AF0000000000000000000A /* UserData.swift */,
+				01AF0000000000000000003A /* CommentThread.swift */,
 				01AF00000000000000000035 /* AuthStore.swift */,
 				01AF0000000000000000000B /* KeyboardResponder.swift */,
 				01AF00000000000000000026 /* RuntimeImageStore.swift */,
@@ -280,6 +294,7 @@
 				02AF00000000000000000004 /* APIConfigurationTests.swift */,
 				02AF00000000000000000005 /* RemoteImageLoaderTests.swift */,
 				02AF00000000000000000006 /* ComposeTests.swift */,
+				02AF00000000000000000008 /* CommentTests.swift */,
 				02AF00000000000000000007 /* InteractionTests.swift */,
 			);
 			path = tweetTweetTests;
@@ -428,8 +443,10 @@
 				01BF00000000000000000006 /* CommentTextView.swift in Sources */,
 				01BF00000000000000000007 /* PostImageCell.swift in Sources */,
 				01BF00000000000000000008 /* Post.swift in Sources */,
+				01BF00000000000000000038 /* Comment.swift in Sources */,
 				01BF00000000000000000009 /* PostCellToolbarButton.swift in Sources */,
 				01BF0000000000000000000A /* UserData.swift in Sources */,
+				01BF0000000000000000003A /* CommentThread.swift in Sources */,
 				01BF0000000000000000000B /* KeyboardResponder.swift in Sources */,
 				01BF0000000000000000000C /* HomeView.swift in Sources */,
 				01BF0000000000000000000D /* CommentInputView.swift in Sources */,
@@ -448,6 +465,7 @@
 				01BF00000000000000000036 /* SignInView.swift in Sources */,
 				01BF00000000000000000035 /* AuthStore.swift in Sources */,
 				01BF00000000000000000034 /* AuthService.swift in Sources */,
+				01BF00000000000000000039 /* CommentService.swift in Sources */,
 				01BF00000000000000000037 /* PostInteractions.swift in Sources */,
 				01BF00000000000000000033 /* KeychainStore.swift in Sources */,
 				01BF00000000000000000023 /* PostRepository.swift in Sources */,
@@ -457,6 +475,7 @@
 				01BF00000000000000000027 /* RemotePostRepository.swift in Sources */,
 				01BF00000000000000000028 /* APIConfiguration.swift in Sources */,
 				01BF0000000000000000002A /* PostImage.swift in Sources */,
+				01BF0000000000000000003B /* CommentListView.swift in Sources */,
 				01BF00000000000000000029 /* RemoteImageLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +489,7 @@
 				02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */,
 				02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */,
 				02BF00000000000000000006 /* ComposeTests.swift in Sources */,
+				02BF00000000000000000008 /* CommentTests.swift in Sources */,
 				02BF00000000000000000007 /* InteractionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -43,7 +43,7 @@ struct PostListView: View { //顯示推特列表
                     Button(action: {
                         onSelectPost(post)
                     }) {
-                        PostCell(post: post)
+                        PostCell(post: post, onComment: { onSelectPost(post) })
                     }
                     .buttonStyle(PlainButtonStyle())
                     .accessibilityHint("開啟貼文詳情")

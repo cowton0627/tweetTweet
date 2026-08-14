@@ -73,7 +73,12 @@ struct HomeSearchView: View {
                     .padding(.vertical, 56)
                 } else {
                     ForEach(posts) { post in
-                        NavigationLink(destination: PostDetailView(post: post)) {
+                        NavigationLink(
+                            destination: PostDetailView(
+                                post: post,
+                                commentService: userData.commentService
+                            )
+                        ) {
                             PostCell(post: post)
                         }
                         .buttonStyle(PlainButtonStyle())
