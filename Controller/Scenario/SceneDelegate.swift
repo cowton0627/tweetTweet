@@ -28,7 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             repository: backend.repository,
             composer: backend.composer,
             interactions: backend.interactions,
-            commentService: backend.comments
+            commentService: backend.comments,
+            profileService: backend.profiles
         )
         let authStore = AuthStore(service: backend.auth)
         let contentView = RootView()

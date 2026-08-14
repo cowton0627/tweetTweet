@@ -9,12 +9,21 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject private var authStore: AuthStore
+    @EnvironmentObject private var userData: UserData
     @State private var showingSignIn = false
 
     var body: some View {
         Group {
             if let user = authStore.user {
-                signedIn(as: user)
+                // The same screen anyone else's account gets. Two screens
+                // would drift apart, and the difference is one button.
+                AccountView(
+                    handle: user.handle,
+                    profileService: userData.profileService,
+                    interactions: userData.interactionService,
+                    onSignOut: { authStore.signOut() }
+                )
+                .id(user.handle)
             } else {
                 signedOut
             }
@@ -24,42 +33,6 @@ struct ProfileView: View {
         .sheet(isPresented: $showingSignIn) {
             SignInView().environmentObject(authStore)
         }
-    }
-
-    private func signedIn(as user: Author) -> some View {
-        VStack(spacing: 16) {
-            PostImage(reference: user.avatar)
-                .frame(width: 88, height: 88)
-                .clipShape(Circle())
-                .overlay(
-                    PostVIPBadge(vip: user.vip).offset(x: 30, y: 30)
-                )
-                .accessibilityHidden(true)
-
-            VStack(spacing: 4) {
-                Text(user.displayName)
-                    .font(.title3.weight(.semibold))
-                Text("@\(user.handle)")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("\(user.displayName)，帳號名稱 \(user.handle)")
-
-            Text("你的貼文與追蹤之後會出現在這裡。")
-                .font(.footnote)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
-
-            Button(role: .destructive) {
-                authStore.signOut()
-            } label: {
-                Text("登出")
-            }
-            .padding(.top, 8)
-        }
-        .padding()
     }
 
     private var signedOut: some View {
@@ -91,6 +64,8 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView().environmentObject(AuthStore(service: nil))
+        ProfileView()
+            .environmentObject(AuthStore(service: nil))
+            .environmentObject(UserData())
     }
 }

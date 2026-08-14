@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeFeedPagerView: View {
     @Binding var leftPercent: CGFloat
     let onSelectPost: (Post) -> Void
+    let onSelectAuthor: (String) -> Void
 
     var body: some View {
         GeometryReader { proxy in
@@ -19,10 +20,18 @@ struct HomeFeedPagerView: View {
                         leftPercent: $leftPercent) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 0) {
-                        PostListView(category: .recommend, onSelectPost: onSelectPost)
-                            .frame(width: proxy.size.width)
-                        PostListView(category: .hot, onSelectPost: onSelectPost)
-                            .frame(width: proxy.size.width)
+                        PostListView(
+                            category: .recommend,
+                            onSelectPost: onSelectPost,
+                            onSelectAuthor: onSelectAuthor
+                        )
+                        .frame(width: proxy.size.width)
+                        PostListView(
+                            category: .hot,
+                            onSelectPost: onSelectPost,
+                            onSelectAuthor: onSelectAuthor
+                        )
+                        .frame(width: proxy.size.width)
                     }
                 }
             }

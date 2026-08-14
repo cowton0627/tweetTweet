@@ -394,3 +394,52 @@ extension RemotePostRepository: CommentService {
         return comment
     }
 }
+
+extension RemotePostRepository: ProfileService {
+    func profile(forHandle handle: String, token: String?) async throws -> Profile {
+        struct Response: Decodable {
+            let user: Author
+            let postCount: Int
+            let followerCount: Int
+            let followingCount: Int
+            let isFollowed: Bool
+            let isMe: Bool
+        }
+
+        let data = try await send(
+            interaction(path: "api/users/\(handle)", method: "GET", token: token)
+        )
+        do {
+            let response = try decoder.decode(Response.self, from: data)
+            var user = response.user
+            user.avatar = absoluteMediaReference(user.avatar)
+            return Profile(
+                user: user,
+                postCount: response.postCount,
+                followerCount: response.followerCount,
+                followingCount: response.followingCount,
+                isFollowed: response.isFollowed,
+                isMe: response.isMe
+            )
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    func posts(byHandle handle: String, token: String?) async throws -> [Post] {
+        let data = try await send(
+            interaction(
+                path: "api/users/\(handle)/posts",
+                method: "GET",
+                token: token
+            )
+        )
+        do {
+            return resolvingMedia(
+                in: try decoder.decode(PostList.self, from: data)
+            ).list
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+}

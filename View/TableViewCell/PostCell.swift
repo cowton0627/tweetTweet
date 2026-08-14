@@ -12,6 +12,10 @@ struct PostCell: View {
     /// What tapping "回應" does. Nil on the detail screen, where the thread is
     /// already below and there is nowhere to go.
     var onComment: (() -> Void)?
+
+    /// What tapping the author does. Nil on their own page, where you are
+    /// already there.
+    var onAuthorTap: ((String) -> Void)?
     
     var bindingPost: Post {
         userData.post(forId: post.id) ?? post
@@ -41,16 +45,22 @@ struct PostCell: View {
                     )
                     .accessibilityHidden(true)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(post.author.displayName)
-                        .font(.headline.weight(.semibold))
-                        .foregroundColor(Color(red: 242 / 255, green: 99 / 255, blue: 4 / 255))
-                        .lineLimit(1)
-                    Text(post.displayDate)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
+                Button(action: { onAuthorTap?(post.author.handle) }) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(post.author.displayName)
+                            .font(.headline.weight(.semibold))
+                            .foregroundColor(Color(red: 242 / 255, green: 99 / 255, blue: 4 / 255))
+                            .lineLimit(1)
+                        Text(post.displayDate)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
                 }
+                .buttonStyle(PlainButtonStyle())
+                .disabled(onAuthorTap == nil)
+                .accessibilityLabel("\(post.author.displayName)，\(post.displayDate)")
+                .accessibilityHint(onAuthorTap == nil ? "" : "開啟這個帳號")
 
                 Spacer()
 

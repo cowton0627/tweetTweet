@@ -16,9 +16,14 @@ final class UserData: ObservableObject {
     private let repository: PostRepository
     private let composer: PostComposer?
     private let interactions: PostInteractions?
+    /// Handed to a profile screen, which follows on its own behalf rather than
+    /// through the feed's copy of a post.
+    var interactionService: PostInteractions? { interactions }
     /// Handed to each detail screen rather than used here: a thread belongs to
     /// the screen showing it, not to the shared store.
     let commentService: CommentService?
+    /// Likewise handed to whichever profile screen is open.
+    let profileService: ProfileService?
     private var recommendPostDic: [Int: Int] = [:]
     private var hotPostDic: [Int: Int] = [:]
 
@@ -35,6 +40,7 @@ final class UserData: ObservableObject {
         composer: PostComposer? = nil,
         interactions: PostInteractions? = nil,
         commentService: CommentService? = nil,
+        profileService: ProfileService? = nil,
         initialRecommendPosts: PostList? = nil,
         initialHotPosts: PostList? = nil
     ) {
@@ -42,6 +48,7 @@ final class UserData: ObservableObject {
         self.composer = composer
         self.interactions = interactions
         self.commentService = commentService
+        self.profileService = profileService
         self.recommendPostList = initialRecommendPosts ?? PostList(list: [])
         self.hotPostList = initialHotPosts ?? PostList(list: [])
         self.loadStates = [

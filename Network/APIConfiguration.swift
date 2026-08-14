@@ -50,6 +50,7 @@ struct Backend {
     let auth: AuthService?
     let interactions: PostInteractions?
     let comments: CommentService?
+    let profiles: ProfileService?
 }
 
 enum PostRepositoryFactory {
@@ -62,7 +63,8 @@ enum PostRepositoryFactory {
                 composer: nil,
                 auth: nil,
                 interactions: nil,
-                comments: nil
+                comments: nil,
+                profiles: nil
             )
         }
         let remote = RemotePostRepository(baseURL: baseURL)
@@ -71,7 +73,8 @@ enum PostRepositoryFactory {
             composer: remote,
             auth: RemoteAuthService(baseURL: baseURL),
             interactions: remote,
-            comments: remote
+            comments: remote,
+            profiles: remote
         )
     }
 }

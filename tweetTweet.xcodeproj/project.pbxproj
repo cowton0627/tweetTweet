@@ -17,6 +17,7 @@
 		01BF00000000000000000038 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000038 /* Comment.swift */; };
 		01BF00000000000000000009 /* PostCellToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000009 /* PostCellToolbarButton.swift */; };
 		01BF0000000000000000000A /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000A /* UserData.swift */; };
+		01BF0000000000000000003D /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000003D /* ProfileStore.swift */; };
 		01BF0000000000000000003A /* CommentThread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000003A /* CommentThread.swift */; };
 		01BF0000000000000000000B /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000B /* KeyboardResponder.swift */; };
 		01BF0000000000000000000C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000000C /* HomeView.swift */; };
@@ -31,11 +32,13 @@
 		01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001B /* HomeFeedPagerView.swift */; };
 		01BF0000000000000000001C /* HomeSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001C /* HomeSearchView.swift */; };
 		01BF00000000000000000032 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000032 /* ProfileView.swift */; };
+		01BF0000000000000000003E /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000003E /* AccountView.swift */; };
 		01BF00000000000000000031 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000031 /* NotificationsView.swift */; };
 		01BF00000000000000000030 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000030 /* RootView.swift */; };
 		01BF00000000000000000036 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000036 /* SignInView.swift */; };
 		01BF00000000000000000035 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000035 /* AuthStore.swift */; };
 		01BF00000000000000000034 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000034 /* AuthService.swift */; };
+		01BF0000000000000000003C /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000003C /* ProfileService.swift */; };
 		01BF00000000000000000039 /* CommentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000039 /* CommentService.swift */; };
 		01BF00000000000000000037 /* PostInteractions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000037 /* PostInteractions.swift */; };
 		01BF00000000000000000033 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000033 /* KeychainStore.swift */; };
@@ -55,6 +58,7 @@
 		02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000004 /* APIConfigurationTests.swift */; };
 		02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000005 /* RemoteImageLoaderTests.swift */; };
 		02BF00000000000000000006 /* ComposeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000006 /* ComposeTests.swift */; };
+		02BF00000000000000000009 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000009 /* ProfileTests.swift */; };
 		02BF00000000000000000008 /* CommentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000008 /* CommentTests.swift */; };
 		02BF00000000000000000007 /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000007 /* InteractionTests.swift */; };
 /* End PBXBuildFile section */
@@ -80,6 +84,7 @@
 		01AF00000000000000000038 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		01AF00000000000000000009 /* PostCellToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellToolbarButton.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000A /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		01AF0000000000000000003D /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		01AF0000000000000000003A /* CommentThread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentThread.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000B /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		01AF0000000000000000000C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -100,11 +105,13 @@
 		01AF0000000000000000001B /* HomeFeedPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedPagerView.swift; sourceTree = "<group>"; };
 		01AF0000000000000000001C /* HomeSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000032 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		01AF0000000000000000003E /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000031 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000030 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000036 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000035 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000034 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		01AF0000000000000000003C /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		01AF00000000000000000039 /* CommentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentService.swift; sourceTree = "<group>"; };
 		01AF00000000000000000037 /* PostInteractions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInteractions.swift; sourceTree = "<group>"; };
 		01AF00000000000000000033 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
@@ -123,6 +130,7 @@
 		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000005 /* RemoteImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000006 /* ComposeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000009 /* ProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000008 /* CommentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000007 /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
@@ -194,6 +202,7 @@
 				01AF0000000000000000001B /* HomeFeedPagerView.swift */,
 				01AF0000000000000000001C /* HomeSearchView.swift */,
 				01AF00000000000000000032 /* ProfileView.swift */,
+				01AF0000000000000000003E /* AccountView.swift */,
 				01AF00000000000000000031 /* NotificationsView.swift */,
 				01AF00000000000000000030 /* RootView.swift */,
 				01AF00000000000000000036 /* SignInView.swift */,
@@ -232,6 +241,7 @@
 				01AF00000000000000000027 /* RemotePostRepository.swift */,
 				01AF00000000000000000028 /* APIConfiguration.swift */,
 				01AF00000000000000000034 /* AuthService.swift */,
+				01AF0000000000000000003C /* ProfileService.swift */,
 				01AF00000000000000000039 /* CommentService.swift */,
 				01AF00000000000000000037 /* PostInteractions.swift */,
 				01AF00000000000000000033 /* KeychainStore.swift */,
@@ -278,6 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				01AF0000000000000000000A /* UserData.swift */,
+				01AF0000000000000000003D /* ProfileStore.swift */,
 				01AF0000000000000000003A /* CommentThread.swift */,
 				01AF00000000000000000035 /* AuthStore.swift */,
 				01AF0000000000000000000B /* KeyboardResponder.swift */,
@@ -294,6 +305,7 @@
 				02AF00000000000000000004 /* APIConfigurationTests.swift */,
 				02AF00000000000000000005 /* RemoteImageLoaderTests.swift */,
 				02AF00000000000000000006 /* ComposeTests.swift */,
+				02AF00000000000000000009 /* ProfileTests.swift */,
 				02AF00000000000000000008 /* CommentTests.swift */,
 				02AF00000000000000000007 /* InteractionTests.swift */,
 			);
@@ -446,6 +458,7 @@
 				01BF00000000000000000038 /* Comment.swift in Sources */,
 				01BF00000000000000000009 /* PostCellToolbarButton.swift in Sources */,
 				01BF0000000000000000000A /* UserData.swift in Sources */,
+				01BF0000000000000000003D /* ProfileStore.swift in Sources */,
 				01BF0000000000000000003A /* CommentThread.swift in Sources */,
 				01BF0000000000000000000B /* KeyboardResponder.swift in Sources */,
 				01BF0000000000000000000C /* HomeView.swift in Sources */,
@@ -460,11 +473,13 @@
 				01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */,
 				01BF0000000000000000001C /* HomeSearchView.swift in Sources */,
 				01BF00000000000000000032 /* ProfileView.swift in Sources */,
+				01BF0000000000000000003E /* AccountView.swift in Sources */,
 				01BF00000000000000000031 /* NotificationsView.swift in Sources */,
 				01BF00000000000000000030 /* RootView.swift in Sources */,
 				01BF00000000000000000036 /* SignInView.swift in Sources */,
 				01BF00000000000000000035 /* AuthStore.swift in Sources */,
 				01BF00000000000000000034 /* AuthService.swift in Sources */,
+				01BF0000000000000000003C /* ProfileService.swift in Sources */,
 				01BF00000000000000000039 /* CommentService.swift in Sources */,
 				01BF00000000000000000037 /* PostInteractions.swift in Sources */,
 				01BF00000000000000000033 /* KeychainStore.swift in Sources */,
@@ -489,6 +504,7 @@
 				02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */,
 				02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */,
 				02BF00000000000000000006 /* ComposeTests.swift in Sources */,
+				02BF00000000000000000009 /* ProfileTests.swift in Sources */,
 				02BF00000000000000000008 /* CommentTests.swift in Sources */,
 				02BF00000000000000000007 /* InteractionTests.swift in Sources */,
 			);

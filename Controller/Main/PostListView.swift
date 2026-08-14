@@ -9,6 +9,7 @@ import SwiftUI
 struct PostListView: View { //顯示推特列表
     let category: PostListCategory
     let onSelectPost: (Post) -> Void
+    let onSelectAuthor: (String) -> Void
 
     @EnvironmentObject var userData: UserData
     @State private var bottomState: BottomState = .idle
@@ -43,7 +44,11 @@ struct PostListView: View { //顯示推特列表
                     Button(action: {
                         onSelectPost(post)
                     }) {
-                        PostCell(post: post, onComment: { onSelectPost(post) })
+                        PostCell(
+                            post: post,
+                            onComment: { onSelectPost(post) },
+                            onAuthorTap: onSelectAuthor
+                        )
                     }
                     .buttonStyle(PlainButtonStyle())
                     .accessibilityHint("開啟貼文詳情")
@@ -164,7 +169,11 @@ private struct BottomStatusView: View {
 struct PostListView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PostListView(category: .recommend, onSelectPost: { _ in })
+            PostListView(
+                category: .recommend,
+                onSelectPost: { _ in },
+                onSelectAuthor: { _ in }
+            )
         }
         .environmentObject(
             UserData(initialRecommendPosts: PostList(list: []))

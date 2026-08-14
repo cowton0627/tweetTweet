@@ -21,6 +21,7 @@ struct PostDetailView: View {
     @StateObject private var thread: CommentThread
     @State private var draft: String = ""
     @State private var failureMessage: String?
+    @State private var selectedAuthor: AuthorHandle?
 
     /// The service is passed in rather than reached for: choosing what talks to
     /// the network is the composition root's job, and a view that reads the
@@ -52,7 +53,12 @@ struct PostDetailView: View {
         VStack(spacing: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
-                    PostCell(post: post)
+                    // No onComment: the thread is already below, and there
+                    // is nowhere for that button to go.
+                    PostCell(
+                        post: post,
+                        onAuthorTap: { selectedAuthor = AuthorHandle(handle: $0) }
+                    )
 
                     Divider()
 
@@ -124,6 +130,15 @@ struct PostDetailView: View {
             guard let count, var updated = userData.post(forId: post.id) else { return }
             updated.commentCount = count
             userData.update(updated)
+        }
+        .sheet(item: $selectedAuthor) { author in
+            AccountView(
+                handle: author.handle,
+                profileService: userData.profileService,
+                interactions: userData.interactionService
+            )
+            .environmentObject(userData)
+            .environmentObject(authStore)
         }
         .alert(
             "無法完成",

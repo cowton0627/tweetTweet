@@ -14,6 +14,7 @@ import SwiftUI
 struct HomeView: View {
     @State var leftPercent: CGFloat = 0
     @State private var selectedPost: Post?
+    @State private var selectedAuthor: AuthorHandle?
 
     @EnvironmentObject private var userData: UserData
     @EnvironmentObject private var authStore: AuthStore
@@ -23,9 +24,11 @@ struct HomeView: View {
             Color(.systemBackground)
                 .ignoresSafeArea()
 
-            HomeFeedPagerView(leftPercent: $leftPercent) { post in
-                selectedPost = post
-            }
+            HomeFeedPagerView(
+                leftPercent: $leftPercent,
+                onSelectPost: { selectedPost = $0 },
+                onSelectAuthor: { selectedAuthor = AuthorHandle(handle: $0) }
+            )
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .safeAreaInset(edge: .top, spacing: 0) {
@@ -38,6 +41,15 @@ struct HomeView: View {
             PostDetailView(post: post, commentService: userData.commentService)
                 .environmentObject(userData)
                 .environmentObject(authStore)
+        }
+        .sheet(item: $selectedAuthor) { author in
+            AccountView(
+                handle: author.handle,
+                profileService: userData.profileService,
+                interactions: userData.interactionService
+            )
+            .environmentObject(userData)
+            .environmentObject(authStore)
         }
     }
 }
@@ -61,4 +73,11 @@ struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView().environmentObject(UserData())
     }
+}
+
+/// Identifies one presentation of an account page. A bare String cannot be
+/// used with `.sheet(item:)`, which needs identity.
+struct AuthorHandle: Identifiable {
+    let handle: String
+    var id: String { handle }
 }
