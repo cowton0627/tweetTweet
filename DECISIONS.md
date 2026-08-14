@@ -318,3 +318,35 @@ M2 的驗收標準原本寫的是「把 `Resources/` 的圖片從 bundle 移除,
 ### 發文失敗不清空輸入
 
 送出失敗時畫面留在原地、文字原封不動,只跳一個 alert。因為網路閃一下就把人寫的東西吃掉,是最糟糕的回應方式。對應的測試斷言失敗時**不會**留下一則只存在本機的貼文——否則使用者會以為發成功了。
+
+## 2026-08-14（M4：部署）
+
+### 免費雲端的真實選項比想像少
+
+盤點後只有三種組合能同時滿足「免費、資料持久、不休眠」，而且沒有一個是單一服務就能做到的：Fly.io 的免費方案 2024 年就取消了，Render 免費不用信用卡但**不能掛持久磁碟**，Oracle 永久免費 VM 要自己維運。
+
+最後拆成三個各自免費的部分:API 在 Render、資料在 Turso(libSQL,9GB 免費且不需信用卡)、圖片在 S3。這反而是比較正確的架構——應用本身無狀態,有狀態的東西各自託管,任何一塊都能單獨替換。
+
+### Turso 的 embedded replica 不支援 transaction,這是換掉整個 driver 的原因
+
+同步的 `libsql` 套件在本機檔案上與 better-sqlite3 幾乎完全相容,但對託管資料庫**拒絕交易**:`db.transaction()` 回 `InvalidParserState`,手動 `BEGIN`/`COMMIT` 說「沒有進行中的交易」,named parameters 則靜默地不綁值——症狀是 NOT NULL 違規,完全指不到真正的原因。
+
+而資料完整性依賴交易(貼文與圖片必須一起落地),所以改用 `@libsql/client`。它是 async-only,資料層因此全面 async,又因為它只出 ESM 型別而專案是 CommonJS,連帶把整個專案轉成 ESM——能繞過的 legacy 解析在 TypeScript 7 會移除,與其買時間不如直接搬。
+
+**教訓:換 driver 前先對真實環境寫探測腳本。** 本機測試全綠不代表遠端可用,而這兩者的差異全部是靜默失敗。那份 20 行的 probe 比事後從壞掉的 migration 反推便宜太多。
+
+### 部署踩到的坑:精簡 image 沒有 CA 憑證
+
+容器 build 成功,啟動第一秒就死於 `TLS error: no valid native root CA certificates found`。
+
+`node:22-slim` 為了體積拿掉了系統憑證庫。Node 二進位檔內建一份 CA bundle,所以 JavaScript 的 HTTPS(包含 S3 SDK)完全正常——但 libSQL 的綁定是原生 Rust,讀的是作業系統的信任庫,於是只有資料庫連線斷掉。同一個 process 裡兩套信任來源。
+
+這種問題在開發機上永遠看不到,因為 macOS 與桌面 Linux 一定有憑證。裝 `ca-certificates` 幾百 KB 解決。
+
+### 金鑰外洩事故,以及窄權限的回報
+
+驗證 S3 時我把憑證放進 shell 參數且漏了 quote,AWS CLI 的錯誤訊息把完整的 secret access key 印了出來。金鑰已撤銷更換。
+
+損害之所以可控,是因為那把金鑰的政策只允許讀寫 `tweettweet-media` 這一個 bucket 裡 `tweettweet/` 開頭的物件——列不出 bucket、刪不掉東西、碰不到其他專案。如果當初共用了既有的金鑰,善後就不是「換一把」而是「盤點所有資產」。
+
+**做法上的修正:憑證只透過 `node --env-file` 進入程序,不經過 shell。** 值不出現在指令參數、不出現在 history、不會被任何工具的錯誤訊息回吐。

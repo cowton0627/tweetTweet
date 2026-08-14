@@ -6,7 +6,7 @@
 
 專案採 local-first 設計：不需帳號、API key 或後端服務，clone 後即可在 Simulator 完整操作，適合作為可重現的 iOS 作品集案例。
 
-同時它也可以接上真正的後端。加一個本機設定檔，動態牆就改由 [tweettweet-api](https://github.com/cowton0627/tweettweet-api)（Express + TypeScript + SQLite）供應，App 的 model 與 decoder 完全不用改；沒設定時自動退回內建 JSON。
+同時它也可以接上真正的後端。加一個本機設定檔，動態牆與圖片就改由 [tweettweet-api](https://github.com/cowton0627/tweettweet-api) 供應——已部署於 https://tweettweet-api.onrender.com （API 在 Render、資料在 Turso、圖片在 S3）。App 的 model 與 decoder 完全不用改；沒設定時自動退回內建 JSON，離線仍可完整操作。
 
 <p>
   <img src="screenshots/home.png" alt="tweetTweet 推薦動態流（淺色模式）" width="240" />
@@ -186,8 +186,8 @@ GitHub Actions 也會在 main branch push、針對 main 的 Pull Request，以�
 
 下一階段規劃：
 
-1. 後端 Docker 化並部署到雲端，讓展示不依賴特定機器保持開機
-2. 讚與追蹤寫回後端
+1. 讚與追蹤寫回後端
+2. 上傳前先降取樣（相簿原圖經 JPEG 編碼後實測 2.8 MB，而顯示寬度最多就是螢幕寬）
 3. 完成實機 VoiceOver 操作驗證
 4. 補齊全新素材版本的流程截圖或操作影片
 
