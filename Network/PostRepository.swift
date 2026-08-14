@@ -6,8 +6,12 @@
 import UIKit
 
 protocol PostRepository {
-    func loadRecommendPosts() async throws -> PostList
-    func loadHotPosts() async throws -> PostList
+    /// The token is what makes `isLiked` and `isFollowed` mean anything: those
+    /// describe a relationship between the reader and the post, so an
+    /// anonymous request gets a feed where nothing is liked and nobody is
+    /// followed. Reading itself never requires one.
+    func loadRecommendPosts(token: String?) async throws -> PostList
+    func loadHotPosts(token: String?) async throws -> PostList
 }
 
 /// Publishing a post, kept apart from reading one.

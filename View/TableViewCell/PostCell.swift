@@ -14,11 +14,19 @@ struct PostCell: View {
     }
     
     @State var presentComment: Bool = false
-    
+    @State private var failureMessage: String?
+
     @EnvironmentObject var userData: UserData
+    @EnvironmentObject var authStore: AuthStore
+
+    /// Whether this post is the reader's own. You cannot follow yourself, and
+    /// the server refuses to try, so the button has no business being there.
+    private var isOwnPost: Bool {
+        authStore.user?.handle == post.author.handle
+    }
     
     var body: some View {
-        var post = bindingPost
+        let post = bindingPost
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
                 PostImage(reference: post.author.avatar)
@@ -43,11 +51,8 @@ struct PostCell: View {
 
                 Spacer()
 
-                if !post.isFollowed {
-                    Button(action:{
-                        post.isFollowed =  true
-                        self.userData.update(post)
-                    }) {
+                if !post.isFollowed && !isOwnPost {
+                    Button(action: { setFollow(true, on: post) }) {
                     Text("追蹤")
                         .font(.subheadline)
                         .foregroundColor(.orange)
@@ -95,15 +100,7 @@ struct PostCell: View {
                                       text: post.likeCountText,
                                       color: post.isLiked ? .red : .primary)
                 {
-//                    print("Click like button")
-                    if post.isLiked {
-                        post.isLiked = false
-                        post.likeCount -=  1
-                    }else {
-                        post.isLiked = true
-                        post.likeCount += 1
-                    }
-                    self.userData.update(post)
+                    setLike(!post.isLiked, on: post)
                 }
                 .accessibilityLabel(
                     post.isLiked
@@ -121,7 +118,56 @@ struct PostCell: View {
         }
         .padding(.horizontal, 15)
         .padding(.top, 15)
-        
+        .alert(
+            "無法完成",
+            isPresented: Binding(
+                get: { failureMessage != nil },
+                set: { if !$0 { failureMessage = nil } }
+            ),
+            presenting: failureMessage
+        ) { _ in
+            Button("好", role: .cancel) {}
+        } message: { message in
+            Text(message)
+        }
+    }
+
+    // Both of these hand the work to UserData rather than editing the post in
+    // place: a like has to reach the server, be reconciled with what it says,
+    // and be rolled back if it never arrives — none of which belongs in a cell.
+    private func setLike(_ liked: Bool, on post: Post) {
+        guard signedInOrComplain() else { return }
+        Task {
+            do {
+                try await userData.setLike(liked, on: post.id, token: authStore.token)
+            } catch {
+                failureMessage = error.localizedDescription
+            }
+        }
+    }
+
+    private func setFollow(_ followed: Bool, on post: Post) {
+        guard signedInOrComplain() else { return }
+        Task {
+            do {
+                try await userData.setFollow(
+                    followed,
+                    forAuthor: post.author.handle,
+                    token: authStore.token
+                )
+            } catch {
+                failureMessage = error.localizedDescription
+            }
+        }
+    }
+
+    /// Offline the taps still work and simply never leave the device, which is
+    /// what keeps the app usable with no server. Online they need an account,
+    /// because there is nobody for the relationship to belong to otherwise.
+    private func signedInOrComplain() -> Bool {
+        guard userData.canInteract, authStore.token == nil else { return true }
+        failureMessage = "請先到「個人」分頁登入。"
+        return false
     }
 }
 
@@ -130,6 +176,8 @@ struct PostCell_Previews: PreviewProvider {
     static var previews: some View {
         let post = Post.preview
         let userData = UserData(initialRecommendPosts: PostList(list: [post]))
-        return PostCell(post: post).environmentObject(userData)
+        return PostCell(post: post)
+            .environmentObject(userData)
+            .environmentObject(AuthStore(service: nil))
     }
 }

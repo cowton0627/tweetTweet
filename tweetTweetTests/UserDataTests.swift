@@ -119,11 +119,11 @@ private struct MockPostRepository: PostRepository {
     let recommendPosts: [Post]
     let hotPosts: [Post]
 
-    func loadRecommendPosts() async throws -> PostList {
+    func loadRecommendPosts(token: String?) async throws -> PostList {
         PostList(list: recommendPosts)
     }
 
-    func loadHotPosts() async throws -> PostList {
+    func loadHotPosts(token: String?) async throws -> PostList {
         PostList(list: hotPosts)
     }
 }
@@ -131,14 +131,14 @@ private struct MockPostRepository: PostRepository {
 private final class RetryableMockPostRepository: PostRepository {
     var shouldFail = true
 
-    func loadRecommendPosts() async throws -> PostList {
+    func loadRecommendPosts(token: String?) async throws -> PostList {
         if shouldFail {
             throw MockError.offline
         }
         return PostList(list: [makePost(id: 90)])
     }
 
-    func loadHotPosts() async throws -> PostList {
+    func loadHotPosts(token: String?) async throws -> PostList {
         PostList(list: [])
     }
 }

@@ -16,6 +16,7 @@ struct HomeView: View {
     @State private var selectedPost: Post?
 
     @EnvironmentObject private var userData: UserData
+    @EnvironmentObject private var authStore: AuthStore
 
     var body: some View {
         ZStack {
@@ -31,8 +32,12 @@ struct HomeView: View {
             HomeTopChromeView(leftPercent: $leftPercent)
         }
         .sheet(item: $selectedPost) { post in
+            // A sheet does not inherit environment objects, so both have to be
+            // handed across explicitly — the cells inside need the account to
+            // know whose posts these are.
             PostDetailView(post: post)
                 .environmentObject(userData)
+                .environmentObject(authStore)
         }
     }
 }

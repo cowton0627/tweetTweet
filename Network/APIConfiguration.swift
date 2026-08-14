@@ -39,20 +39,36 @@ enum APIConfiguration {
     }
 }
 
+/// What the app can do with whatever backend it was configured with.
+///
+/// Everything except reading is optional and nil offline: without a server
+/// there is nowhere to publish, sign in, or record a like, and the app says so
+/// by having nothing rather than by throwing when someone taps.
+struct Backend {
+    let repository: PostRepository
+    let composer: PostComposer?
+    let auth: AuthService?
+    let interactions: PostInteractions?
+}
+
 enum PostRepositoryFactory {
     /// The remote repository when a backend is configured, bundled JSON when
     /// it is not, so the app stays usable with no server running.
-    ///
-    /// The composer comes back alongside it and is nil offline: without a
-    /// server there is nowhere to publish to, and the app says so by having
-    /// nothing rather than by throwing later.
-    static func makeDefault(
-        bundle: Bundle = .main
-    ) -> (repository: PostRepository, composer: PostComposer?, auth: AuthService?) {
+    static func makeDefault(bundle: Bundle = .main) -> Backend {
         guard let baseURL = APIConfiguration.baseURL(from: bundle) else {
-            return (LocalPostRepository(), nil, nil)
+            return Backend(
+                repository: LocalPostRepository(),
+                composer: nil,
+                auth: nil,
+                interactions: nil
+            )
         }
         let remote = RemotePostRepository(baseURL: baseURL)
-        return (remote, remote, RemoteAuthService(baseURL: baseURL))
+        return Backend(
+            repository: remote,
+            composer: remote,
+            auth: RemoteAuthService(baseURL: baseURL),
+            interactions: remote
+        )
     }
 }

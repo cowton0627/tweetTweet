@@ -71,9 +71,16 @@ struct RootView: View {
                 .environmentObject(authStore)
         }
         .task {
-            // Restoring the session first, so a feed request can carry it.
+            // Restoring the session first, so the feed request can carry it —
+            // without a token the server has no reader to compute `isLiked`
+            // and `isFollowed` against, and everything comes back untouched.
             await authStore.restore()
-            await userData.loadAll()
+            await userData.loadAll(token: authStore.token)
+        }
+        // Signing in or out changes what the feed says about the reader, not
+        // just who the profile tab shows.
+        .onChange(of: authStore.token) { token in
+            Task { await userData.loadAll(token: token) }
         }
     }
 }
@@ -86,6 +93,8 @@ struct ComposeDraft: Identifiable {
 
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
-        RootView().environmentObject(UserData())
+        RootView()
+            .environmentObject(UserData())
+            .environmentObject(AuthStore(service: nil))
     }
 }

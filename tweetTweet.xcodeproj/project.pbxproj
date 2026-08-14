@@ -34,6 +34,7 @@
 		01BF00000000000000000036 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000036 /* SignInView.swift */; };
 		01BF00000000000000000035 /* AuthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000035 /* AuthStore.swift */; };
 		01BF00000000000000000034 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000034 /* AuthService.swift */; };
+		01BF00000000000000000037 /* PostInteractions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000037 /* PostInteractions.swift */; };
 		01BF00000000000000000033 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000033 /* KeychainStore.swift */; };
 		01BF00000000000000000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000012 /* Assets.xcassets */; };
 		01BF00000000000000000021 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000014 /* LaunchScreen.storyboard */; };
@@ -50,6 +51,7 @@
 		02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000004 /* APIConfigurationTests.swift */; };
 		02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000005 /* RemoteImageLoaderTests.swift */; };
 		02BF00000000000000000006 /* ComposeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000006 /* ComposeTests.swift */; };
+		02BF00000000000000000007 /* InteractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AF00000000000000000007 /* InteractionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +98,7 @@
 		01AF00000000000000000036 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000035 /* AuthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000034 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		01AF00000000000000000037 /* PostInteractions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostInteractions.swift; sourceTree = "<group>"; };
 		01AF00000000000000000033 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		01AF00000000000000000023 /* PostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000024 /* LocalPostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPostRepository.swift; sourceTree = "<group>"; };
@@ -111,6 +114,7 @@
 		02AF00000000000000000004 /* APIConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfigurationTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000005 /* RemoteImageLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageLoaderTests.swift; sourceTree = "<group>"; };
 		02AF00000000000000000006 /* ComposeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeTests.swift; sourceTree = "<group>"; };
+		02AF00000000000000000007 /* InteractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractionTests.swift; sourceTree = "<group>"; };
 		FEED00000000000000000000 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		FEED00000000000000000002 /* Signing.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Signing.local.xcconfig.example; sourceTree = "<group>"; };
 		FEED00000000000000000003 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
@@ -217,6 +221,7 @@
 				01AF00000000000000000027 /* RemotePostRepository.swift */,
 				01AF00000000000000000028 /* APIConfiguration.swift */,
 				01AF00000000000000000034 /* AuthService.swift */,
+				01AF00000000000000000037 /* PostInteractions.swift */,
 				01AF00000000000000000033 /* KeychainStore.swift */,
 				01AF00000000000000000029 /* RemoteImageLoader.swift */,
 			);
@@ -275,6 +280,7 @@
 				02AF00000000000000000004 /* APIConfigurationTests.swift */,
 				02AF00000000000000000005 /* RemoteImageLoaderTests.swift */,
 				02AF00000000000000000006 /* ComposeTests.swift */,
+				02AF00000000000000000007 /* InteractionTests.swift */,
 			);
 			path = tweetTweetTests;
 			sourceTree = "<group>";
@@ -442,6 +448,7 @@
 				01BF00000000000000000036 /* SignInView.swift in Sources */,
 				01BF00000000000000000035 /* AuthStore.swift in Sources */,
 				01BF00000000000000000034 /* AuthService.swift in Sources */,
+				01BF00000000000000000037 /* PostInteractions.swift in Sources */,
 				01BF00000000000000000033 /* KeychainStore.swift in Sources */,
 				01BF00000000000000000023 /* PostRepository.swift in Sources */,
 				01BF00000000000000000024 /* LocalPostRepository.swift in Sources */,
@@ -463,6 +470,7 @@
 				02BF00000000000000000004 /* APIConfigurationTests.swift in Sources */,
 				02BF00000000000000000005 /* RemoteImageLoaderTests.swift in Sources */,
 				02BF00000000000000000006 /* ComposeTests.swift in Sources */,
+				02BF00000000000000000007 /* InteractionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

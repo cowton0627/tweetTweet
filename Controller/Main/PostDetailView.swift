@@ -10,7 +10,13 @@ struct PostDetailView: View {
     let post: Post
     
     @EnvironmentObject private var userData: UserData
+    @EnvironmentObject private var authStore: AuthStore
     @State private var showingCommentInput = false
+    @State private var failureMessage: String?
+
+    private var isOwnPost: Bool {
+        authStore.user?.handle == post.author.handle
+    }
 
     private var currentPost: Post {
         userData.post(forId: post.id) ?? post
@@ -56,12 +62,14 @@ struct PostDetailView: View {
             Divider()
 
             HStack(spacing: 12) {
-                Button(action: { toggleFollow(for: post) }) {
-                    Label(post.isFollowed ? "已追蹤" : "追蹤", systemImage: post.isFollowed ? "checkmark.circle.fill" : "person.badge.plus")
-                        .frame(maxWidth: .infinity)
+                if !isOwnPost {
+                    Button(action: { setFollow(!post.isFollowed, for: post) }) {
+                        Label(post.isFollowed ? "已追蹤" : "追蹤", systemImage: post.isFollowed ? "checkmark.circle.fill" : "person.badge.plus")
+                            .frame(maxWidth: .infinity)
+                    }
                 }
 
-                Button(action: { toggleLike(for: post) }) {
+                Button(action: { setLike(!post.isLiked, for: post) }) {
                     Label(post.isLiked ? "已喜歡" : "喜歡", systemImage: post.isLiked ? "heart.fill" : "heart")
                         .frame(maxWidth: .infinity)
                 }
@@ -78,28 +86,54 @@ struct PostDetailView: View {
             .buttonStyle(BorderlessButtonStyle())
         }
         .navigationBarTitle("詳情", displayMode: .inline)
+        .alert(
+            "無法完成",
+            isPresented: Binding(
+                get: { failureMessage != nil },
+                set: { if !$0 { failureMessage = nil } }
+            ),
+            presenting: failureMessage
+        ) { _ in
+            Button("好", role: .cancel) {}
+        } message: { message in
+            Text(message)
+        }
         .sheet(isPresented: $showingCommentInput) {
             CommentInputView(post: post)
                 .environmentObject(userData)
         }
     }
 
-    private func toggleFollow(for post: Post) {
-        var updated = post
-        updated.isFollowed.toggle()
-        userData.update(updated)
+    private func setLike(_ liked: Bool, for post: Post) {
+        guard signedInOrComplain() else { return }
+        Task {
+            do {
+                try await userData.setLike(liked, on: post.id, token: authStore.token)
+            } catch {
+                failureMessage = error.localizedDescription
+            }
+        }
     }
 
-    private func toggleLike(for post: Post) {
-        var updated = post
-        if updated.isLiked {
-            updated.isLiked = false
-            updated.likeCount = max(0, updated.likeCount - 1)
-        } else {
-            updated.isLiked = true
-            updated.likeCount += 1
+    private func setFollow(_ followed: Bool, for post: Post) {
+        guard signedInOrComplain() else { return }
+        Task {
+            do {
+                try await userData.setFollow(
+                    followed,
+                    forAuthor: post.author.handle,
+                    token: authStore.token
+                )
+            } catch {
+                failureMessage = error.localizedDescription
+            }
         }
-        userData.update(updated)
+    }
+
+    private func signedInOrComplain() -> Bool {
+        guard userData.canInteract, authStore.token == nil else { return true }
+        failureMessage = "請先到「個人」分頁登入。"
+        return false
     }
 }
 
@@ -112,5 +146,6 @@ struct PostDetailView_Previews: PreviewProvider {
             PostDetailView(post: post)
         }
         .environmentObject(userData)
+        .environmentObject(AuthStore(service: nil))
     }
 }

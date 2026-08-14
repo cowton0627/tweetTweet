@@ -23,18 +23,21 @@ struct RemotePostRepository: PostRepository {
         self.decoder = decoder
     }
 
-    func loadRecommendPosts() async throws -> PostList {
-        try await load(path: "api/feeds/recommend")
+    func loadRecommendPosts(token: String?) async throws -> PostList {
+        try await load(path: "api/feeds/recommend", token: token)
     }
 
-    func loadHotPosts() async throws -> PostList {
-        try await load(path: "api/feeds/hot")
+    func loadHotPosts(token: String?) async throws -> PostList {
+        try await load(path: "api/feeds/hot", token: token)
     }
 
-    private func load(path: String) async throws -> PostList {
+    private func load(path: String, token: String?) async throws -> PostList {
         var request = URLRequest(url: baseURL.appendingPathComponent(path))
         request.timeoutInterval = 15
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        if let token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let data: Data
         let response: URLResponse
@@ -163,6 +166,61 @@ extension RemotePostRepository: PostComposer {
         } catch {
             throw RemotePostRepositoryError.decodingFailed(error)
         }
+    }
+
+}
+
+extension RemotePostRepository: PostInteractions {
+    func setLike(
+        _ liked: Bool,
+        postID: Int,
+        token: String
+    ) async throws -> LikeState {
+        struct Response: Decodable {
+            let likeCount: Int
+            let isLiked: Bool
+        }
+
+        // PUT to like, DELETE to unlike: each names the state wanted rather
+        // than an event, so repeating one is harmless — which is what a double
+        // tap and a retried request both need.
+        let data = try await send(
+            interaction(
+                path: "api/posts/\(postID)/like",
+                method: liked ? "PUT" : "DELETE",
+                token: token
+            )
+        )
+        do {
+            let response = try decoder.decode(Response.self, from: data)
+            return LikeState(likeCount: response.likeCount, isLiked: response.isLiked)
+        } catch {
+            throw RemotePostRepositoryError.decodingFailed(error)
+        }
+    }
+
+    func setFollow(_ followed: Bool, handle: String, token: String) async throws {
+        // Answers 204 with no body, so nothing is decoded.
+        _ = try await send(
+            interaction(
+                path: "api/users/\(handle)/follow",
+                method: followed ? "PUT" : "DELETE",
+                token: token
+            )
+        )
+    }
+
+    private func interaction(
+        path: String,
+        method: String,
+        token: String
+    ) -> URLRequest {
+        var request = URLRequest(url: baseURL.appendingPathComponent(path))
+        request.httpMethod = method
+        request.timeoutInterval = 15
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
     }
 
     /// Performs a request and returns its body, mapping failures the same way

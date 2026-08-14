@@ -120,8 +120,8 @@ final class ComposeTests: XCTestCase {
 }
 
 private struct EmptyRepository: PostRepository {
-    func loadRecommendPosts() async throws -> PostList { PostList(list: []) }
-    func loadHotPosts() async throws -> PostList { PostList(list: []) }
+    func loadRecommendPosts(token: String?) async throws -> PostList { PostList(list: []) }
+    func loadHotPosts(token: String?) async throws -> PostList { PostList(list: []) }
 }
 
 private final class SpyComposer: PostComposer {

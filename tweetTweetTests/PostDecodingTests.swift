@@ -65,7 +65,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         }
         let repository = makeRemoteRepository()
 
-        let result = try await repository.loadRecommendPosts()
+        let result = try await repository.loadRecommendPosts(token: nil)
 
         XCTAssertEqual(result.list.map(\.id), [42])
         XCTAssertEqual(result.list.first?.author.displayName, "遠端貼文")
@@ -84,7 +84,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         let repository = makeRemoteRepository()
 
         do {
-            _ = try await repository.loadHotPosts()
+            _ = try await repository.loadHotPosts(token: nil)
             XCTFail("Expected HTTP status error")
         } catch let error as RemotePostRepositoryError {
             XCTAssertEqual(error.errorDescription, "伺服器暫時無法回應，請稍後再試。")
@@ -115,7 +115,7 @@ final class RemotePostRepositoryTests: XCTestCase {
             }
 
             do {
-                _ = try await makeRemoteRepository().loadHotPosts()
+                _ = try await makeRemoteRepository().loadHotPosts(token: nil)
                 XCTFail("Expected an error for status \(statusCode)")
             } catch let error as RemotePostRepositoryError {
                 XCTAssertEqual(error.errorDescription, expected, "status \(statusCode)")
@@ -136,7 +136,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         }
 
         do {
-            _ = try await makeRemoteRepository().loadHotPosts()
+            _ = try await makeRemoteRepository().loadHotPosts(token: nil)
             XCTFail("Expected an error")
         } catch let error as RemotePostRepositoryError {
             XCTAssertEqual(error.errorDescription, "伺服器回應異常（418）。")
@@ -161,7 +161,7 @@ final class RemotePostRepositoryTests: XCTestCase {
             URLProtocolStub.requestHandler = { _ in throw URLError(code) }
 
             do {
-                _ = try await makeRemoteRepository().loadRecommendPosts()
+                _ = try await makeRemoteRepository().loadRecommendPosts(token: nil)
                 XCTFail("Expected an error for \(code)")
             } catch let error as RemotePostRepositoryError {
                 XCTAssertEqual(error.errorDescription, expected, "code \(code)")
@@ -173,7 +173,7 @@ final class RemotePostRepositoryTests: XCTestCase {
         URLProtocolStub.requestHandler = { _ in throw URLError(.cannotFindHost) }
 
         do {
-            _ = try await makeRemoteRepository().loadRecommendPosts()
+            _ = try await makeRemoteRepository().loadRecommendPosts(token: nil)
             XCTFail("Expected an error")
         } catch {
             let message = error.localizedDescription
@@ -207,7 +207,7 @@ final class RemotePostRepositoryTests: XCTestCase {
             return (try XCTUnwrap(response), Data(body.utf8))
         }
 
-        let feed = try await makeRemoteRepository().loadRecommendPosts()
+        let feed = try await makeRemoteRepository().loadRecommendPosts(token: nil)
         let post = try XCTUnwrap(feed.list.first)
 
         XCTAssertEqual(post.author.avatar, "https://example.test/media/avatar-01.jpg")
@@ -240,7 +240,7 @@ final class RemotePostRepositoryTests: XCTestCase {
             return (try XCTUnwrap(response), Data(body.utf8))
         }
 
-        let feed = try await makeRemoteRepository().loadRecommendPosts()
+        let feed = try await makeRemoteRepository().loadRecommendPosts(token: nil)
         let post = try XCTUnwrap(feed.list.first)
 
         XCTAssertEqual(post.author.avatar, "avatar-01.jpg")

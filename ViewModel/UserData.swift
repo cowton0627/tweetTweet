@@ -15,6 +15,7 @@ final class UserData: ObservableObject {
 
     private let repository: PostRepository
     private let composer: PostComposer?
+    private let interactions: PostInteractions?
     private var recommendPostDic: [Int: Int] = [:]
     private var hotPostDic: [Int: Int] = [:]
 
@@ -22,14 +23,20 @@ final class UserData: ObservableObject {
     /// works but never leaves the device.
     var canPublish: Bool { composer != nil }
 
+    /// Whether likes and follows outlive the session. False offline, where
+    /// tapping still works but only changes what is on screen.
+    var canInteract: Bool { interactions != nil }
+
     init(
         repository: PostRepository = LocalPostRepository(),
         composer: PostComposer? = nil,
+        interactions: PostInteractions? = nil,
         initialRecommendPosts: PostList? = nil,
         initialHotPosts: PostList? = nil
     ) {
         self.repository = repository
         self.composer = composer
+        self.interactions = interactions
         self.recommendPostList = initialRecommendPosts ?? PostList(list: [])
         self.hotPostList = initialHotPosts ?? PostList(list: [])
         self.loadStates = [
@@ -40,12 +47,12 @@ final class UserData: ObservableObject {
         rebuildIndex(for: .hot)
     }
 
-    func loadAll() async {
+    func loadAll(token: String? = nil) async {
         setLoadState(.loading, for: .recommend)
         setLoadState(.loading, for: .hot)
 
-        async let recommendRequest = repository.loadRecommendPosts()
-        async let hotRequest = repository.loadHotPosts()
+        async let recommendRequest = repository.loadRecommendPosts(token: token)
+        async let hotRequest = repository.loadHotPosts(token: token)
 
         do {
             apply(try await recommendRequest, to: .recommend)
@@ -60,16 +67,16 @@ final class UserData: ObservableObject {
         }
     }
 
-    func retry(_ category: PostListCategory) async {
+    func retry(_ category: PostListCategory, token: String? = nil) async {
         setLoadState(.loading, for: category)
 
         do {
             let posts: PostList
             switch category {
             case .recommend:
-                posts = try await repository.loadRecommendPosts()
+                posts = try await repository.loadRecommendPosts(token: token)
             case .hot:
-                posts = try await repository.loadHotPosts()
+                posts = try await repository.loadHotPosts(token: token)
             }
             apply(posts, to: category)
         } catch {
@@ -171,13 +178,84 @@ final class UserData: ObservableObject {
                 vip: false
             ),
             date: formatter.string(from: Date()),
-            isFollowed: true,
+            isFollowed: false,
             text: text,
             images: images,
             commentCount: 0,
             likeCount: 0,
             isLiked: false
         )
+    }
+
+    /// Sets whether the reader likes this post.
+    ///
+    /// The change lands on screen first and is undone if the server refuses.
+    /// A like is a response to a tap, and waiting for a round trip before the
+    /// heart fills makes the whole app feel broken on a slow connection — but
+    /// an optimistic update that is never reconciled is just a lie, hence the
+    /// rollback.
+    func setLike(_ liked: Bool, on postID: Int, token: String?) async throws {
+        guard var post = post(forId: postID) else { return }
+        let previous = post
+
+        post.isLiked = liked
+        post.likeCount = max(0, post.likeCount + (liked ? 1 : -1))
+        update(post)
+
+        guard let interactions, let token else { return }
+        do {
+            let state = try await interactions.setLike(
+                liked,
+                postID: postID,
+                token: token
+            )
+            // The server's count wins: other people are liking the same post,
+            // so the number after your tap is not necessarily the number
+            // before it plus one.
+            if var confirmed = self.post(forId: postID) {
+                confirmed.isLiked = state.isLiked
+                confirmed.likeCount = state.likeCount
+                update(confirmed)
+            }
+        } catch {
+            update(previous)
+            throw error
+        }
+    }
+
+    /// Sets whether the reader follows an author.
+    ///
+    /// Applies to every post by that author in both feeds — following is a
+    /// relationship with the person, and leaving their other posts showing
+    /// "追蹤" would look like the tap failed.
+    func setFollow(
+        _ followed: Bool,
+        forAuthor handle: String,
+        token: String?
+    ) async throws {
+        let previous = postsByAuthor(handle)
+        guard !previous.isEmpty else { return }
+        applyFollow(followed, toAuthor: handle)
+
+        guard let interactions, let token else { return }
+        do {
+            try await interactions.setFollow(followed, handle: handle, token: token)
+        } catch {
+            for post in previous { update(post) }
+            throw error
+        }
+    }
+
+    private func postsByAuthor(_ handle: String) -> [Post] {
+        (recommendPostList.list + hotPostList.list)
+            .filter { $0.author.handle == handle }
+    }
+
+    private func applyFollow(_ followed: Bool, toAuthor handle: String) {
+        for var post in postsByAuthor(handle) {
+            post.isFollowed = followed
+            update(post)
+        }
     }
 
     func nextPostID() -> Int {

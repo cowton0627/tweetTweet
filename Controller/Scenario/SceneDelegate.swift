@@ -26,7 +26,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let backend = PostRepositoryFactory.makeDefault()
         let userData = UserData(
             repository: backend.repository,
-            composer: backend.composer
+            composer: backend.composer,
+            interactions: backend.interactions
         )
         let authStore = AuthStore(service: backend.auth)
         let contentView = RootView()
