@@ -2,83 +2,60 @@
 //  HomeChromeViews.swift
 //  tweetTweet
 //
-//  Created by Codex on 2026/5/11.
+//  The tab bar. One row, one job: which area you are in.
 //
 
 import SwiftUI
 
-struct HomeTopChromeView: View {
-    @Binding var leftPercent: CGFloat
-    let onCamera: () -> Void
-    let onCompose: () -> Void
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Button(action: onCamera) {
-                Image(systemName: "camera")
-                    .font(.body)
-                    .frame(width: 44, height: 44)
-                    .contentShape(Rectangle())
-            }
-            .foregroundColor(.blue)
-            .buttonStyle(PlainButtonStyle())
-            .accessibilityLabel("加入圖片")
-            .accessibilityHint("選擇相機、相簿或內建素材")
-
-            Spacer(minLength: 0)
-
-            HomeNavigationBar(leftPercent: $leftPercent)
-
-            Spacer(minLength: 0)
-
-            Button(action: onCompose) {
-                Image(systemName: "plus.circle.fill")
-                    .font(.title3)
-                    .frame(width: 44, height: 44)
-                    .contentShape(Rectangle())
-            }
-            .foregroundColor(.orange)
-            .buttonStyle(PlainButtonStyle())
-            .accessibilityLabel("發表新貼文")
-        }
-        .padding(.horizontal, 12)
-        .padding(.top, 8)
-        .padding(.bottom, 10)
-        .background(Color(.systemBackground))
-        .overlay(Divider(), alignment: .bottom)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-    }
-}
-
-struct HomeBottomChromeView: View {
-    @Binding var leftPercent: CGFloat
-    let onRecommend: () -> Void
-    let onHot: () -> Void
-    let onSearch: () -> Void
-    let onCamera: () -> Void
+struct AppTabBar: View {
+    @Binding var selection: AppTab
     let onCompose: () -> Void
 
     var body: some View {
         HStack(spacing: 0) {
-            BottomChromeButton(title: "推薦", systemImage: "house.fill", isSelected: leftPercent < 0.5, action: onRecommend)
-            Spacer(minLength: 0)
-            BottomChromeButton(title: "熱門", systemImage: "flame.fill", isSelected: leftPercent >= 0.5, action: onHot)
-            Spacer(minLength: 0)
-            BottomChromeButton(title: "搜尋", systemImage: "magnifyingglass", isSelected: false, action: onSearch)
-            Spacer(minLength: 0)
-            BottomChromeButton(title: "圖片", systemImage: "camera", isSelected: false, action: onCamera)
-            Spacer(minLength: 0)
-            BottomChromeButton(title: "發文", systemImage: "square.and.pencil", isSelected: false, action: onCompose)
+            tabButton(.home)
+            tabButton(.search)
+
+            // Composing sits in the middle because it is the primary action,
+            // but it is not a tab: it presents over the current area rather
+            // than replacing it, so it never shows a selected state.
+            Button(action: onCompose) {
+                Image(systemName: "square.and.pencil")
+                    .font(.title3.weight(.semibold))
+                    .frame(width: 52, height: 36)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(Color.orange)
+                    )
+                    .foregroundColor(.white)
+                    .contentShape(Rectangle())
+            }
+            .frame(maxWidth: .infinity)
+            .buttonStyle(PlainButtonStyle())
+            .accessibilityLabel("發表新貼文")
+
+            tabButton(.notifications)
+            tabButton(.profile)
         }
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 8)
         .padding(.top, 6)
         .padding(.bottom, 8)
         .background(Color(.systemBackground))
         .overlay(Divider(), alignment: .top)
     }
+
+    private func tabButton(_ tab: AppTab) -> some View {
+        TabBarButton(
+            title: tab.title,
+            systemImage: tab.systemImage,
+            isSelected: selection == tab,
+            action: { selection = tab }
+        )
+        .frame(maxWidth: .infinity)
+    }
 }
 
-struct BottomChromeButton: View {
+struct TabBarButton: View {
     let title: String
     let systemImage: String
     let isSelected: Bool

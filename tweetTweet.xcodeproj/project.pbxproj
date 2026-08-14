@@ -28,6 +28,9 @@
 		01BF0000000000000000001A /* HomeChromeViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001A /* HomeChromeViews.swift */; };
 		01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001B /* HomeFeedPagerView.swift */; };
 		01BF0000000000000000001C /* HomeSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0000000000000000001C /* HomeSearchView.swift */; };
+		01BF00000000000000000032 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000032 /* ProfileView.swift */; };
+		01BF00000000000000000031 /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000031 /* NotificationsView.swift */; };
+		01BF00000000000000000030 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000030 /* RootView.swift */; };
 		01BF00000000000000000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000012 /* Assets.xcassets */; };
 		01BF00000000000000000021 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000014 /* LaunchScreen.storyboard */; };
 		01BF00000000000000000023 /* PostRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF00000000000000000023 /* PostRepository.swift */; };
@@ -83,6 +86,9 @@
 		01AF0000000000000000001A /* HomeChromeViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeChromeViews.swift; sourceTree = "<group>"; };
 		01AF0000000000000000001B /* HomeFeedPagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedPagerView.swift; sourceTree = "<group>"; };
 		01AF0000000000000000001C /* HomeSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSearchView.swift; sourceTree = "<group>"; };
+		01AF00000000000000000032 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		01AF00000000000000000031 /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
+		01AF00000000000000000030 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		01AF00000000000000000023 /* PostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000024 /* LocalPostRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPostRepository.swift; sourceTree = "<group>"; };
 		01AF00000000000000000025 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
@@ -165,6 +171,9 @@
 				01AF0000000000000000000C /* HomeView.swift */,
 				01AF0000000000000000001B /* HomeFeedPagerView.swift */,
 				01AF0000000000000000001C /* HomeSearchView.swift */,
+				01AF00000000000000000032 /* ProfileView.swift */,
+				01AF00000000000000000031 /* NotificationsView.swift */,
+				01AF00000000000000000030 /* RootView.swift */,
 				01AF0000000000000000000E /* PostDetailView.swift */,
 				01AF00000000000000000018 /* ComposePostView.swift */,
 				01AF00000000000000000019 /* MediaPickerView.swift */,
@@ -415,6 +424,9 @@
 				01BF0000000000000000001A /* HomeChromeViews.swift in Sources */,
 				01BF0000000000000000001B /* HomeFeedPagerView.swift in Sources */,
 				01BF0000000000000000001C /* HomeSearchView.swift in Sources */,
+				01BF00000000000000000032 /* ProfileView.swift in Sources */,
+				01BF00000000000000000031 /* NotificationsView.swift in Sources */,
+				01BF00000000000000000030 /* RootView.swift in Sources */,
 				01BF00000000000000000023 /* PostRepository.swift in Sources */,
 				01BF00000000000000000024 /* LocalPostRepository.swift in Sources */,
 				01BF00000000000000000025 /* CameraPicker.swift in Sources */,

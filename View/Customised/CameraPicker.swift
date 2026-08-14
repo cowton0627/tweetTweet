@@ -62,3 +62,14 @@ struct CameraPicker: UIViewControllerRepresentable {
         }
     }
 }
+
+// Lets a source be presented with .sheet(item:), which needs identity to know
+// when to swap one presentation for another.
+extension CameraPicker.Source: Identifiable {
+    var id: String {
+        switch self {
+        case .camera: return "camera"
+        case .photoLibrary: return "photoLibrary"
+        }
+    }
+}

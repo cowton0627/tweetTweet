@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ComposePostView: View {
-    let attachedImages: [String]
     let initialCategory: PostListCategory
 
     @Environment(\.dismiss) private var dismiss
@@ -16,12 +15,19 @@ struct ComposePostView: View {
 
     @State private var text: String = ""
     @State private var category: PostListCategory
+    @State private var attachedImages: [String] = []
     @State private var showEmptyTextHUD: Bool = false
     @State private var isSending: Bool = false
     @State private var failureMessage: String?
 
-    init(attachedImages: [String] = [], initialCategory: PostListCategory = .recommend) {
-        self.attachedImages = attachedImages
+    // Picking an image belongs to composing, not to navigation: it is a step
+    // within writing a post, not somewhere a reader goes. Keeping it here is
+    // what collapses four entry points into one.
+    @State private var showingSourceSheet: Bool = false
+    @State private var showingMediaPicker: Bool = false
+    @State private var cameraSource: CameraPicker.Source?
+
+    init(initialCategory: PostListCategory = .recommend) {
         self.initialCategory = initialCategory
         self._category = State(initialValue: initialCategory)
     }
@@ -46,7 +52,29 @@ struct ComposePostView: View {
                         )
 
                     if !attachedImages.isEmpty {
-                        PostImageCell(images: attachedImages, width: UIScreen.main.bounds.width - 40)
+                        PostImageCell(
+                            images: attachedImages,
+                            width: UIScreen.main.bounds.width - 40
+                        )
+                    }
+
+                    Button(action: { showingSourceSheet = true }) {
+                        Label(
+                            attachedImages.isEmpty ? "加入圖片" : "更換圖片",
+                            systemImage: "photo.on.rectangle"
+                        )
+                        .font(.subheadline)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .foregroundColor(.orange)
+                    .accessibilityHint("選擇相機、相簿或內建素材")
+
+                    if !attachedImages.isEmpty {
+                        Button(role: .destructive, action: { attachedImages = [] }) {
+                            Label("移除圖片", systemImage: "trash")
+                                .font(.subheadline)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
                 .padding(.top, 4)
@@ -73,6 +101,29 @@ struct ComposePostView: View {
                 }
             }
             .disabled(isSending)
+            .confirmationDialog(
+                "加入圖片",
+                isPresented: $showingSourceSheet,
+                titleVisibility: .visible
+            ) {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    Button("拍照") { cameraSource = .camera }
+                }
+                Button("從相簿選取") { cameraSource = .photoLibrary }
+                Button("內建素材庫") { showingMediaPicker = true }
+                Button("取消", role: .cancel) {}
+            }
+            .sheet(isPresented: $showingMediaPicker) {
+                MediaPickerView(imageNames: userData.imageLibrary()) { selected in
+                    attachedImages = selected
+                }
+            }
+            .sheet(item: $cameraSource) { source in
+                CameraPicker(source: source) { image in
+                    attachedImages = [RuntimeImageStore.store(image)]
+                }
+                .ignoresSafeArea()
+            }
             .alert(
                 "無法發表",
                 isPresented: Binding(
@@ -127,7 +178,7 @@ struct ComposePostView: View {
 
 struct ComposePostView_Previews: PreviewProvider {
     static var previews: some View {
-        ComposePostView(attachedImages: ["post-01.jpg"], initialCategory: .recommend)
+        ComposePostView()
             .environmentObject(UserData())
     }
 }

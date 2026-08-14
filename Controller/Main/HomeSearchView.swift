@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct HomeSearchView: View {
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var userData: UserData
     @State private var query: String = ""
 
@@ -83,12 +82,5 @@ struct HomeSearchView: View {
         }
         .navigationTitle("搜尋")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("完成") {
-                    dismiss()
-                }
-            }
-        }
     }
 }
