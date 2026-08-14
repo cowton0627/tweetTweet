@@ -268,17 +268,26 @@ Comments/
 
 每個階段結束時 App 都要是可用的。
 
-**Phase 1 — 導覽重整**（約半天，無依賴）
+**Phase 1 — 導覽重整** ✅ 已完成
 照第 1 節重排。通知與個人先放空狀態畫面。發文入口收斂成一個。
-可以立刻做，不必等後端。
 
-**Phase 2 — 帳號**（兩到三天，動兩個 repo）
-`users` 表、註冊／登入、argon2、JWT、Keychain、登入畫面、未登入可讀。
-既有貼文全部歸給一個 seed 使用者。
+**Phase 2 — 帳號** ✅ 已完成
+`users` 表、註冊／登入、JWT、Keychain、登入畫面、未登入可讀。
+種子貼文分給七個假使用者（不是同一個），feed 才看起來像真的。
 
-**Phase 3 — 互動移到關聯表**（一到兩天）
+實際與規劃的差異：
+- **argon2 換成 scrypt**。argon2 要編譯原生模組，Render 的免費容器與
+  Turso 的 Rust binding 已經讓 build 夠脆弱了；scrypt 是 Node 內建，
+  參數（N、r、p）直接寫進 hash 字串，日後要調強度不必動既有帳號。
+- **沒有 email**。註冊只要 handle + 顯示名稱 + 密碼。email 的用途是找回
+  密碼與通知，這個 demo 兩者都沒有，收了只是多存一份個資。
+- **未登入仍可發文**，會歸到 demo 帳號。原本打算擋，但那會讓沒帳號的人
+  連 App 在做什麼都看不出來。登入的意義改成「貼文掛你的名字」。
+
+**Phase 3 — 互動移到關聯表**（一到兩天）← 下一步
 `likes`、`follows`，feed 查詢加入 viewer。
-⚠️ 先驗證 `ALTER TABLE posts DROP COLUMN` 在 Turso 可用。
+⚠️ `ALTER TABLE posts DROP COLUMN` 已在 Turso 上驗證可用（v5 migration 走過
+一次，`post_images` 沒被波及）。
 
 **Phase 4 — 回文**（兩天）
 `comments` 表、端點、詳情頁列表、底部輸入列、feed 帶最新 2 則。
@@ -293,7 +302,7 @@ Comments/
 - **通知**要做到什麼程度？真正的推播需要 APNs 憑證與裝置 token 管理，是獨立的一塊。先做「站內通知列表」還是整個延後？
 - **OpenAPI spec**：端點從 4 個變成十幾個之後，iOS 與後端對契約的理解會開始漂移。要不要導入 spec-first？
 - **圖片降取樣**（已知問題）：相簿原圖經 JPEG 編碼後實測 2.8 MB。要排進哪個階段？
-- **既有種子資料**的作者要怎麼分配？全給同一個假使用者，還是造幾個假使用者讓 feed 看起來像真的？
+- ~~**既有種子資料**的作者要怎麼分配？~~ 已決定：七個假使用者，見 `seed/users.json`。
 
 ---
 
