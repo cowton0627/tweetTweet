@@ -394,3 +394,14 @@ scrypt 是 Node 內建,沒有 build step。強度參數(N、r、p)連同 salt �
 `posts` 要加 `user_id` 外鍵,而 SQLite 改欄位的標準做法是「建新表、搬資料、丟舊表、改名」。這在這裡**不能用**:託管的 libSQL 不允許關掉外鍵檢查,而 `DROP TABLE posts` 會 cascade 進 `post_images`,把每一列圖片靜默刪光。`PRAGMA defer_foreign_keys` 沒有用,它延後的是檢查,不是 cascade。
 
 改用 `ALTER TABLE ADD COLUMN`,並在寫 migration 之前先在 Turso 上實測 `ADD`/`DROP COLUMN` 確實不會波及子表。這個限制寫進 `src/db.ts` 的註解,因為下一個要改 `posts` 的人會直覺地伸手去拿重建法。
+
+### Embedded replica 只在啟動時同步,所以資料庫不是即時的真相
+
+清掉測試貼文時發現的:直接對 Turso primary 下 `DELETE` 之後,線上 API 仍然回傳那幾筆。`createDb` 只在開啟連線時呼叫一次 `db.sync()`,沒有週期性同步——執行中的伺服器讀的是自己那份本機 replica 快照。
+
+單一實例的情況下這是對的:所有寫入都經過這個 process,replica 就是最新的。但它有兩個推論要記住:
+
+1. **繞過 API 改資料,要重啟才看得到。** 早先「直接改 SQLite 資料列再重啟 App」的驗證之所以成立,是因為當時後端也一起重啟了。
+2. **不能水平擴展。** 兩個實例各自持有 replica,A 寫的東西 B 要到重啟才知道。真要多實例就得改成直連 primary,或加上週期性 sync。
+
+目前放著不改:Render 免費方案只跑一個實例,而閒置 15 分鐘就休眠、下次請求冷啟動,等於自帶一個上限 15 分鐘的同步週期。
