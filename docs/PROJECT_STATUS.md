@@ -10,7 +10,7 @@ tweetTweet 已從純本地原型變成真正的前後端專案。動態牆由 [t
 
 後端已部署到雲端（https://tweettweet-api.onrender.com ），不再依賴任何一台自己的機器保持開機：API 跑在 Render，貼文資料在 Turso（libSQL），圖片在 AWS S3。網域固定，App 不需要為了追網域而重新 build。
 
-Render 免費方案閒置 15 分鐘會休眠，冷啟動約一分鐘——示範前先打一次 `/api/health` 叫醒它。
+Render 免費方案閒置 15 分鐘會休眠，冷啟動約一分鐘——示範前先打一次 `/health` 叫醒它（這個端點刻意放在 `/api` 的流量限制之外——健康檢查被限流會回報一個不存在的故障）。
 
 導覽已依 [`PRODUCT_PLAN.md`](PRODUCT_PLAN.md) 重整（Phase 1），發文從四個入口收斂成一個。帳號系統（Phase 2）也已上線：可以註冊、登入，貼文掛在自己名下；沒有帳號仍然可讀可發，只是會歸到 demo 帳號。
 
